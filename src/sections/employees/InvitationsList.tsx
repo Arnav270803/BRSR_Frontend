@@ -1,4 +1,5 @@
-import { Check, Clock, Copy, Shield, UserRound, XCircle } from "lucide-react";
+import { useState } from "react";
+import { Check, Clock, Copy, MailCheck, MailX, Shield, UserRound, XCircle } from "lucide-react";
 import type { InvitationRecord, InvitationStatus } from "./employeesData";
 import { formatDate, getDaysUntilExpiry, getInvitationStatus } from "./employeesUtils";
 
@@ -31,6 +32,7 @@ export function InvitationsList({ invitations }: { invitations: InvitationRecord
                     <th className="px-4 py-3">Email</th>
                     <th className="px-4 py-3">Role</th>
                     <th className="px-4 py-3">Status</th>
+                    <th className="px-4 py-3">Delivery</th>
                     <th className="px-4 py-3">Expires</th>
                     <th className="px-4 py-3">Invite link</th>
                   </tr>
@@ -64,6 +66,9 @@ function InvitationRow({ invitation }: { invitation: InvitationRecord }) {
       </td>
       <td className="px-4 py-4">
         <StatusPill status={status} />
+      </td>
+      <td className="px-4 py-4">
+        <DeliveryPill invitation={invitation} />
       </td>
       <td className="px-4 py-4 text-[#5f6d65]">
         <p>{formatDate(invitation.expiresAt)}</p>
@@ -110,6 +115,14 @@ function InvitationCard({ invitation }: { invitation: InvitationRecord }) {
             {getDaysUntilExpiry(invitation)}
           </p>
         </div>
+        <div className="rounded-md border border-[#e0e8e2] bg-[#f7faf7] p-3">
+          <p className="text-[11px] font-semibold tracking-[0.08em] text-[#69756e] uppercase">
+            Delivery
+          </p>
+          <div className="mt-2">
+            <DeliveryPill invitation={invitation} />
+          </div>
+        </div>
       </div>
 
       <div className="mt-4">
@@ -147,7 +160,38 @@ function StatusPill({ status }: { status: InvitationStatus }) {
   );
 }
 
+function DeliveryPill({ invitation }: { invitation: InvitationRecord }) {
+  if (invitation.acceptedAt) {
+    return <span className="text-sm text-[#778179]">Accepted</span>;
+  }
+
+  if (invitation.emailSent) {
+    return (
+      <span className="inline-flex w-fit items-center gap-1.5 rounded-md border border-[#bdd3c3] bg-[#edf6ef] px-2.5 py-1 text-xs font-semibold text-[#2f6b45]">
+        <MailCheck className="size-3.5" strokeWidth={1.8} />
+        Email sent
+      </span>
+    );
+  }
+
+  if (invitation.emailError) {
+    return (
+      <span
+        className="inline-flex w-fit items-center gap-1.5 rounded-md border border-[#d7c6c1] bg-[#fbefed] px-2.5 py-1 text-xs font-semibold text-[#713c34]"
+        title={invitation.emailError}
+      >
+        <MailX className="size-3.5" strokeWidth={1.8} />
+        Link only
+      </span>
+    );
+  }
+
+  return <span className="text-sm text-[#778179]">Link available</span>;
+}
+
 function TokenChip({ inviteLink, token }: { inviteLink?: string; token?: string }) {
+  const [copied, setCopied] = useState(false);
+
   if (!token) {
     return <span className="text-sm text-[#778179]">Accepted</span>;
   }
@@ -162,6 +206,8 @@ function TokenChip({ inviteLink, token }: { inviteLink?: string; token?: string 
     }
 
     await navigator.clipboard.writeText(resolvedInviteLink);
+    setCopied(true);
+    window.setTimeout(() => setCopied(false), 1800);
   }
 
   return (
@@ -181,6 +227,9 @@ function TokenChip({ inviteLink, token }: { inviteLink?: string; token?: string 
       >
         <Copy className="size-4" strokeWidth={1.8} />
       </button>
+      {copied ? (
+        <span className="shrink-0 text-xs font-semibold text-[#2f6b45]">Copied</span>
+      ) : null}
     </div>
   );
 }

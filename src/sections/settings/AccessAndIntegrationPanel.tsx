@@ -1,4 +1,4 @@
-import { DatabaseZap, ShieldCheck, Users } from "lucide-react";
+import { CheckCircle2, DatabaseZap, ShieldCheck, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 import type { CompanyWorkspace } from "../workspace/workspaceData";
 
@@ -57,16 +57,17 @@ export function AccessAndIntegrationPanel({ workspace }: { workspace: CompanyWor
 
         <div className="mt-5 rounded-lg border border-[#dbe5df] bg-[#f8faf7]/70 p-4">
           <p className="text-xs font-semibold uppercase tracking-[0.1em] text-[#7a887f]">
-            Source endpoint
+            Workspace API
           </p>
-          <p className="mt-2 break-words font-mono text-sm font-semibold text-[#203128]">
-            GET /api/companies/:companyId/workspace
+          <p className="mt-2 flex items-center gap-2 text-sm font-semibold text-[#203128]">
+            <CheckCircle2 className="size-4 text-[#2f6d48]" strokeWidth={1.8} />
+            Connected
           </p>
         </div>
 
         <p className="mt-4 text-sm leading-6 text-[#66736b]">
-          This page is ready to replace demo data with the workspace API response once the frontend
-          API layer is connected.
+          Company profile, reporting years, role state, and setup readiness are loaded from the
+          backend workspace response.
         </p>
       </section>
     </div>

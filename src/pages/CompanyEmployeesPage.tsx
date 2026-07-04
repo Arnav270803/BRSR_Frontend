@@ -5,6 +5,7 @@ import {
   listCompanyInvitations,
 } from "../api/invitations";
 import { getCompanyWorkspace } from "../api/workspace";
+import { ActiveMembersPanel } from "../sections/employees/ActiveMembersPanel";
 import { EmployeesHeader } from "../sections/employees/EmployeesHeader";
 import { EmployeesInviteForm } from "../sections/employees/EmployeesInviteForm";
 import { EmployeesMetrics } from "../sections/employees/EmployeesMetrics";
@@ -14,6 +15,7 @@ import {
   type InvitationRecord,
 } from "../sections/employees/employeesData";
 import { getInvitationStatus } from "../sections/employees/employeesUtils";
+import { WorkspacePageState } from "../sections/workspace/WorkspacePageState";
 import { WorkspaceSidebar } from "../sections/workspace/WorkspaceSidebar";
 
 export function CompanyEmployeesPage() {
@@ -49,6 +51,7 @@ export function CompanyEmployeesPage() {
   const workspace = workspaceQuery.data!.data;
   const company = workspace.company;
   const viewerRole = workspace.viewerRole;
+  const canManageAccess = viewerRole !== "USER";
   const invitations = invitationsQuery.data!.data;
   const activeMemberCount = workspace.activeMemberCount;
   const pendingInviteCount = invitations.filter(
@@ -90,7 +93,11 @@ export function CompanyEmployeesPage() {
         />
 
         <section className="flex min-w-0 flex-1 flex-col gap-3 sm:gap-4 lg:py-2 xl:gap-5">
-          <EmployeesHeader company={company} viewerRole={viewerRole} />
+          <EmployeesHeader
+            canManageAccess={canManageAccess}
+            company={company}
+            viewerRole={viewerRole}
+          />
 
           <EmployeesMetrics
             acceptedInviteCount={acceptedInviteCount}
@@ -100,8 +107,17 @@ export function CompanyEmployeesPage() {
           />
 
           <div className="grid gap-3 sm:gap-4 xl:grid-cols-[minmax(0,1fr)_430px] xl:gap-5 2xl:grid-cols-[minmax(0,1fr)_500px]">
-            <InvitationsList invitations={invitations} />
-            <EmployeesInviteForm createInvitation={createInvitation} />
+            <div className="grid gap-3 sm:gap-4 xl:gap-5">
+              <ActiveMembersPanel
+                activeMemberCount={activeMemberCount}
+                viewerRole={viewerRole}
+              />
+              <InvitationsList invitations={invitations} />
+            </div>
+            <EmployeesInviteForm
+              canCreate={canManageAccess}
+              createInvitation={createInvitation}
+            />
           </div>
         </section>
       </div>
@@ -116,17 +132,5 @@ function EmployeesShell({
   message: string;
   tone?: "default" | "error";
 }) {
-  return (
-    <main className="grid min-h-screen place-items-center bg-[#eef3ef] px-4 text-[#16211b]">
-      <div
-        className={`rounded-lg border p-5 text-sm font-semibold shadow-[0_18px_60px_rgba(35,47,38,0.10)] backdrop-blur-2xl ${
-          tone === "error"
-            ? "border-[#e2c6bd] bg-[#fff7f3] text-[#8a3f2a]"
-            : "border-white/70 bg-white/60"
-        }`}
-      >
-        {message}
-      </div>
-    </main>
-  );
+  return <WorkspacePageState message={message} tone={tone} />;
 }

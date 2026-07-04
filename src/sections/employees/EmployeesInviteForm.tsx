@@ -36,8 +36,10 @@ function FieldMessage({ error }: { error?: FieldError }) {
 }
 
 export function EmployeesInviteForm({
+  canCreate,
   createInvitation,
 }: {
+  canCreate: boolean;
   createInvitation: (values: CreateInvitationValues) => Promise<InvitationRecord>;
 }) {
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
@@ -103,6 +105,7 @@ export function EmployeesInviteForm({
         </span>
       </div>
 
+      {canCreate ? (
       <form className="mt-5 grid gap-4" onSubmit={handleSubmit(onSubmit)}>
         <label>
           <span className="text-sm font-semibold text-[#253229]">Email</span>
@@ -149,9 +152,15 @@ export function EmployeesInviteForm({
           <p className="text-sm font-semibold text-[#2f6b45]">{statusMessage}</p>
         ) : null}
       </form>
+      ) : (
+        <div className="mt-5 rounded-lg border border-[#d9e2dc] bg-white/55 p-4 text-sm leading-6 text-[#65716a]">
+          Your role can view access state, but only admins can invite new employees.
+        </div>
+      )}
 
       <div className="mt-5 rounded-lg border border-[#d9e2dc] bg-white/45 p-4 text-sm leading-6 text-[#65716a]">
-        Local invite tokens are shown until email delivery is connected.
+        Invited users must sign in with the same email address used in the invitation.
+        If email delivery fails, copy the invite link from the invitations list.
       </div>
     </aside>
   );

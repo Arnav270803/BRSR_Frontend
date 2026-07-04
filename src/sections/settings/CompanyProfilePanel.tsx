@@ -31,7 +31,7 @@ export function CompanyProfilePanel({ workspace }: { workspace: CompanyWorkspace
           <h2 className="mt-1 text-xl font-semibold text-[#18251d]">Registered workspace details</h2>
         </div>
         <span className="w-fit rounded-md border border-[#d7e0da] bg-white/60 px-3 py-2 text-xs font-semibold uppercase tracking-[0.08em] text-[#6f7c74]">
-          From workspace API
+          Read only
         </span>
       </div>
 

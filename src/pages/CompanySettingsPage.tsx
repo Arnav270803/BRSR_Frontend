@@ -3,9 +3,11 @@ import { Navigate, useParams } from "react-router-dom";
 import { getCompanyWorkspace } from "../api/workspace";
 import { AccessAndIntegrationPanel } from "../sections/settings/AccessAndIntegrationPanel";
 import { CompanyProfilePanel } from "../sections/settings/CompanyProfilePanel";
+import { GovernanceRoadmapPanel } from "../sections/settings/GovernanceRoadmapPanel";
 import { SettingsHeader } from "../sections/settings/SettingsHeader";
 import { SettingsMetrics } from "../sections/settings/SettingsMetrics";
 import { WorkspaceReadinessPanel } from "../sections/settings/WorkspaceReadinessPanel";
+import { WorkspacePageState } from "../sections/workspace/WorkspacePageState";
 import { WorkspaceSidebar } from "../sections/workspace/WorkspaceSidebar";
 
 export function CompanySettingsPage() {
@@ -52,6 +54,7 @@ export function CompanySettingsPage() {
             <div className="grid gap-3 sm:gap-4 xl:gap-5">
               <CompanyProfilePanel workspace={workspace} />
               <WorkspaceReadinessPanel workspace={workspace} />
+              <GovernanceRoadmapPanel />
             </div>
             <AccessAndIntegrationPanel workspace={workspace} />
           </div>
@@ -68,17 +71,5 @@ function SettingsShell({
   message: string;
   tone?: "default" | "error";
 }) {
-  return (
-    <main className="grid min-h-screen place-items-center bg-[#eef3ef] px-4 text-[#16211b]">
-      <div
-        className={`rounded-lg border p-5 text-sm font-semibold shadow-[0_18px_60px_rgba(35,47,38,0.10)] backdrop-blur-2xl ${
-          tone === "error"
-            ? "border-[#e2c6bd] bg-[#fff7f3] text-[#8a3f2a]"
-            : "border-white/70 bg-white/60"
-        }`}
-      >
-        {message}
-      </div>
-    </main>
-  );
+  return <WorkspacePageState message={message} tone={tone} />;
 }

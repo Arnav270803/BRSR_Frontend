@@ -6,6 +6,7 @@ import { ReportingYearsPanel } from "../sections/workspace/ReportingYearsPanel";
 import { SetupProgress } from "../sections/workspace/SetupProgress";
 import { WorkspaceHeader } from "../sections/workspace/WorkspaceHeader";
 import { WorkspaceMetricCards } from "../sections/workspace/WorkspaceMetricCards";
+import { WorkspacePageState } from "../sections/workspace/WorkspacePageState";
 import { WorkspaceSidebar } from "../sections/workspace/WorkspaceSidebar";
 
 export function CompanyWorkspacePage() {
@@ -89,17 +90,5 @@ function WorkspaceShell({
   message: string;
   tone?: "default" | "error";
 }) {
-  return (
-    <main className="grid min-h-screen place-items-center bg-[#eef3ef] px-4 text-[#16211b]">
-      <div
-        className={`rounded-lg border p-5 text-sm font-semibold shadow-[0_18px_60px_rgba(35,47,38,0.10)] backdrop-blur-2xl ${
-          tone === "error"
-            ? "border-[#e2c6bd] bg-[#fff7f3] text-[#8a3f2a]"
-            : "border-white/70 bg-white/60"
-        }`}
-      >
-        {message}
-      </div>
-    </main>
-  );
+  return <WorkspacePageState message={message} tone={tone} />;
 }

@@ -8,9 +8,11 @@ type CompanySummary = {
 };
 
 export function EmployeesHeader({
+  canManageAccess,
   company,
   viewerRole,
 }: {
+  canManageAccess: boolean;
   company: CompanySummary;
   viewerRole: WorkspaceRole;
 }) {
@@ -36,18 +38,22 @@ export function EmployeesHeader({
             {company.displayName} / {company.legalName}
           </p>
           <p className="mt-1 max-w-2xl text-wrap text-sm leading-6 break-words text-[#6a756e]">
-            Invite admins and users to maintain BRSR data.
+            {canManageAccess
+              ? "Invite admins and users to maintain BRSR data."
+              : "Review your company access state. Invite management is available to admins."}
           </p>
         </div>
 
-        <a
-          className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-md bg-[#1f5135] px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-[#183f2a] focus:ring-3 focus:ring-[#426a52]/25 focus:outline-none sm:w-auto"
-          href="#invite-employee"
-          title="Invite employee"
-        >
-          <UserPlus className="size-4" strokeWidth={1.8} />
-          Invite employee
-        </a>
+        {canManageAccess ? (
+          <a
+            className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-md bg-[#1f5135] px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-[#183f2a] focus:ring-3 focus:ring-[#426a52]/25 focus:outline-none sm:w-auto"
+            href="#invite-employee"
+            title="Invite employee"
+          >
+            <UserPlus className="size-4" strokeWidth={1.8} />
+            Invite employee
+          </a>
+        ) : null}
       </div>
     </header>
   );
