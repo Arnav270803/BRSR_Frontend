@@ -17,7 +17,11 @@ export function ReportingYearsList({
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="text-sm font-semibold text-[#426a52]">Reporting years</p>
-          <h2 className="mt-1 text-xl font-semibold text-[#142019]">Company cycles</h2>
+          <h2 className="mt-1 text-xl font-semibold text-[#142019]">Annual workspaces</h2>
+          <p className="mt-2 max-w-2xl text-sm leading-6 text-[#65716a]">
+            Each reporting year keeps its own GHG setup and data-entry workspace.
+            The newest active year opens by default from the sidebar and dashboard.
+          </p>
         </div>
         <span className="w-fit rounded-md border border-[#d5dfd8] bg-white/70 px-3 py-1.5 text-xs font-semibold text-[#5f6f66]">
           {reportingYears.length} active
@@ -27,10 +31,11 @@ export function ReportingYearsList({
       {reportingYears.length > 0 ? (
         <>
           <div className="mt-5 grid gap-3 lg:hidden">
-            {reportingYears.map((reportingYear) => (
+            {reportingYears.map((reportingYear, index) => (
               <ReportingYearCard
                 canManageSetup={canManageSetup}
                 companyId={companyId}
+                isDefault={index === 0}
                 key={reportingYear.id}
                 reportingYear={reportingYear}
               />
@@ -50,21 +55,27 @@ export function ReportingYearsList({
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#e0e8e2] text-sm">
-                  {reportingYears.map((reportingYear) => {
+                  {reportingYears.map((reportingYear, index) => {
                     const status = getReportingYearStatus(reportingYear);
 
                     return (
                       <tr className="text-[#253229]" key={reportingYear.id}>
                         <td className="px-4 py-4 font-semibold 2xl:px-5">
-                          {reportingYear.label}
+                          <div className="flex flex-wrap items-center gap-2">
+                            {reportingYear.label}
+                            {index === 0 ? <DefaultPill /> : null}
+                          </div>
                         </td>
                         <td className="px-4 py-4 text-[#5f6d65] 2xl:px-5">
                           {formatDate(reportingYear.startDate)} -{" "}
                           {formatDate(reportingYear.endDate)}
                         </td>
-                        <td className="px-4 py-4 text-[#5f6d65] 2xl:px-5">
-                          {reportingYear.selectedGhgActivityCount}
-                        </td>
+                      <td className="px-4 py-4 text-[#5f6d65] 2xl:px-5">
+                          <p className="font-semibold text-[#253229]">
+                            {reportingYear.selectedGhgActivityCount}
+                          </p>
+                          <p className="mt-1 text-xs text-[#75827a]">selected activities</p>
+                      </td>
                         <td className="px-4 py-4 2xl:px-5">
                           <StatusPill status={status} />
                         </td>
@@ -104,10 +115,12 @@ export function ReportingYearsList({
 function ReportingYearCard({
   canManageSetup,
   companyId,
+  isDefault,
   reportingYear,
 }: {
   canManageSetup: boolean;
   companyId: string;
+  isDefault: boolean;
   reportingYear: ReportingYearRecord;
 }) {
   const status = getReportingYearStatus(reportingYear);
@@ -116,7 +129,10 @@ function ReportingYearCard({
     <article className="min-w-0 rounded-lg border border-[#d9e2dc] bg-white/60 p-4">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div className="min-w-0">
-          <h3 className="text-base font-semibold text-[#142019]">{reportingYear.label}</h3>
+          <div className="flex flex-wrap items-center gap-2">
+            <h3 className="text-base font-semibold text-[#142019]">{reportingYear.label}</h3>
+            {isDefault ? <DefaultPill /> : null}
+          </div>
           <p className="mt-1 text-sm leading-6 text-[#647169]">
             {formatDate(reportingYear.startDate)} - {formatDate(reportingYear.endDate)}
           </p>
@@ -130,6 +146,9 @@ function ReportingYearCard({
         </p>
         <p className="mt-1 text-xl font-semibold text-[#142019]">
           {reportingYear.selectedGhgActivityCount}
+        </p>
+        <p className="mt-1 text-xs leading-5 text-[#68756d]">
+          Record totals can appear here once the backend exposes per-year counts.
         </p>
       </div>
 
@@ -148,6 +167,14 @@ function ReportingYearCard({
         />
       </div>
     </article>
+  );
+}
+
+function DefaultPill() {
+  return (
+    <span className="inline-flex rounded-md border border-[#bdd3c3] bg-[#edf6ef] px-2 py-0.5 text-[11px] font-semibold text-[#2f6b45]">
+      Default
+    </span>
   );
 }
 

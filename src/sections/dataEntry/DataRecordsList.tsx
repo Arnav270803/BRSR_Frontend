@@ -95,7 +95,8 @@ export function DataRecordsList({
         </>
       ) : (
         <div className="mt-5 rounded-lg border border-dashed border-[#c8d6cd] bg-white/45 p-6 text-sm text-[#617069]">
-          No data records have been added yet.
+          No records have been added for this reporting year yet. Add the first record from the
+          activity data panel.
         </div>
       )}
     </section>
@@ -173,11 +174,19 @@ function DeleteButton({
   canDelete: boolean;
   onClick: () => void;
 }) {
+  function confirmDelete() {
+    if (!window.confirm("Delete this data record? This action will remove it from the active record list.")) {
+      return;
+    }
+
+    onClick();
+  }
+
   return (
     <button
       className="inline-flex h-9 items-center justify-center gap-2 rounded-md border border-[#d7c6c1] bg-white/70 px-3 text-sm font-semibold text-[#713c34] transition hover:border-[#c99990] hover:bg-white focus:ring-3 focus:ring-[#9b3a32]/15 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
       disabled={!canDelete}
-      onClick={onClick}
+      onClick={confirmDelete}
       title={canDelete ? "Delete record" : "You can delete only your own records"}
       type="button"
     >

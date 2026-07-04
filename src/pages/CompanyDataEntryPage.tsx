@@ -139,6 +139,7 @@ export function CompanyDataEntryPage() {
             />
             <DataRecordForm
               onAddRecord={addRecord}
+              records={records}
               selectedActivities={selectedActivities}
             />
           </div>

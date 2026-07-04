@@ -28,7 +28,10 @@ export function ReportingYearsPanel({
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="text-sm font-semibold text-[#426a52]">Reporting years</p>
-          <h2 className="mt-1 text-xl font-semibold text-[#142019]">Company cycles</h2>
+          <h2 className="mt-1 text-xl font-semibold text-[#142019]">Annual workspaces</h2>
+          <p className="mt-2 max-w-2xl text-sm leading-6 text-[#65716a]">
+            Open a year to work with its own GHG setup and data records.
+          </p>
         </div>
         <Link
           className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-md border border-[#cdd9d1] bg-white/70 px-4 text-sm font-semibold text-[#1d2a22] shadow-sm transition hover:border-[#9fb5a6] hover:bg-white focus:ring-3 focus:ring-[#426a52]/20 focus:outline-none sm:w-auto"
@@ -43,7 +46,7 @@ export function ReportingYearsPanel({
       {reportingYears.length > 0 ? (
         <>
           <div className="mt-5 grid gap-3 md:hidden">
-            {reportingYears.map((reportingYear) => {
+            {reportingYears.map((reportingYear, index) => {
               const status = getReportingYearStatus(reportingYear);
 
               return (
@@ -56,6 +59,7 @@ export function ReportingYearsPanel({
                       <h3 className="text-base font-semibold text-[#142019]">
                         {reportingYear.label}
                       </h3>
+                      {index === 0 ? <DefaultPill /> : null}
                       <p className="mt-1 text-sm leading-6 text-[#647169]">
                         {formatDate(reportingYear.startDate)} -{" "}
                         {formatDate(reportingYear.endDate)}
@@ -108,13 +112,16 @@ export function ReportingYearsPanel({
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#e0e8e2] text-sm">
-                {reportingYears.map((reportingYear) => {
+                {reportingYears.map((reportingYear, index) => {
                   const status = getReportingYearStatus(reportingYear);
 
                   return (
                     <tr className="text-[#253229]" key={reportingYear.id}>
                       <td className="px-4 py-4 font-semibold 2xl:px-5">
-                        {reportingYear.label}
+                        <div className="flex flex-wrap items-center gap-2">
+                          {reportingYear.label}
+                          {index === 0 ? <DefaultPill /> : null}
+                        </div>
                       </td>
                       <td className="px-4 py-4 text-[#5f6d65] 2xl:px-5">
                         {formatDate(reportingYear.startDate)} -{" "}
@@ -158,5 +165,13 @@ export function ReportingYearsPanel({
         </div>
       )}
     </section>
+  );
+}
+
+function DefaultPill() {
+  return (
+    <span className="inline-flex w-fit rounded-md border border-[#bdd3c3] bg-[#edf6ef] px-2 py-0.5 text-[11px] font-semibold text-[#2f6b45]">
+      Default
+    </span>
   );
 }

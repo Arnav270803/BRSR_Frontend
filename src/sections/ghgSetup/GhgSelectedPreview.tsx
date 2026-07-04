@@ -1,6 +1,28 @@
 import { Save, Trash2 } from "lucide-react";
 import type { GhgActivity, GhgCategory } from "./ghgSetupData";
 
+function uniqueTextParts(parts: Array<string | null | undefined>) {
+  const seen = new Set<string>();
+
+  return parts
+    .map((part) => part?.trim())
+    .filter((part): part is string => Boolean(part))
+    .filter((part) => {
+      const key = part.toLowerCase();
+
+      if (seen.has(key)) {
+        return false;
+      }
+
+      seen.add(key);
+      return true;
+    });
+}
+
+function getActivityLabel(activity: GhgActivity) {
+  return uniqueTextParts([activity.activity, activity.subtype, activity.variant]).join(" - ");
+}
+
 export function GhgSelectedPreview({
   canEdit,
   categories,
@@ -19,7 +41,7 @@ export function GhgSelectedPreview({
   statusMessage: string | null;
 }) {
   return (
-    <aside className="rounded-lg border border-white/70 bg-white/50 p-4 shadow-[0_18px_60px_rgba(35,47,38,0.10)] backdrop-blur-2xl sm:p-5 2xl:p-6">
+    <aside className="rounded-lg border border-white/70 bg-white/50 p-4 shadow-[0_18px_60px_rgba(35,47,38,0.10)] backdrop-blur-2xl sm:p-5 xl:sticky xl:top-4 xl:max-h-[calc(100vh-2rem)] xl:overflow-y-auto 2xl:p-6">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between xl:flex-col 2xl:flex-row">
         <div>
           <p className="text-sm font-semibold text-[#426a52]">Selected preview</p>
@@ -38,7 +60,7 @@ export function GhgSelectedPreview({
         </span>
       </div>
 
-      <div className="mt-5 grid gap-2 sm:grid-cols-2 xl:grid-cols-1">
+      <div className="sticky top-0 z-10 mt-5 grid gap-2 rounded-lg border border-white/70 bg-white/70 p-2 backdrop-blur-xl sm:grid-cols-2 xl:grid-cols-1">
         {canEdit ? (
           <>
             <button
@@ -104,9 +126,12 @@ export function GhgSelectedPreview({
                     className="rounded-md border border-[#e0e8e2] bg-[#f7faf7] p-3"
                     key={activity.id}
                   >
-                    <p className="text-sm font-semibold text-[#1e2b23]">{activity.activity}</p>
+                    <p className="text-sm font-semibold text-[#1e2b23]">
+                      {getActivityLabel(activity)}
+                    </p>
                     <p className="mt-1 text-xs text-[#68756d]">
-                      {activity.unit} / {activity.factorKgCo2e ?? "factor not set"}
+                      {activity.scope ?? "Scope not set"} / {activity.unit} /{" "}
+                      {activity.factorKgCo2e ?? "factor not set"}
                     </p>
                   </div>
                 ))}

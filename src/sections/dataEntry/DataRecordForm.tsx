@@ -3,7 +3,11 @@ import { Calculator, Check, Plus, Search } from "lucide-react";
 import { type FieldError, useForm } from "react-hook-form";
 import { z } from "zod";
 import { ApiError } from "../../api/client";
-import type { CreateDataRecordValues, SelectedGhgActivity } from "./dataEntryData";
+import type {
+  CreateDataRecordValues,
+  DataRecord,
+  SelectedGhgActivity,
+} from "./dataEntryData";
 import {
   calculateKgCo2e,
   formatNumber,
@@ -55,9 +59,11 @@ function FieldMessage({ error }: { error?: FieldError }) {
 
 export function DataRecordForm({
   onAddRecord,
+  records,
   selectedActivities,
 }: {
   onAddRecord: (values: CreateDataRecordValues) => Promise<void>;
+  records: DataRecord[];
   selectedActivities: SelectedGhgActivity[];
 }) {
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
@@ -80,6 +86,17 @@ export function DataRecordForm({
     () => getSelectedActivity(selectedActivities, selectedActivityId),
     [selectedActivities, selectedActivityId],
   );
+  const recentSelectionIds = useMemo(() => {
+    const seen = new Set<string>();
+
+    for (const record of records) {
+      if (!seen.has(record.ghgActivitySelectionId)) {
+        seen.add(record.ghgActivitySelectionId);
+      }
+    }
+
+    return seen;
+  }, [records]);
   const calculatedKgCo2e = selectedActivity
     ? calculateKgCo2e(quantity, selectedActivity.activity.factorKgCo2e)
     : null;
@@ -135,6 +152,7 @@ export function DataRecordForm({
             <input type="hidden" {...register("ghgActivitySelectionId")} />
             <ActivitySearchPicker
               error={errors.ghgActivitySelectionId}
+              recentSelectionIds={recentSelectionIds}
               selectedActivities={selectedActivities}
               value={selectedActivityId}
               onChange={(selectionId) => {
@@ -223,29 +241,72 @@ export function DataRecordForm({
 function ActivitySearchPicker({
   error,
   onChange,
+  recentSelectionIds,
   selectedActivities,
   value,
 }: {
   error?: FieldError;
   onChange: (selectionId: string) => void;
+  recentSelectionIds: Set<string>;
   selectedActivities: SelectedGhgActivity[];
   value: string;
 }) {
   const [searchTerm, setSearchTerm] = useState("");
+  const [categoryId, setCategoryId] = useState("all");
+  const [scope, setScope] = useState("all");
+  const [recentOnly, setRecentOnly] = useState(false);
   const selectedActivity = useMemo(
     () => getSelectedActivity(selectedActivities, value),
     [selectedActivities, value],
   );
-  const normalizedSearchTerm = searchTerm.trim().toLowerCase();
-  const filteredActivities = useMemo(() => {
-    if (!normalizedSearchTerm) {
-      return selectedActivities;
+  const categories = useMemo(() => {
+    const categoryMap = new Map<string, string>();
+
+    for (const selection of selectedActivities) {
+      categoryMap.set(selection.activity.category.id, selection.activity.category.name);
     }
 
-    return selectedActivities.filter((selection) =>
-      getActivitySearchText(selection).includes(normalizedSearchTerm),
+    return [...categoryMap.entries()].map(([id, name]) => ({ id, name }));
+  }, [selectedActivities]);
+  const scopes = useMemo(
+    () => [
+      ...new Set(
+        selectedActivities
+          .map((selection) => selection.activity.scope)
+          .filter((scopeValue): scopeValue is string => Boolean(scopeValue)),
+      ),
+    ],
+    [selectedActivities],
+  );
+  const normalizedSearchTerm = searchTerm.trim().toLowerCase();
+  const filteredActivities = useMemo(() => {
+    const filtered = selectedActivities.filter(
+      (selection) =>
+        (categoryId === "all" || selection.activity.category.id === categoryId) &&
+        (scope === "all" || selection.activity.scope === scope) &&
+        (!recentOnly || recentSelectionIds.has(selection.selectionId)) &&
+        (!normalizedSearchTerm ||
+          getActivitySearchText(selection).includes(normalizedSearchTerm)),
     );
-  }, [normalizedSearchTerm, selectedActivities]);
+
+    return [...filtered].sort((left, right) => {
+      const leftRecent = recentSelectionIds.has(left.selectionId);
+      const rightRecent = recentSelectionIds.has(right.selectionId);
+
+      if (leftRecent === rightRecent) {
+        return getActivityLabel(left).localeCompare(getActivityLabel(right));
+      }
+
+      return leftRecent ? -1 : 1;
+    });
+  }, [
+    categoryId,
+    normalizedSearchTerm,
+    recentOnly,
+    recentSelectionIds,
+    scope,
+    selectedActivities,
+  ]);
 
   useEffect(() => {
     if (!selectedActivity) {
@@ -277,7 +338,10 @@ function ActivitySearchPicker({
       </div>
 
       {selectedActivity ? (
-        <div className="border-b border-[#e0e8e2] bg-[#f7faf7] px-3 py-2">
+        <div className="border-b border-[#e0e8e2] bg-[#f7faf7] px-3 py-3">
+          <p className="text-xs font-semibold tracking-[0.1em] text-[#6f7b73] uppercase">
+            Selected activity
+          </p>
           <p className="text-sm font-semibold text-[#142019]">
             {getActivityLabel(selectedActivity)}
           </p>
@@ -286,6 +350,49 @@ function ActivitySearchPicker({
           </p>
         </div>
       ) : null}
+
+      <div className="grid gap-2 border-b border-[#e0e8e2] bg-white/45 p-2 sm:grid-cols-3">
+        <label>
+          <span className="sr-only">Filter by category</span>
+          <select
+            className="h-9 w-full rounded-md border border-[#d2ded6] bg-white/75 px-2 text-xs font-semibold text-[#16211b] outline-none focus:border-[#678c72] focus:ring-3 focus:ring-[#426a52]/15"
+            value={categoryId}
+            onChange={(event) => setCategoryId(event.target.value)}
+          >
+            <option value="all">All categories</option>
+            {categories.map((category) => (
+              <option key={category.id} value={category.id}>
+                {category.name}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label>
+          <span className="sr-only">Filter by scope</span>
+          <select
+            className="h-9 w-full rounded-md border border-[#d2ded6] bg-white/75 px-2 text-xs font-semibold text-[#16211b] outline-none focus:border-[#678c72] focus:ring-3 focus:ring-[#426a52]/15"
+            value={scope}
+            onChange={(event) => setScope(event.target.value)}
+          >
+            <option value="all">All scopes</option>
+            {scopes.map((scopeValue) => (
+              <option key={scopeValue} value={scopeValue}>
+                {scopeValue}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="flex h-9 items-center gap-2 rounded-md border border-[#d2ded6] bg-white/75 px-2 text-xs font-semibold text-[#253229]">
+          <input
+            checked={recentOnly}
+            className="size-3.5 accent-[#1f5135]"
+            disabled={recentSelectionIds.size === 0}
+            type="checkbox"
+            onChange={(event) => setRecentOnly(event.target.checked)}
+          />
+          Recent only
+        </label>
+      </div>
 
       <div className="max-h-72 overflow-y-auto p-2">
         {filteredActivities.length > 0 ? (
@@ -323,6 +430,11 @@ function ActivitySearchPicker({
                     <span className="mt-1 block text-xs leading-5 text-[#65716a]">
                       {getActivityMetaLabel(selection)}
                     </span>
+                    {recentSelectionIds.has(selection.selectionId) ? (
+                      <span className="mt-2 inline-flex rounded-md border border-[#bdd3c3] bg-[#edf6ef] px-2 py-0.5 text-[11px] font-semibold text-[#2f6b45]">
+                        Recently used
+                      </span>
+                    ) : null}
                   </span>
                 </button>
               );
@@ -330,7 +442,7 @@ function ActivitySearchPicker({
           </div>
         ) : (
           <div className="rounded-md border border-dashed border-[#c8d6cd] bg-white/45 p-4 text-sm leading-6 text-[#617069]">
-            No selected activity matches your search.
+            No selected activity matches your search and filters.
           </div>
         )}
       </div>
