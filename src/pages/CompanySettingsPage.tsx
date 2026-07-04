@@ -40,7 +40,7 @@ export function CompanySettingsPage() {
           activeItem="settings"
           companyId={workspace.company.id}
           companyName={workspace.company.displayName}
-          defaultReportingYearId={workspace.reportingYears[0]?.id}
+          reportingYears={workspace.reportingYears}
           viewerRole={workspace.viewerRole}
         />
 

@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { Navigate, useParams } from "react-router-dom";
+import { listDataRecords } from "../api/dataRecords";
 import { getCompanyWorkspace } from "../api/workspace";
-import { QuickActions } from "../sections/workspace/QuickActions";
 import { ReportingYearsPanel } from "../sections/workspace/ReportingYearsPanel";
 import { SetupProgress } from "../sections/workspace/SetupProgress";
 import { WorkspaceHeader } from "../sections/workspace/WorkspaceHeader";
@@ -14,6 +14,12 @@ export function CompanyWorkspacePage() {
     queryKey: ["company-workspace", companyId],
     queryFn: () => getCompanyWorkspace(companyId!),
     enabled: Boolean(companyId),
+  });
+  const defaultReportingYearId = workspaceQuery.data?.data.reportingYears[0]?.id;
+  const dataRecordsQuery = useQuery({
+    queryKey: ["data-records", companyId, defaultReportingYearId, "dashboard"],
+    queryFn: () => listDataRecords(companyId!, defaultReportingYearId!),
+    enabled: Boolean(companyId && defaultReportingYearId),
   });
 
   if (!companyId) {
@@ -44,7 +50,7 @@ export function CompanyWorkspacePage() {
           activeItem="dashboard"
           companyId={workspace.company.id}
           companyName={workspace.company.displayName}
-          defaultReportingYearId={workspace.reportingYears[0]?.id}
+          reportingYears={workspace.reportingYears}
           viewerRole={workspace.viewerRole}
         />
 
@@ -58,14 +64,13 @@ export function CompanyWorkspacePage() {
             totalSelectedActivities={totalSelectedActivities}
           />
 
-          <div className="grid gap-3 sm:gap-4 xl:grid-cols-[minmax(0,1fr)_400px] xl:gap-5 2xl:grid-cols-[minmax(0,1fr)_460px]">
-            <SetupProgress setup={workspace.setup} />
-            <QuickActions
-              companyId={workspace.company.id}
-              defaultReportingYearId={workspace.reportingYears[0]?.id}
-              viewerRole={workspace.viewerRole}
-            />
-          </div>
+          <SetupProgress
+            activeReportingYear={workspace.reportingYears[0]}
+            companyId={workspace.company.id}
+            dataRecordCount={dataRecordsQuery.data?.data.length ?? 0}
+            isDataRecordCountLoading={dataRecordsQuery.isLoading}
+            workspace={workspace}
+          />
 
           <ReportingYearsPanel
             companyId={workspace.company.id}

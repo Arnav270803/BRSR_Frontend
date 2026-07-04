@@ -111,6 +111,7 @@ export function CompanyDataEntryPage() {
           companyId={company.id}
           companyName={company.displayName}
           currentReportingYearId={reportingYear.id}
+          reportingYears={workspace.reportingYears}
           viewerRole={viewerRole}
         />
 

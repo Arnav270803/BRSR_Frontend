@@ -68,7 +68,7 @@ export function CompanyReportingYearsPage() {
           activeItem="reportingYears"
           companyId={company.id}
           companyName={company.displayName}
-          defaultReportingYearId={reportingYears[0]?.id}
+          reportingYears={reportingYears}
           viewerRole={viewerRole}
         />
 

@@ -85,7 +85,7 @@ export function CompanyEmployeesPage() {
           activeItem="employees"
           companyId={company.id}
           companyName={company.displayName}
-          defaultReportingYearId={workspace.reportingYears[0]?.id}
+          reportingYears={workspace.reportingYears}
           viewerRole={viewerRole}
         />
 
