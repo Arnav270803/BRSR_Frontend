@@ -3,7 +3,7 @@ import { Navigate, useParams } from "react-router-dom";
 import {
   createDataRecord,
   deleteDataRecord,
-  listDataRecords,
+  listDataRecordsForSite,
 } from "../api/dataRecords";
 import { listGhgActivitySelections } from "../api/ghg";
 import { getCurrentSession } from "../api/auth";
@@ -20,7 +20,7 @@ import { WorkspacePageState } from "../sections/workspace/WorkspacePageState";
 import { WorkspaceSidebar } from "../sections/workspace/WorkspaceSidebar";
 
 export function CompanyDataEntryPage() {
-  const { companyId, reportingYearId } = useParams();
+  const { companyId, siteId, reportingYearId } = useParams();
   const queryClient = useQueryClient();
   const sessionQuery = useQuery({
     queryKey: ["auth", "me"],
@@ -33,28 +33,31 @@ export function CompanyDataEntryPage() {
     queryFn: () => getCompanyWorkspace(companyId!),
     enabled: Boolean(companyId),
   });
+  const resolvedSiteId =
+    workspaceQuery.data?.data.sites.find((site) => site.id === siteId)?.id ??
+    workspaceQuery.data?.data.sites[0]?.id;
   const selectionsQuery = useQuery({
-    queryKey: ["ghg-selections", companyId, reportingYearId],
-    queryFn: () => listGhgActivitySelections(companyId!, reportingYearId!),
-    enabled: Boolean(companyId && reportingYearId),
+    queryKey: ["ghg-selections", companyId, resolvedSiteId, reportingYearId],
+    queryFn: () => listGhgActivitySelections(companyId!, reportingYearId!, resolvedSiteId),
+    enabled: Boolean(companyId && reportingYearId && resolvedSiteId),
   });
   const recordsQuery = useQuery({
-    queryKey: ["data-records", companyId, reportingYearId],
-    queryFn: () => listDataRecords(companyId!, reportingYearId!),
-    enabled: Boolean(companyId && reportingYearId),
+    queryKey: ["data-records", companyId, resolvedSiteId, reportingYearId],
+    queryFn: () => listDataRecordsForSite(companyId!, resolvedSiteId, reportingYearId!),
+    enabled: Boolean(companyId && reportingYearId && resolvedSiteId),
   });
   const createRecordMutation = useMutation({
     mutationFn: (values: CreateDataRecordValues) =>
-      createDataRecord(companyId!, reportingYearId!, toCreateRecordPayload(values)),
+      createDataRecord(companyId!, reportingYearId!, toCreateRecordPayload(values), resolvedSiteId),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["data-records", companyId, reportingYearId] });
+      await queryClient.invalidateQueries({ queryKey: ["data-records", companyId, resolvedSiteId, reportingYearId] });
     },
   });
   const deleteRecordMutation = useMutation({
     mutationFn: (dataRecordId: string) =>
-      deleteDataRecord(companyId!, reportingYearId!, dataRecordId),
+      deleteDataRecord(companyId!, reportingYearId!, dataRecordId, resolvedSiteId),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["data-records", companyId, reportingYearId] });
+      await queryClient.invalidateQueries({ queryKey: ["data-records", companyId, resolvedSiteId, reportingYearId] });
     },
   });
 
@@ -83,6 +86,21 @@ export function CompanyDataEntryPage() {
   const session = sessionQuery.data!.data;
   const workspace = workspaceQuery.data!.data;
   const company = workspace.company;
+  const activeSite = workspace.sites.find((site) => site.id === siteId) ?? workspace.sites[0];
+
+  if (!activeSite) {
+    return <DataEntryShell message="Create a site before entering data." tone="error" />;
+  }
+
+  if (!siteId || siteId !== activeSite.id) {
+    return (
+      <Navigate
+        replace
+        to={`/app/${companyId}/sites/${activeSite.id}/reporting-years/${reportingYearId}/data`}
+      />
+    );
+  }
+
   const reportingYear = selectionsQuery.data!.data.reportingYear;
   const viewerRole = workspace.viewerRole;
   const selectedActivities = selectionsQuery.data!.data.selectedActivities;
@@ -111,8 +129,10 @@ export function CompanyDataEntryPage() {
           activeItem="dataEntry"
           companyId={company.id}
           companyName={company.displayName}
+          currentSiteId={activeSite.id}
           currentReportingYearId={reportingYear.id}
           reportingYears={workspace.reportingYears}
+          sites={workspace.sites}
           viewerRole={viewerRole}
         />
 

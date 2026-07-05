@@ -16,6 +16,14 @@ export type CreateCompanyInput = {
   employeeCountRange?: string;
   contactPhone?: string;
   logoUrl?: string;
+  site?: {
+    name: string;
+    type: string;
+    country: string;
+    state: string;
+    city: string;
+    address?: string;
+  };
 };
 
 export type CreateCompanyResult = {

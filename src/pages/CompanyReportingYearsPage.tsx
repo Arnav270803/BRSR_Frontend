@@ -51,6 +51,7 @@ export function CompanyReportingYearsPage() {
 
   const workspace = workspaceQuery.data!.data;
   const company = workspace.company;
+  const activeSite = workspace.sites[0];
   const reportingYears = reportingYearsQuery.data!.data;
   const viewerRole = workspace.viewerRole;
   const canCreateReportingYear = viewerRole !== "USER";
@@ -69,7 +70,9 @@ export function CompanyReportingYearsPage() {
           activeItem="reportingYears"
           companyId={company.id}
           companyName={company.displayName}
+          currentSiteId={activeSite?.id}
           reportingYears={reportingYears}
+          sites={workspace.sites}
           viewerRole={viewerRole}
         />
 

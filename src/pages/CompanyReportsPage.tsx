@@ -10,7 +10,7 @@ import { WorkspacePageState } from "../sections/workspace/WorkspacePageState";
 import { WorkspaceSidebar } from "../sections/workspace/WorkspaceSidebar";
 
 export function CompanyReportsPage() {
-  const { companyId } = useParams();
+  const { companyId, siteId } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
   const [generatedReportingYearId, setGeneratedReportingYearId] = useState<string>();
   const [isDownloading, setIsDownloading] = useState(false);
@@ -21,6 +21,7 @@ export function CompanyReportsPage() {
   });
   const workspace = workspaceQuery.data?.data;
   const reportingYears = workspace?.reportingYears ?? [];
+  const activeSite = workspace?.sites.find((site) => site.id === siteId) ?? workspace?.sites[0];
   const requestedYearId = searchParams.get("year");
   const selectedReportingYearId = useMemo(() => {
     const requestedYear = reportingYears.find((year) => year.id === requestedYearId);
@@ -28,9 +29,9 @@ export function CompanyReportsPage() {
     return requestedYear?.id ?? reportingYears[0]?.id ?? "";
   }, [reportingYears, requestedYearId]);
   const reportQuery = useQuery({
-    queryKey: ["report", companyId, generatedReportingYearId],
-    queryFn: () => getReportingYearReport(companyId!, generatedReportingYearId!),
-    enabled: Boolean(companyId && generatedReportingYearId),
+    queryKey: ["report", companyId, activeSite?.id, generatedReportingYearId],
+    queryFn: () => getReportingYearReport(companyId!, generatedReportingYearId!, activeSite?.id),
+    enabled: Boolean(companyId && activeSite && generatedReportingYearId),
   });
 
   useEffect(() => {
@@ -52,6 +53,16 @@ export function CompanyReportsPage() {
   }
 
   const currentWorkspace = workspace;
+  const currentSite = activeSite;
+  if (!currentSite) {
+    return <WorkspacePageState message="Create a site before generating reports." tone="error" />;
+  }
+
+  if (!siteId || siteId !== currentSite.id) {
+    return <Navigate replace to={`/app/${companyId}/sites/${currentSite.id}/reports`} />;
+  }
+
+  const currentSiteId = currentSite.id;
   const report = reportQuery.data?.data;
   const visibleReport =
     report?.reportingYear.id === selectedReportingYearId ? report : undefined;
@@ -80,6 +91,7 @@ export function CompanyReportsPage() {
       const { blob, filename } = await downloadReportingYearReportPdf(
         currentWorkspace.company.id,
         generatedReportingYearId,
+        currentSiteId,
       );
       const url = window.URL.createObjectURL(blob);
       const anchor = document.createElement("a");
@@ -105,8 +117,10 @@ export function CompanyReportsPage() {
           activeItem="reports"
           companyId={currentWorkspace.company.id}
           companyName={currentWorkspace.company.displayName}
+          currentSiteId={currentSite.id}
           currentReportingYearId={selectedReportingYearId}
           reportingYears={reportingYears}
+          sites={currentWorkspace.sites}
           viewerRole={currentWorkspace.viewerRole}
         />
 

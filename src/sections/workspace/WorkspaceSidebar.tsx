@@ -5,12 +5,13 @@ import {
   FileText,
   LayoutDashboard,
   Leaf,
+  MapPin,
   Settings,
   Users,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import type { ReportingYear, WorkspaceRole } from "./workspaceData";
+import type { CompanySite, ReportingYear, WorkspaceRole } from "./workspaceData";
 
 export type WorkspaceNavKey =
   | "dashboard"
@@ -18,6 +19,7 @@ export type WorkspaceNavKey =
   | "ghgSetup"
   | "dataEntry"
   | "reports"
+  | "sites"
   | "employees"
   | "settings";
 
@@ -40,6 +42,7 @@ function getNavigation(viewerRole: WorkspaceRole, companyId: string): NavItem[] 
     { key: "ghgSetup", label: "GHG setup", icon: Leaf },
     { key: "dataEntry", label: "Data entry", icon: ClipboardList },
     { key: "reports", label: "Reports", icon: FileText, to: `/app/${companyId}/reports` },
+    { key: "sites", label: "Sites", icon: MapPin, to: `/app/${companyId}/sites` },
     { key: "employees", label: "Employees", icon: Users, to: `/app/${companyId}/employees` },
     { key: "settings", label: "Settings", icon: Settings, to: `/app/${companyId}/settings` },
   ];
@@ -48,6 +51,7 @@ function getNavigation(viewerRole: WorkspaceRole, companyId: string): NavItem[] 
     { key: "dashboard", label: "Dashboard", icon: LayoutDashboard, to: `/app/${companyId}` },
     { key: "dataEntry", label: "Data entry", icon: ClipboardList },
     { key: "reports", label: "Reports", icon: FileText, to: `/app/${companyId}/reports` },
+    { key: "sites", label: "Sites", icon: MapPin, to: `/app/${companyId}/sites` },
     { key: "settings", label: "Settings", icon: Settings, to: `/app/${companyId}/settings` },
   ];
 
@@ -62,28 +66,42 @@ export function WorkspaceSidebar({
   activeItem,
   companyId,
   companyName,
+  currentSiteId,
   currentReportingYearId,
   reportingYears,
+  sites = [],
   viewerRole,
 }: {
   activeItem: WorkspaceNavKey;
   companyId: string;
   companyName: string;
+  currentSiteId?: string;
   currentReportingYearId?: string;
   reportingYears: ReportingYear[];
+  sites?: CompanySite[];
   viewerRole: WorkspaceRole;
 }) {
   const navigate = useNavigate();
+  const activeSite = sites.find((site) => site.id === currentSiteId) ?? sites[0];
   const activeReportingYear =
     reportingYears.find((reportingYear) => reportingYear.id === currentReportingYearId) ??
     reportingYears[0];
   const reportingYearIdForLinks = activeReportingYear?.id;
   const navigation = getNavigation(viewerRole, companyId).map((item) => {
+    if (item.key === "dashboard") {
+      return {
+        ...item,
+        to: activeSite ? `/app/${companyId}/sites/${activeSite.id}` : item.to,
+      };
+    }
+
     if (item.key === "ghgSetup") {
       return {
         ...item,
         to: reportingYearIdForLinks
-          ? `/app/${companyId}/reporting-years/${reportingYearIdForLinks}/ghg-setup`
+          ? activeSite
+            ? `/app/${companyId}/sites/${activeSite.id}/reporting-years/${reportingYearIdForLinks}/ghg-setup`
+            : `/app/${companyId}/reporting-years/${reportingYearIdForLinks}/ghg-setup`
           : `/app/${companyId}/reporting-years`,
       };
     }
@@ -92,25 +110,60 @@ export function WorkspaceSidebar({
       return {
         ...item,
         to: reportingYearIdForLinks
-          ? `/app/${companyId}/reporting-years/${reportingYearIdForLinks}/data`
+          ? activeSite
+            ? `/app/${companyId}/sites/${activeSite.id}/reporting-years/${reportingYearIdForLinks}/data`
+            : `/app/${companyId}/reporting-years/${reportingYearIdForLinks}/data`
           : `/app/${companyId}/reporting-years`,
+      };
+    }
+
+    if (item.key === "reports") {
+      return {
+        ...item,
+        to: activeSite
+          ? `/app/${companyId}/sites/${activeSite.id}/reports`
+          : `/app/${companyId}/reports`,
       };
     }
 
     return item;
   });
   const hasReportingYears = reportingYears.length > 0;
+  const hasSites = sites.length > 0;
 
   function getReportingYearRoute(reportingYearId: string) {
     if (activeItem === "ghgSetup") {
-      return `/app/${companyId}/reporting-years/${reportingYearId}/ghg-setup`;
+      return activeSite
+        ? `/app/${companyId}/sites/${activeSite.id}/reporting-years/${reportingYearId}/ghg-setup`
+        : `/app/${companyId}/reporting-years/${reportingYearId}/ghg-setup`;
     }
 
     if (activeItem === "reports") {
-      return `/app/${companyId}/reports?year=${reportingYearId}`;
+      return activeSite
+        ? `/app/${companyId}/sites/${activeSite.id}/reports?year=${reportingYearId}`
+        : `/app/${companyId}/reports?year=${reportingYearId}`;
     }
 
-    return `/app/${companyId}/reporting-years/${reportingYearId}/data`;
+    return activeSite
+      ? `/app/${companyId}/sites/${activeSite.id}/reporting-years/${reportingYearId}/data`
+      : `/app/${companyId}/reporting-years/${reportingYearId}/data`;
+  }
+
+  function getSiteRoute(siteId: string) {
+    if (activeItem === "ghgSetup" && activeReportingYear) {
+      return `/app/${companyId}/sites/${siteId}/reporting-years/${activeReportingYear.id}/ghg-setup`;
+    }
+
+    if (activeItem === "dataEntry" && activeReportingYear) {
+      return `/app/${companyId}/sites/${siteId}/reporting-years/${activeReportingYear.id}/data`;
+    }
+
+    if (activeItem === "reports") {
+      const yearQuery = activeReportingYear ? `?year=${activeReportingYear.id}` : "";
+      return `/app/${companyId}/sites/${siteId}/reports${yearQuery}`;
+    }
+
+    return `/app/${companyId}/sites/${siteId}`;
   }
 
   return (
@@ -123,6 +176,41 @@ export function WorkspaceSidebar({
           <p className="text-sm font-semibold text-[#142019]">BRSR Workspace</p>
           <p className="truncate text-xs text-[#68756d]">{companyName}</p>
         </div>
+      </div>
+
+      <div className="mt-3 rounded-lg border border-[#d9e2dc] bg-white/45 p-3 sm:mt-4 2xl:p-4">
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0">
+            <p className="text-[11px] font-semibold tracking-[0.12em] text-[#69756e] uppercase">
+              Active site
+            </p>
+            <p className="mt-1 truncate text-sm font-semibold text-[#1e2b23]">
+              {activeSite?.name ?? "No site created"}
+            </p>
+          </div>
+          <MapPin className="mt-0.5 size-4 shrink-0 text-[#426a52]" strokeWidth={1.8} />
+        </div>
+
+        {hasSites ? (
+          <label className="mt-3 block">
+            <span className="sr-only">Switch site</span>
+            <select
+              className="h-10 w-full rounded-md border border-[#d2ded6] bg-white/75 px-3 text-sm font-semibold text-[#16211b] shadow-sm outline-none transition focus:border-[#678c72] focus:ring-3 focus:ring-[#426a52]/15"
+              value={activeSite?.id}
+              onChange={(event) => navigate(getSiteRoute(event.target.value))}
+            >
+              {sites.map((site) => (
+                <option key={site.id} value={site.id}>
+                  {site.name}
+                </option>
+              ))}
+            </select>
+          </label>
+        ) : (
+          <p className="mt-3 text-xs leading-5 text-[#65716a]">
+            Create a site before configuring data.
+          </p>
+        )}
       </div>
 
       <div className="mt-3 rounded-lg border border-[#d9e2dc] bg-white/45 p-3 sm:mt-4 2xl:p-4">

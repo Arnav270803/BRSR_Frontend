@@ -1,6 +1,6 @@
 import { ClipboardList, UserPlus } from "lucide-react";
 import { Link } from "react-router-dom";
-import type { CompanyWorkspace } from "./workspaceData";
+import type { CompanySite, CompanyWorkspace } from "./workspaceData";
 
 function getInitials(name: string) {
   return name
@@ -12,12 +12,18 @@ function getInitials(name: string) {
     .toUpperCase();
 }
 
-export function WorkspaceHeader({ workspace }: { workspace: CompanyWorkspace }) {
+export function WorkspaceHeader({
+  activeSite,
+  workspace,
+}: {
+  activeSite: CompanySite;
+  workspace: CompanyWorkspace;
+}) {
   const { company, viewerRole } = workspace;
   const canManageAccess = viewerRole !== "USER";
   const defaultReportingYearId = workspace.reportingYears[0]?.id;
   const dataEntryPath = defaultReportingYearId
-    ? `/app/${company.id}/reporting-years/${defaultReportingYearId}/data`
+    ? `/app/${company.id}/sites/${activeSite.id}/reporting-years/${defaultReportingYearId}/data`
     : `/app/${company.id}/reporting-years`;
   const companyDetails = [
     company.primaryDomain,
@@ -48,6 +54,9 @@ export function WorkspaceHeader({ workspace }: { workspace: CompanyWorkspace }) 
               {company.legalName}
             </p>
             <div className="mt-2 flex flex-wrap gap-2">
+              <span className="rounded-md border border-[#c0d5c7] bg-[#eef8f0] px-2.5 py-1 text-xs font-semibold text-[#2f6b45] 2xl:text-sm">
+                {activeSite.name}
+              </span>
               {companyDetails.map((detail) => (
                 <span
                   className="rounded-md border border-[#d8e2dc] bg-white/55 px-2.5 py-1 text-xs font-medium text-[#637069] 2xl:text-sm"

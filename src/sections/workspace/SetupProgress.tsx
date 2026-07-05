@@ -30,11 +30,12 @@ type NextAction = {
 
 function getReportingYearPath(
   companyId: string,
+  siteId: string,
   reportingYearId: string | undefined,
   target: "data" | "ghg-setup",
 ) {
   return reportingYearId
-    ? `/app/${companyId}/reporting-years/${reportingYearId}/${target}`
+    ? `/app/${companyId}/sites/${siteId}/reporting-years/${reportingYearId}/${target}`
     : `/app/${companyId}/reporting-years`;
 }
 
@@ -44,12 +45,14 @@ function getNextAction({
   dataRecordCount,
   hasTeamAccess,
   isAdmin,
+  siteId,
 }: {
   activeReportingYear?: ReportingYear;
   companyId: string;
   dataRecordCount: number;
   hasTeamAccess: boolean;
   isAdmin: boolean;
+  siteId: string;
 }): NextAction {
   if (!activeReportingYear) {
     return isAdmin
@@ -63,7 +66,7 @@ function getNextAction({
           label: "Open workspace",
           detail: "A company admin needs to create the reporting year first.",
           icon: LockKeyhole,
-          to: `/app/${companyId}`,
+          to: `/app/${companyId}/sites/${siteId}`,
         };
   }
 
@@ -73,13 +76,13 @@ function getNextAction({
           label: "Select GHG activities",
           detail: `${activeReportingYear.label} needs selected activities before data entry.`,
           icon: Leaf,
-          to: getReportingYearPath(companyId, activeReportingYear.id, "ghg-setup"),
+          to: getReportingYearPath(companyId, siteId, activeReportingYear.id, "ghg-setup"),
         }
       : {
           label: "View selected fields",
           detail: "Data entry will open once an admin selects the company activities.",
           icon: Leaf,
-          to: getReportingYearPath(companyId, activeReportingYear.id, "ghg-setup"),
+          to: getReportingYearPath(companyId, siteId, activeReportingYear.id, "ghg-setup"),
         };
   }
 
@@ -97,7 +100,7 @@ function getNextAction({
       label: "Start data entry",
       detail: `Add the first activity record for ${activeReportingYear.label}.`,
       icon: ClipboardList,
-      to: getReportingYearPath(companyId, activeReportingYear.id, "data"),
+      to: getReportingYearPath(companyId, siteId, activeReportingYear.id, "data"),
     };
   }
 
@@ -105,7 +108,7 @@ function getNextAction({
     label: "Review data entry",
     detail: `${dataRecordCount} record${dataRecordCount === 1 ? "" : "s"} submitted for ${activeReportingYear.label}.`,
     icon: ClipboardList,
-    to: getReportingYearPath(companyId, activeReportingYear.id, "data"),
+    to: getReportingYearPath(companyId, siteId, activeReportingYear.id, "data"),
   };
 }
 
@@ -114,12 +117,14 @@ export function SetupProgress({
   companyId,
   dataRecordCount,
   isDataRecordCountLoading,
+  siteId,
   workspace,
 }: {
   activeReportingYear?: ReportingYear;
   companyId: string;
   dataRecordCount: number;
   isDataRecordCountLoading: boolean;
+  siteId: string;
   workspace: CompanyWorkspace;
 }) {
   const isAdmin = workspace.viewerRole !== "USER";
@@ -152,7 +157,7 @@ export function SetupProgress({
       ready: hasGhgActivities,
       blocked: !hasReportingYear,
       icon: Leaf,
-      to: getReportingYearPath(companyId, activeReportingYear?.id, "ghg-setup"),
+      to: getReportingYearPath(companyId, siteId, activeReportingYear?.id, "ghg-setup"),
     },
     {
       label: "Employees invited",
@@ -174,7 +179,7 @@ export function SetupProgress({
       ready: hasDataRecords,
       blocked: !hasGhgActivities,
       icon: ClipboardList,
-      to: getReportingYearPath(companyId, activeReportingYear?.id, "data"),
+      to: getReportingYearPath(companyId, siteId, activeReportingYear?.id, "data"),
     },
   ];
   const readyCount = steps.filter((step) => step.ready).length;
@@ -185,6 +190,7 @@ export function SetupProgress({
     dataRecordCount,
     hasTeamAccess,
     isAdmin,
+    siteId,
   });
   const NextActionIcon = nextAction.icon;
 

@@ -18,6 +18,15 @@ type ApiListResponse<TData> = {
 };
 
 export type GhgSelectionsResponse = {
+  site: {
+    id: string;
+    name: string;
+    type: string;
+    city: string;
+    state: string;
+    country: string;
+    isPrimary: boolean;
+  };
   reportingYear: ReportingYearRecord;
   selectedActivities: SelectedGhgActivity[];
 };
@@ -49,9 +58,17 @@ export async function listGhgActivities() {
   };
 }
 
-export function listGhgActivitySelections(companyId: string, reportingYearId: string) {
+export function listGhgActivitySelections(
+  companyId: string,
+  reportingYearId: string,
+  siteId?: string,
+) {
+  const prefix = siteId
+    ? `/companies/${companyId}/sites/${siteId}`
+    : `/companies/${companyId}`;
+
   return apiRequest<ApiDataResponse<GhgSelectionsResponse>>(
-    `/companies/${companyId}/reporting-years/${reportingYearId}/ghg-activity-selections`,
+    `${prefix}/reporting-years/${reportingYearId}/ghg-activity-selections`,
   );
 }
 
@@ -59,9 +76,14 @@ export function updateGhgActivitySelections(
   companyId: string,
   reportingYearId: string,
   activityIds: string[],
+  siteId?: string,
 ) {
+  const prefix = siteId
+    ? `/companies/${companyId}/sites/${siteId}`
+    : `/companies/${companyId}`;
+
   return apiRequest<ApiDataResponse<GhgSelectionsResponse>>(
-    `/companies/${companyId}/reporting-years/${reportingYearId}/ghg-activity-selections`,
+    `${prefix}/reporting-years/${reportingYearId}/ghg-activity-selections`,
     {
       method: "PUT",
       body: JSON.stringify({ activityIds }),

@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { Navigate, useParams } from "react-router-dom";
-import { listDataRecords } from "../api/dataRecords";
+import { listDataRecordsForSite } from "../api/dataRecords";
 import { getCompanyWorkspace } from "../api/workspace";
 import { ReportingYearsPanel } from "../sections/workspace/ReportingYearsPanel";
 import { SetupProgress } from "../sections/workspace/SetupProgress";
@@ -10,17 +10,19 @@ import { WorkspacePageState } from "../sections/workspace/WorkspacePageState";
 import { WorkspaceSidebar } from "../sections/workspace/WorkspaceSidebar";
 
 export function CompanyWorkspacePage() {
-  const { companyId } = useParams();
+  const { companyId, siteId } = useParams();
   const workspaceQuery = useQuery({
     queryKey: ["company-workspace", companyId],
     queryFn: () => getCompanyWorkspace(companyId!),
     enabled: Boolean(companyId),
   });
+  const workspace = workspaceQuery.data?.data;
+  const activeSite = workspace?.sites.find((site) => site.id === siteId) ?? workspace?.sites[0];
   const defaultReportingYearId = workspaceQuery.data?.data.reportingYears[0]?.id;
   const dataRecordsQuery = useQuery({
-    queryKey: ["data-records", companyId, defaultReportingYearId, "dashboard"],
-    queryFn: () => listDataRecords(companyId!, defaultReportingYearId!),
-    enabled: Boolean(companyId && defaultReportingYearId),
+    queryKey: ["data-records", companyId, activeSite?.id, defaultReportingYearId, "dashboard"],
+    queryFn: () => listDataRecordsForSite(companyId!, activeSite!.id, defaultReportingYearId!),
+    enabled: Boolean(companyId && activeSite && defaultReportingYearId),
   });
 
   if (!companyId) {
@@ -35,8 +37,18 @@ export function CompanyWorkspacePage() {
     return <WorkspaceShell message="Unable to load this company workspace." tone="error" />;
   }
 
-  const workspace = workspaceQuery.data!.data;
-  const totalSelectedActivities = workspace.reportingYears.reduce(
+  const currentWorkspace = workspaceQuery.data!.data;
+  const currentSite = activeSite;
+
+  if (!currentSite) {
+    return <WorkspaceShell message="Create a site before opening the workspace." tone="error" />;
+  }
+
+  if (!siteId || siteId !== currentSite.id) {
+    return <Navigate replace to={`/app/${companyId}/sites/${currentSite.id}`} />;
+  }
+
+  const totalSelectedActivities = currentWorkspace.reportingYears.reduce(
     (total, reportingYear) => total + reportingYear.selectedGhgActivityCount,
     0,
   );
@@ -49,33 +61,38 @@ export function CompanyWorkspacePage() {
       <div className="relative mx-auto flex min-h-screen w-full max-w-[1920px] flex-col gap-3 px-3 py-3 sm:gap-4 sm:px-4 sm:py-4 lg:flex-row lg:px-5 xl:gap-5 2xl:px-8">
         <WorkspaceSidebar
           activeItem="dashboard"
-          companyId={workspace.company.id}
-          companyName={workspace.company.displayName}
-          reportingYears={workspace.reportingYears}
-          viewerRole={workspace.viewerRole}
+          companyId={currentWorkspace.company.id}
+          companyName={currentWorkspace.company.displayName}
+          currentSiteId={currentSite.id}
+          reportingYears={currentWorkspace.reportingYears}
+          sites={currentWorkspace.sites}
+          viewerRole={currentWorkspace.viewerRole}
         />
 
         <section className="flex min-w-0 flex-1 flex-col gap-3 sm:gap-4 lg:py-2 xl:gap-5">
-          <WorkspaceHeader workspace={workspace} />
+          <WorkspaceHeader activeSite={currentSite} workspace={currentWorkspace} />
 
           <WorkspaceMetricCards
-            activeMemberCount={workspace.activeMemberCount}
-            reportingYearCount={workspace.reportingYears.length}
-            setup={workspace.setup}
+            activeMemberCount={currentWorkspace.activeMemberCount}
+            reportingYearCount={currentWorkspace.reportingYears.length}
+            setup={currentWorkspace.setup}
+            siteCount={currentWorkspace.sites.length}
             totalSelectedActivities={totalSelectedActivities}
           />
 
           <SetupProgress
-            activeReportingYear={workspace.reportingYears[0]}
-            companyId={workspace.company.id}
+            activeReportingYear={currentWorkspace.reportingYears[0]}
+            companyId={currentWorkspace.company.id}
             dataRecordCount={dataRecordsQuery.data?.data.length ?? 0}
             isDataRecordCountLoading={dataRecordsQuery.isLoading}
-            workspace={workspace}
+            siteId={currentSite.id}
+            workspace={currentWorkspace}
           />
 
           <ReportingYearsPanel
-            companyId={workspace.company.id}
-            reportingYears={workspace.reportingYears}
+            companyId={currentWorkspace.company.id}
+            reportingYears={currentWorkspace.reportingYears}
+            siteId={currentSite.id}
           />
         </section>
       </div>

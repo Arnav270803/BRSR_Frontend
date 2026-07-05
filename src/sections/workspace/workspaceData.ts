@@ -10,8 +10,22 @@ export type ReportingYear = {
 
 export type WorkspaceSetup = {
   reportingYearsReady: boolean;
+  sitesReady: boolean;
   ghgActivitySelectionReady: boolean;
   fieldConfigurationReady: boolean;
+};
+
+export type CompanySite = {
+  id: string;
+  companyId: string;
+  name: string;
+  type: string;
+  country: string;
+  state: string;
+  city: string;
+  address: string | null;
+  isPrimary: boolean;
+  status: string;
 };
 
 export type CompanyWorkspace = {
@@ -29,6 +43,7 @@ export type CompanyWorkspace = {
   };
   viewerRole: WorkspaceRole;
   activeMemberCount: number;
+  sites: CompanySite[];
   reportingYears: ReportingYear[];
   setup: WorkspaceSetup;
 };
@@ -48,6 +63,20 @@ export const demoWorkspace: CompanyWorkspace = {
   },
   viewerRole: "ADMIN",
   activeMemberCount: 24,
+  sites: [
+    {
+      id: "delhi-plant",
+      companyId: "demo-company",
+      name: "Delhi Plant",
+      type: "PLANT",
+      country: "India",
+      state: "Delhi",
+      city: "Delhi",
+      address: null,
+      isPrimary: true,
+      status: "ACTIVE",
+    },
+  ],
   reportingYears: [
     {
       id: "fy-2025-26",
@@ -66,6 +95,7 @@ export const demoWorkspace: CompanyWorkspace = {
   ],
   setup: {
     reportingYearsReady: true,
+    sitesReady: true,
     ghgActivitySelectionReady: true,
     fieldConfigurationReady: true,
   },

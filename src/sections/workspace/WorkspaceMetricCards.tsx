@@ -1,4 +1,4 @@
-import { CalendarRange, CheckCircle2, Leaf, UsersRound } from "lucide-react";
+import { CalendarRange, CheckCircle2, Leaf, MapPin, UsersRound } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import type { WorkspaceSetup } from "./workspaceData";
 
@@ -22,11 +22,13 @@ export function WorkspaceMetricCards({
   activeMemberCount,
   reportingYearCount,
   setup,
+  siteCount,
   totalSelectedActivities,
 }: {
   activeMemberCount: number;
   reportingYearCount: number;
   setup: WorkspaceSetup;
+  siteCount: number;
   totalSelectedActivities: number;
 }) {
   const metrics: Array<{
@@ -40,6 +42,12 @@ export function WorkspaceMetricCards({
       value: String(activeMemberCount),
       tone: "border-[#7da58b]",
       icon: UsersRound,
+    },
+    {
+      label: "Sites",
+      value: String(siteCount),
+      tone: "border-[#8f9fc1]",
+      icon: MapPin,
     },
     {
       label: "Reporting years",
@@ -62,7 +70,7 @@ export function WorkspaceMetricCards({
   ];
 
   return (
-    <section className="grid gap-3 sm:grid-cols-2 sm:gap-4 xl:grid-cols-4">
+    <section className="grid gap-3 sm:grid-cols-2 sm:gap-4 xl:grid-cols-5">
       {metrics.map((metric) => {
         const Icon = metric.icon;
 

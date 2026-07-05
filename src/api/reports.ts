@@ -48,6 +48,16 @@ export type ReportingYearReport = {
     location: string;
     financialYearStartMonth: number;
   };
+  site: {
+    id: string;
+    name: string;
+    type: string;
+    country: string;
+    state: string;
+    city: string;
+    address: string | null;
+    isPrimary: boolean;
+  };
   reportingYear: {
     id: string;
     label: string;
@@ -74,14 +84,30 @@ export type ReportingYearReport = {
   limitations: string[];
 };
 
-export function getReportingYearReport(companyId: string, reportingYearId: string) {
+export function getReportingYearReport(
+  companyId: string,
+  reportingYearId: string,
+  siteId?: string,
+) {
+  const prefix = siteId
+    ? `/companies/${companyId}/sites/${siteId}`
+    : `/companies/${companyId}`;
+
   return apiRequest<ApiDataResponse<ReportingYearReport>>(
-    `/companies/${companyId}/reporting-years/${reportingYearId}/report`,
+    `${prefix}/reporting-years/${reportingYearId}/report`,
   );
 }
 
-export function downloadReportingYearReportPdf(companyId: string, reportingYearId: string) {
+export function downloadReportingYearReportPdf(
+  companyId: string,
+  reportingYearId: string,
+  siteId?: string,
+) {
+  const prefix = siteId
+    ? `/companies/${companyId}/sites/${siteId}`
+    : `/companies/${companyId}`;
+
   return apiBlobRequest(
-    `/companies/${companyId}/reporting-years/${reportingYearId}/report.pdf`,
+    `${prefix}/reporting-years/${reportingYearId}/report.pdf`,
   );
 }

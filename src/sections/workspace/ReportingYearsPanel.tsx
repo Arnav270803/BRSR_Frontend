@@ -19,9 +19,11 @@ function getReportingYearStatus(reportingYear: ReportingYear) {
 export function ReportingYearsPanel({
   companyId,
   reportingYears,
+  siteId,
 }: {
   companyId: string;
   reportingYears: ReportingYear[];
+  siteId: string;
 }) {
   return (
     <section className="rounded-lg border border-white/70 bg-white/50 p-4 shadow-[0_18px_60px_rgba(35,47,38,0.10)] backdrop-blur-2xl sm:p-5 2xl:p-6">
@@ -88,7 +90,7 @@ export function ReportingYearsPanel({
                     <Link
                       className="inline-flex min-w-0 items-center justify-center gap-2 rounded-md border border-[#d1ddd5] bg-white/75 px-3 text-sm font-semibold text-[#1d2a22] transition hover:border-[#9fb5a6] hover:bg-white focus:ring-3 focus:ring-[#426a52]/20 focus:outline-none"
                       title={`Open ${reportingYear.label}`}
-                      to={`/app/${companyId}/reporting-years/${reportingYear.id}/data`}
+                      to={`/app/${companyId}/sites/${siteId}/reporting-years/${reportingYear.id}/data`}
                     >
                       Open
                       <ArrowRight className="size-4" strokeWidth={1.8} />
@@ -145,7 +147,7 @@ export function ReportingYearsPanel({
                         <Link
                           className="inline-flex h-9 items-center justify-center gap-2 rounded-md border border-[#d1ddd5] bg-white/75 px-3 text-sm font-semibold text-[#1d2a22] transition hover:border-[#9fb5a6] hover:bg-white focus:ring-3 focus:ring-[#426a52]/20 focus:outline-none"
                           title={`Open ${reportingYear.label}`}
-                          to={`/app/${companyId}/reporting-years/${reportingYear.id}/data`}
+                          to={`/app/${companyId}/sites/${siteId}/reporting-years/${reportingYear.id}/data`}
                         >
                           Open
                           <ArrowRight className="size-4" strokeWidth={1.8} />

@@ -47,6 +47,12 @@ const companyOnboardingSchema = z.object({
   cin: optionalText,
   gst: optionalText,
   registeredAddress: optionalText,
+  siteName: z.string().trim().min(1, "Primary site name is required"),
+  siteType: z.string().trim().min(1, "Primary site type is required"),
+  siteCountry: z.string().trim().min(1, "Site country is required"),
+  siteState: z.string().trim().min(1, "Site state is required"),
+  siteCity: z.string().trim().min(1, "Site city is required"),
+  siteAddress: optionalText,
   listedStatus: optionalText,
   employeeCountRange: optionalText,
   contactPhone: optionalText,
@@ -65,6 +71,12 @@ type CompanyOnboardingFormValues = {
   cin: string;
   gst: string;
   registeredAddress: string;
+  siteName: string;
+  siteType: string;
+  siteCountry: string;
+  siteState: string;
+  siteCity: string;
+  siteAddress: string;
   listedStatus: string;
   employeeCountRange: string;
   contactPhone: string;
@@ -98,6 +110,12 @@ const emptyDefaults: CompanyOnboardingFormValues = {
   cin: "",
   gst: "",
   registeredAddress: "",
+  siteName: "",
+  siteType: "OTHER",
+  siteCountry: "",
+  siteState: "",
+  siteCity: "",
+  siteAddress: "",
   listedStatus: "",
   employeeCountRange: "",
   contactPhone: "",
@@ -172,7 +190,31 @@ export function CompanyOnboardingForm() {
     }
 
     try {
-      const response = await createCompany(result.data);
+      const response = await createCompany({
+        legalName: result.data.legalName,
+        displayName: result.data.displayName,
+        primaryDomain: result.data.primaryDomain,
+        industry: result.data.industry,
+        country: result.data.country,
+        state: result.data.state,
+        city: result.data.city,
+        financialYearStartMonth: result.data.financialYearStartMonth,
+        cin: result.data.cin,
+        gst: result.data.gst,
+        registeredAddress: result.data.registeredAddress,
+        listedStatus: result.data.listedStatus,
+        employeeCountRange: result.data.employeeCountRange,
+        contactPhone: result.data.contactPhone,
+        logoUrl: result.data.logoUrl,
+        site: {
+          name: result.data.siteName,
+          type: result.data.siteType,
+          country: result.data.siteCountry,
+          state: result.data.siteState,
+          city: result.data.siteCity,
+          address: result.data.siteAddress,
+        },
+      });
       navigate(`/app/${response.data.company.id}`, { replace: true });
     } catch (error) {
       if (error instanceof ApiError) {
@@ -302,6 +344,91 @@ export function CompanyOnboardingForm() {
             {...register("registeredAddress")}
           />
           <FieldMessage error={errors.registeredAddress} />
+        </label>
+      </FormSection>
+
+      <FormSection
+        description="Create the first site where data will be configured and collected."
+        title="Primary site"
+      >
+        <div className="grid gap-4 md:grid-cols-2">
+          <label>
+            <span className={labelClass()}>Site name</span>
+            <input
+              aria-invalid={Boolean(errors.siteName)}
+              className={fieldClass(Boolean(errors.siteName))}
+              placeholder="Delhi Plant"
+              type="text"
+              {...register("siteName")}
+            />
+            <FieldMessage error={errors.siteName} />
+          </label>
+
+          <label>
+            <span className={labelClass()}>Site type</span>
+            <select
+              aria-invalid={Boolean(errors.siteType)}
+              className={fieldClass(Boolean(errors.siteType))}
+              {...register("siteType")}
+            >
+              <option value="OFFICE">Office</option>
+              <option value="PLANT">Plant</option>
+              <option value="WAREHOUSE">Warehouse</option>
+              <option value="BRANCH">Branch</option>
+              <option value="FACTORY">Factory</option>
+              <option value="OTHER">Other</option>
+            </select>
+            <FieldMessage error={errors.siteType} />
+          </label>
+        </div>
+
+        <div className="mt-4 grid gap-4 md:grid-cols-3">
+          <label>
+            <span className={labelClass()}>Country</span>
+            <input
+              aria-invalid={Boolean(errors.siteCountry)}
+              className={fieldClass(Boolean(errors.siteCountry))}
+              placeholder="India"
+              type="text"
+              {...register("siteCountry")}
+            />
+            <FieldMessage error={errors.siteCountry} />
+          </label>
+
+          <label>
+            <span className={labelClass()}>State</span>
+            <input
+              aria-invalid={Boolean(errors.siteState)}
+              className={fieldClass(Boolean(errors.siteState))}
+              placeholder="Delhi"
+              type="text"
+              {...register("siteState")}
+            />
+            <FieldMessage error={errors.siteState} />
+          </label>
+
+          <label>
+            <span className={labelClass()}>City</span>
+            <input
+              aria-invalid={Boolean(errors.siteCity)}
+              className={fieldClass(Boolean(errors.siteCity))}
+              placeholder="Delhi"
+              type="text"
+              {...register("siteCity")}
+            />
+            <FieldMessage error={errors.siteCity} />
+          </label>
+        </div>
+
+        <label className="mt-4 block">
+          <span className={labelClass()}>Site address</span>
+          <textarea
+            aria-invalid={Boolean(errors.siteAddress)}
+            className={textareaClass(Boolean(errors.siteAddress))}
+            placeholder="Site address"
+            {...register("siteAddress")}
+          />
+          <FieldMessage error={errors.siteAddress} />
         </label>
       </FormSection>
 

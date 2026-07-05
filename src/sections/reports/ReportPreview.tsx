@@ -44,7 +44,7 @@ export function ReportPreview({ report, isLoading }: ReportPreviewProps) {
             Report preview
           </p>
           <h2 className="mt-2 text-2xl font-semibold text-[#142019]">
-            {report.company.displayName} - {report.reportingYear.label}
+            {report.company.displayName} - {report.site.name} - {report.reportingYear.label}
           </h2>
           <p className="mt-2 text-sm leading-6 text-[#65736b]">
             Generated {formatReportDateTime(report.generatedAt)}
@@ -90,6 +90,12 @@ export function ReportPreview({ report, isLoading }: ReportPreviewProps) {
               <InfoTile
                 label="Financial year"
                 value={`Starts in month ${report.company.financialYearStartMonth}`}
+              />
+              <InfoTile label="Site" value={report.site.name} />
+              <InfoTile label="Site type" value={report.site.type} />
+              <InfoTile
+                label="Site location"
+                value={`${report.site.city}, ${report.site.state}, ${report.site.country}`}
               />
             </div>
           </ReportBlock>

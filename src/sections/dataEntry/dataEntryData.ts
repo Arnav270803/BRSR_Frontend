@@ -29,6 +29,7 @@ export type SelectedGhgActivity = {
 export type DataRecord = {
   id: string;
   companyId: string;
+  siteId: string;
   reportingYearId: string;
   ghgActivitySelectionId: string;
   ghgActivityId: string;
@@ -163,6 +164,7 @@ export const demoDataRecords: DataRecord[] = [
   {
     id: "record-electricity-apr",
     companyId: "demo-company",
+    siteId: "delhi-plant",
     reportingYearId: "fy-2025-26",
     ghgActivitySelectionId: "sel-grid-electricity",
     ghgActivityId: "act-grid-electricity-india",
@@ -199,6 +201,7 @@ export const demoDataRecords: DataRecord[] = [
   {
     id: "record-diesel-apr",
     companyId: "demo-company",
+    siteId: "delhi-plant",
     reportingYearId: "fy-2025-26",
     ghgActivitySelectionId: "sel-diesel-generator",
     ghgActivityId: "act-diesel-generator",

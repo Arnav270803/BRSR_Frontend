@@ -9,6 +9,7 @@ import { CompanyReportingYearRedirectPage } from "../pages/CompanyReportingYearR
 import { CompanyReportingYearsPage } from "../pages/CompanyReportingYearsPage";
 import { CompanyReportsPage } from "../pages/CompanyReportsPage";
 import { CompanySettingsPage } from "../pages/CompanySettingsPage";
+import { CompanySitesPage } from "../pages/CompanySitesPage";
 import { CompanyWorkspacePage } from "../pages/CompanyWorkspacePage";
 import { LoginPage } from "../pages/LoginPage";
 
@@ -23,6 +24,8 @@ export default function App() {
           <Route element={<CompanyOnboardingPage />} path="/onboarding/company" />
         </Route>
         <Route element={<CompanyWorkspacePage />} path="/app/:companyId" />
+        <Route element={<CompanyWorkspacePage />} path="/app/:companyId/sites/:siteId" />
+        <Route element={<CompanySitesPage />} path="/app/:companyId/sites" />
         <Route
           element={<CompanyReportingYearRedirectPage target="ghg-setup" />}
           path="/app/:companyId/ghg-setup"
@@ -41,8 +44,20 @@ export default function App() {
           path="/app/:companyId/reporting-years/:reportingYearId/ghg-setup"
         />
         <Route
+          element={<CompanyGhgSetupPage />}
+          path="/app/:companyId/sites/:siteId/reporting-years/:reportingYearId/ghg-setup"
+        />
+        <Route
           element={<CompanyDataEntryPage />}
           path="/app/:companyId/reporting-years/:reportingYearId/data"
+        />
+        <Route
+          element={<CompanyDataEntryPage />}
+          path="/app/:companyId/sites/:siteId/reporting-years/:reportingYearId/data"
+        />
+        <Route
+          element={<CompanyReportsPage />}
+          path="/app/:companyId/sites/:siteId/reports"
         />
         <Route element={<CompanyEmployeesPage />} path="/app/:companyId/employees" />
         <Route element={<CompanySettingsPage />} path="/app/:companyId/settings" />

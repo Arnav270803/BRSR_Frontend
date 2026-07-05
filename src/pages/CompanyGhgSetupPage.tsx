@@ -30,13 +30,16 @@ function areSetsEqual(left: Set<string>, right: Set<string>) {
 }
 
 export function CompanyGhgSetupPage() {
-  const { companyId, reportingYearId } = useParams();
+  const { companyId, siteId, reportingYearId } = useParams();
   const queryClient = useQueryClient();
   const workspaceQuery = useQuery({
     queryKey: ["company-workspace", companyId],
     queryFn: () => getCompanyWorkspace(companyId!),
     enabled: Boolean(companyId),
   });
+  const resolvedSiteId =
+    workspaceQuery.data?.data.sites.find((site) => site.id === siteId)?.id ??
+    workspaceQuery.data?.data.sites[0]?.id;
   const categoriesQuery = useQuery({
     queryKey: ["ghg-categories"],
     queryFn: listGhgCategories,
@@ -46,16 +49,16 @@ export function CompanyGhgSetupPage() {
     queryFn: listGhgActivities,
   });
   const selectionsQuery = useQuery({
-    queryKey: ["ghg-selections", companyId, reportingYearId],
-    queryFn: () => listGhgActivitySelections(companyId!, reportingYearId!),
-    enabled: Boolean(companyId && reportingYearId),
+    queryKey: ["ghg-selections", companyId, resolvedSiteId, reportingYearId],
+    queryFn: () => listGhgActivitySelections(companyId!, reportingYearId!, resolvedSiteId),
+    enabled: Boolean(companyId && reportingYearId && resolvedSiteId),
   });
   const saveSelectionsMutation = useMutation({
     mutationFn: (activityIds: string[]) =>
-      updateGhgActivitySelections(companyId!, reportingYearId!, activityIds),
+      updateGhgActivitySelections(companyId!, reportingYearId!, activityIds, resolvedSiteId),
     onSuccess: async () => {
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: ["ghg-selections", companyId, reportingYearId] }),
+        queryClient.invalidateQueries({ queryKey: ["ghg-selections", companyId, resolvedSiteId, reportingYearId] }),
         queryClient.invalidateQueries({ queryKey: ["company-workspace", companyId] }),
         queryClient.invalidateQueries({ queryKey: ["reporting-years", companyId] }),
       ]);
@@ -104,6 +107,21 @@ export function CompanyGhgSetupPage() {
 
   const workspace = workspaceQuery.data!.data;
   const company = workspace.company;
+  const activeSite = workspace.sites.find((site) => site.id === siteId) ?? workspace.sites[0];
+
+  if (!activeSite) {
+    return <GhgSetupShell message="Create a site before configuring GHG setup." tone="error" />;
+  }
+
+  if (!siteId || siteId !== activeSite.id) {
+    return (
+      <Navigate
+        replace
+        to={`/app/${companyId}/sites/${activeSite.id}/reporting-years/${reportingYearId}/ghg-setup`}
+      />
+    );
+  }
+
   const viewerRole = workspace.viewerRole;
   const canEdit = viewerRole !== "USER";
   const reportingYear = selectionsQuery.data!.data.reportingYear;
@@ -191,8 +209,10 @@ export function CompanyGhgSetupPage() {
           activeItem="ghgSetup"
           companyId={company.id}
           companyName={company.displayName}
+          currentSiteId={activeSite.id}
           currentReportingYearId={reportingYear.id}
           reportingYears={workspace.reportingYears}
+          sites={workspace.sites}
           viewerRole={viewerRole}
         />
 

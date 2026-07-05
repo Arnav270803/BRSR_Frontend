@@ -4,12 +4,17 @@ import {
   createCompanyInvitation,
   listCompanyInvitations,
 } from "../api/invitations";
+import {
+  listCompanySiteMembers,
+  updateCompanySiteMemberAccess,
+} from "../api/sites";
 import { getCompanyWorkspace } from "../api/workspace";
 import { ActiveMembersPanel } from "../sections/employees/ActiveMembersPanel";
 import { EmployeesHeader } from "../sections/employees/EmployeesHeader";
 import { EmployeesInviteForm } from "../sections/employees/EmployeesInviteForm";
 import { EmployeesMetrics } from "../sections/employees/EmployeesMetrics";
 import { InvitationsList } from "../sections/employees/InvitationsList";
+import { SiteAccessPanel } from "../sections/employees/SiteAccessPanel";
 import {
   type CreateInvitationValues,
   type InvitationRecord,
@@ -31,28 +36,45 @@ export function CompanyEmployeesPage() {
     queryFn: () => listCompanyInvitations(companyId!),
     enabled: Boolean(companyId),
   });
+  const siteMembersQuery = useQuery({
+    queryKey: ["company-site-members", companyId],
+    queryFn: () => listCompanySiteMembers(companyId!),
+    enabled: Boolean(companyId),
+  });
   const createInvitationMutation = useMutation({
     mutationFn: (values: CreateInvitationValues) =>
       createCompanyInvitation(companyId!, values),
+  });
+  const updateSiteAccessMutation = useMutation({
+    mutationFn: ({ siteIds, userId }: { siteIds: string[]; userId: string }) =>
+      updateCompanySiteMemberAccess(companyId!, userId, siteIds),
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["company-site-members", companyId] }),
+        queryClient.invalidateQueries({ queryKey: ["company-workspace", companyId] }),
+      ]);
+    },
   });
 
   if (!companyId) {
     return <Navigate replace to="/login" />;
   }
 
-  if (workspaceQuery.isLoading || invitationsQuery.isLoading) {
+  if (workspaceQuery.isLoading || invitationsQuery.isLoading || siteMembersQuery.isLoading) {
     return <EmployeesShell message="Loading employees..." />;
   }
 
-  if (workspaceQuery.isError || invitationsQuery.isError) {
+  if (workspaceQuery.isError || invitationsQuery.isError || siteMembersQuery.isError) {
     return <EmployeesShell message="Unable to load employee access." tone="error" />;
   }
 
   const workspace = workspaceQuery.data!.data;
   const company = workspace.company;
   const viewerRole = workspace.viewerRole;
+  const activeSite = workspace.sites[0];
   const canManageAccess = viewerRole !== "USER";
   const invitations = invitationsQuery.data!.data;
+  const siteMembers = siteMembersQuery.data!.data;
   const activeMemberCount = workspace.activeMemberCount;
   const pendingInviteCount = invitations.filter(
     (invitation) => getInvitationStatus(invitation) === "Pending",
@@ -88,7 +110,9 @@ export function CompanyEmployeesPage() {
           activeItem="employees"
           companyId={company.id}
           companyName={company.displayName}
+          currentSiteId={activeSite?.id}
           reportingYears={workspace.reportingYears}
+          sites={workspace.sites}
           viewerRole={viewerRole}
         />
 
@@ -110,6 +134,15 @@ export function CompanyEmployeesPage() {
             <div className="grid gap-3 sm:gap-4 xl:gap-5">
               <ActiveMembersPanel
                 activeMemberCount={activeMemberCount}
+                viewerRole={viewerRole}
+              />
+              <SiteAccessPanel
+                canManageAccess={canManageAccess}
+                members={siteMembers}
+                saveSiteAccess={(userId, siteIds) =>
+                  updateSiteAccessMutation.mutateAsync({ siteIds, userId }).then(() => undefined)
+                }
+                sites={workspace.sites}
                 viewerRole={viewerRole}
               />
               <InvitationsList invitations={invitations} />

@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { Navigate, useParams } from "react-router-dom";
-import { listReportingYears } from "../api/reportingYears";
+import { getCompanyWorkspace } from "../api/workspace";
 
 export function CompanyReportingYearRedirectPage({
   target,
@@ -8,9 +8,9 @@ export function CompanyReportingYearRedirectPage({
   target: "data" | "ghg-setup";
 }) {
   const { companyId } = useParams();
-  const reportingYearsQuery = useQuery({
-    queryKey: ["reporting-years", companyId],
-    queryFn: () => listReportingYears(companyId!),
+  const workspaceQuery = useQuery({
+    queryKey: ["company-workspace", companyId],
+    queryFn: () => getCompanyWorkspace(companyId!),
     enabled: Boolean(companyId),
   });
 
@@ -18,24 +18,30 @@ export function CompanyReportingYearRedirectPage({
     return <Navigate replace to="/login" />;
   }
 
-  if (reportingYearsQuery.isLoading) {
+  if (workspaceQuery.isLoading) {
     return <RedirectShell message="Opening reporting year..." />;
   }
 
-  if (reportingYearsQuery.isError) {
+  if (workspaceQuery.isError) {
     return <RedirectShell message="Unable to find a reporting year." tone="error" />;
   }
 
-  const reportingYear = reportingYearsQuery.data!.data[0];
+  const workspace = workspaceQuery.data!.data;
+  const reportingYear = workspace.reportingYears[0];
+  const site = workspace.sites[0];
 
   if (!reportingYear) {
     return <Navigate replace to={`/app/${companyId}/reporting-years`} />;
   }
 
+  if (!site) {
+    return <RedirectShell message="Create a site before opening this workspace." tone="error" />;
+  }
+
   return (
     <Navigate
       replace
-      to={`/app/${companyId}/reporting-years/${reportingYear.id}/${target}`}
+      to={`/app/${companyId}/sites/${site.id}/reporting-years/${reportingYear.id}/${target}`}
     />
   );
 }

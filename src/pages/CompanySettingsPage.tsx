@@ -31,6 +31,7 @@ export function CompanySettingsPage() {
   }
 
   const workspace = workspaceQuery.data!.data;
+  const activeSite = workspace.sites[0];
 
   return (
     <main className="relative min-h-screen overflow-x-hidden bg-[#eef3ef] text-[#16211b]">
@@ -42,7 +43,9 @@ export function CompanySettingsPage() {
           activeItem="settings"
           companyId={workspace.company.id}
           companyName={workspace.company.displayName}
+          currentSiteId={activeSite?.id}
           reportingYears={workspace.reportingYears}
+          sites={workspace.sites}
           viewerRole={workspace.viewerRole}
         />
 
