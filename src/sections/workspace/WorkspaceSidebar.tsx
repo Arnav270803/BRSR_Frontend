@@ -6,10 +6,13 @@ import {
   LayoutDashboard,
   Leaf,
   MapPin,
+  Menu,
   Settings,
   Users,
+  X,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import type { CompanySite, ReportingYear, WorkspaceRole } from "./workspaceData";
 
@@ -81,6 +84,7 @@ export function WorkspaceSidebar({
   sites?: CompanySite[];
   viewerRole: WorkspaceRole;
 }) {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
   const activeSite = sites.find((site) => site.id === currentSiteId) ?? sites[0];
   const activeReportingYear =
@@ -130,6 +134,7 @@ export function WorkspaceSidebar({
   });
   const hasReportingYears = reportingYears.length > 0;
   const hasSites = sites.length > 0;
+  const activeNavItem = navigation.find((item) => item.key === activeItem);
 
   function getReportingYearRoute(reportingYearId: string) {
     if (activeItem === "ghgSetup") {
@@ -167,7 +172,135 @@ export function WorkspaceSidebar({
   }
 
   return (
-    <aside className="rounded-lg border border-white/70 bg-white/50 p-3 shadow-[0_18px_60px_rgba(35,47,38,0.10)] backdrop-blur-2xl sm:p-4 lg:sticky lg:top-4 lg:flex lg:h-[calc(100vh-2rem)] lg:w-72 lg:shrink-0 lg:flex-col xl:w-80 2xl:w-[340px] 2xl:p-5">
+    <>
+      <header className="sticky top-2 z-30 rounded-lg border border-white/75 bg-white/70 p-2.5 shadow-[0_14px_44px_rgba(35,47,38,0.14)] backdrop-blur-2xl lg:hidden">
+        <div className="flex items-center gap-2">
+          <span className="grid size-10 shrink-0 place-items-center rounded-lg bg-[#1f5135] text-white">
+            <Building2 className="size-5" strokeWidth={1.8} />
+          </span>
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-sm font-semibold text-[#142019]">BRSR Workspace</p>
+            <p className="truncate text-xs text-[#68756d]">
+              {companyName}
+              {activeSite ? ` / ${activeSite.name}` : ""}
+              {activeReportingYear ? ` / ${activeReportingYear.label}` : ""}
+            </p>
+          </div>
+          <button
+            aria-expanded={isMobileMenuOpen}
+            aria-label={isMobileMenuOpen ? "Close workspace menu" : "Open workspace menu"}
+            className="grid size-10 shrink-0 place-items-center rounded-md border border-[#cdd9d1] bg-white/80 text-[#1d2a22] shadow-sm transition hover:border-[#9fb5a6] focus:ring-3 focus:ring-[#426a52]/20 focus:outline-none"
+            type="button"
+            onClick={() => setIsMobileMenuOpen((current) => !current)}
+          >
+            {isMobileMenuOpen ? (
+              <X className="size-5" strokeWidth={1.8} />
+            ) : (
+              <Menu className="size-5" strokeWidth={1.8} />
+            )}
+          </button>
+        </div>
+
+        <div className="mt-2 grid grid-cols-2 gap-2">
+          {hasSites ? (
+            <label className="min-w-0">
+              <span className="sr-only">Switch site</span>
+              <select
+                className="h-10 w-full rounded-md border border-[#d2ded6] bg-white/80 px-2 text-xs font-semibold text-[#16211b] shadow-sm outline-none transition focus:border-[#678c72] focus:ring-3 focus:ring-[#426a52]/15"
+                value={activeSite?.id}
+                onChange={(event) => navigate(getSiteRoute(event.target.value))}
+              >
+                {sites.map((site) => (
+                  <option key={site.id} value={site.id}>
+                    {site.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+          ) : (
+            <Link
+              className="inline-flex h-10 min-w-0 items-center justify-center rounded-md border border-[#cdd9d1] bg-white/75 px-2 text-xs font-semibold text-[#1d2a22]"
+              to={`/app/${companyId}/sites`}
+            >
+              Create site
+            </Link>
+          )}
+
+          {hasReportingYears ? (
+            <label className="min-w-0">
+              <span className="sr-only">Switch reporting year</span>
+              <select
+                className="h-10 w-full rounded-md border border-[#d2ded6] bg-white/80 px-2 text-xs font-semibold text-[#16211b] shadow-sm outline-none transition focus:border-[#678c72] focus:ring-3 focus:ring-[#426a52]/15"
+                value={activeReportingYear?.id}
+                onChange={(event) => navigate(getReportingYearRoute(event.target.value))}
+              >
+                {reportingYears.map((reportingYear) => (
+                  <option key={reportingYear.id} value={reportingYear.id}>
+                    {reportingYear.label}
+                  </option>
+                ))}
+              </select>
+            </label>
+          ) : (
+            <Link
+              className="inline-flex h-10 min-w-0 items-center justify-center rounded-md border border-[#cdd9d1] bg-white/75 px-2 text-xs font-semibold text-[#1d2a22]"
+              to={`/app/${companyId}/reporting-years`}
+            >
+              Create year
+            </Link>
+          )}
+        </div>
+
+        <div className="mt-2 flex items-center justify-between gap-2 rounded-md border border-[#d9e2dc] bg-white/55 px-3 py-2">
+          <span className="text-[11px] font-semibold tracking-[0.08em] text-[#69756e] uppercase">
+            Current
+          </span>
+          <span className="truncate text-sm font-semibold text-[#183f2a]">
+            {activeNavItem?.label ?? "Workspace"}
+          </span>
+        </div>
+
+        {isMobileMenuOpen ? (
+          <nav className="mt-2 grid gap-1.5 rounded-lg border border-[#d9e2dc] bg-white/70 p-2 shadow-sm">
+            {navigation.map((item) => {
+              const Icon = item.icon;
+              const isActive = item.key === activeItem;
+              const className = `flex h-10 min-w-0 items-center gap-2 rounded-md border px-3 text-sm font-semibold transition focus:ring-3 focus:ring-[#426a52]/20 focus:outline-none ${
+                isActive
+                  ? "border-[#bdd3c3] bg-[#edf6ef] text-[#183f2a]"
+                  : "border-transparent text-[#66736b] hover:border-[#d7e0da] hover:bg-white/80 hover:text-[#26342b]"
+              }`;
+              const content = (
+                <>
+                  <Icon className="size-4 shrink-0" strokeWidth={1.8} />
+                  <span className="min-w-0 truncate">{item.label}</span>
+                </>
+              );
+
+              if (item.to) {
+                return (
+                  <Link
+                    className={className}
+                    key={item.label}
+                    to={item.to}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    {content}
+                  </Link>
+                );
+              }
+
+              return (
+                <button className={className} key={item.label} type="button">
+                  {content}
+                </button>
+              );
+            })}
+          </nav>
+        ) : null}
+      </header>
+
+      <aside className="hidden rounded-lg border border-white/70 bg-white/50 p-3 shadow-[0_18px_60px_rgba(35,47,38,0.10)] backdrop-blur-2xl sm:p-4 lg:sticky lg:top-4 lg:flex lg:h-[calc(100vh-2rem)] lg:w-72 lg:shrink-0 lg:flex-col xl:w-80 2xl:w-[340px] 2xl:p-5">
       <div className="flex items-center gap-3 border-b border-[#dce5df] pb-3 sm:pb-4">
         <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-[#1f5135] text-white sm:size-10">
           <Building2 className="size-5" strokeWidth={1.8} />
@@ -292,6 +425,7 @@ export function WorkspaceSidebar({
             : "Company setup and data access"}
         </p>
       </div>
-    </aside>
+      </aside>
+    </>
   );
 }

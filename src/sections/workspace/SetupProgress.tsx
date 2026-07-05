@@ -195,52 +195,52 @@ export function SetupProgress({
   const NextActionIcon = nextAction.icon;
 
   return (
-    <section className="rounded-lg border border-white/70 bg-white/50 p-4 shadow-[0_18px_60px_rgba(35,47,38,0.10)] backdrop-blur-2xl sm:p-5 2xl:p-6">
-      <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_390px] 2xl:grid-cols-[minmax(0,1fr)_450px]">
+    <section className="rounded-lg border border-white/70 bg-white/50 p-3 shadow-[0_18px_60px_rgba(35,47,38,0.10)] backdrop-blur-2xl sm:p-4 lg:p-5 2xl:p-6">
+      <div className="grid gap-3 lg:gap-4 xl:grid-cols-[minmax(0,1fr)_390px] 2xl:grid-cols-[minmax(0,1fr)_450px]">
         <div className="min-w-0">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
+          <div className="flex items-start justify-between gap-3">
             <div>
-              <p className="text-sm font-semibold text-[#426a52]">Guided setup</p>
-              <h2 className="mt-1 text-xl font-semibold text-[#142019]">
+              <p className="text-xs font-semibold text-[#426a52] sm:text-sm">Guided setup</p>
+              <h2 className="mt-0.5 text-lg font-semibold text-[#142019] sm:mt-1 sm:text-xl">
                 {readyCount} of {steps.length} steps ready
               </h2>
             </div>
-            <span className="w-fit rounded-md border border-[#cbd9d1] bg-white/65 px-3 py-2 text-sm font-semibold text-[#52635a]">
+            <span className="w-fit rounded-md border border-[#cbd9d1] bg-white/65 px-2.5 py-1.5 text-xs font-semibold text-[#52635a] sm:px-3 sm:py-2 sm:text-sm">
               {progress}%
             </span>
           </div>
 
-          <div className="mt-5 h-2 overflow-hidden rounded-full bg-[#dfe9e2]">
+          <div className="mt-3 h-2 overflow-hidden rounded-full bg-[#dfe9e2] sm:mt-5">
             <div
               className="h-full rounded-full bg-[#2f6b45] transition-all"
               style={{ width: `${progress}%` }}
             />
           </div>
 
-          <div className="mt-5 grid gap-3 md:grid-cols-2 2xl:grid-cols-5">
+          <div className="-mx-3 mt-3 flex gap-2 overflow-x-auto px-3 pb-1 sm:-mx-4 sm:mt-5 sm:px-4 md:mx-0 md:grid md:grid-cols-2 md:overflow-visible md:px-0 md:pb-0 2xl:grid-cols-5">
             {steps.map((step) => (
               <SetupStepCard key={step.label} step={step} />
             ))}
           </div>
         </div>
 
-        <aside className="rounded-lg border border-[#c8d8cd] bg-[#f7faf7]/80 p-4 shadow-sm sm:p-5">
+        <aside className="rounded-lg border border-[#c8d8cd] bg-[#f7faf7]/80 p-3 shadow-sm sm:p-5">
           <div className="flex items-start justify-between gap-3">
             <div>
-              <p className="text-sm font-semibold text-[#426a52]">Recommended next</p>
-              <h3 className="mt-1 text-xl font-semibold text-[#142019]">
+              <p className="text-xs font-semibold text-[#426a52] sm:text-sm">Recommended next</p>
+              <h3 className="mt-0.5 text-lg font-semibold text-[#142019] sm:mt-1 sm:text-xl">
                 {nextAction.label}
               </h3>
             </div>
-            <span className="grid size-10 shrink-0 place-items-center rounded-md bg-[#e7f1eb] text-[#315f42]">
-              <NextActionIcon className="size-5" strokeWidth={1.8} />
+            <span className="grid size-9 shrink-0 place-items-center rounded-md bg-[#e7f1eb] text-[#315f42] sm:size-10">
+              <NextActionIcon className="size-4 sm:size-5" strokeWidth={1.8} />
             </span>
           </div>
 
-          <p className="mt-3 text-sm leading-6 text-[#647169]">{nextAction.detail}</p>
+          <p className="mt-2 text-sm leading-6 text-[#647169] sm:mt-3">{nextAction.detail}</p>
 
           <Link
-            className="mt-5 inline-flex h-11 w-full items-center justify-center gap-2 rounded-md bg-[#1f5135] px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-[#183f2a] focus:ring-3 focus:ring-[#426a52]/25 focus:outline-none"
+            className="mt-3 inline-flex h-10 w-full items-center justify-center gap-2 rounded-md bg-[#1f5135] px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-[#183f2a] focus:ring-3 focus:ring-[#426a52]/25 focus:outline-none sm:mt-5 sm:h-11"
             to={nextAction.to}
           >
             Continue
@@ -255,7 +255,7 @@ export function SetupProgress({
 function SetupStepCard({ step }: { step: SetupStep }) {
   const Icon = step.icon;
   const status = step.ready ? "Ready" : step.blocked ? "Blocked" : "Next";
-  const className = `rounded-lg border p-3 transition sm:p-4 ${
+  const className = `min-w-[220px] rounded-lg border p-3 transition md:min-w-0 ${
     step.ready
       ? "border-[#bdd3c3] bg-[#edf6ef]"
       : step.blocked
@@ -264,9 +264,9 @@ function SetupStepCard({ step }: { step: SetupStep }) {
   }`;
   const content = (
     <>
-      <div className="flex items-start justify-between gap-3">
+      <div className="flex items-center justify-between gap-3">
         <span
-          className={`grid size-9 place-items-center rounded-md ${
+          className={`grid size-8 place-items-center rounded-md sm:size-9 ${
             step.ready ? "bg-white/70 text-[#2f6b45]" : "bg-white/65 text-[#315f42]"
           }`}
         >
@@ -290,9 +290,23 @@ function SetupStepCard({ step }: { step: SetupStep }) {
           )}
         </span>
       </div>
-      <p className="mt-4 text-sm font-semibold text-[#1e2b23]">{step.label}</p>
-      <p className="mt-1 text-xs font-semibold text-[#65716a]">{status}</p>
-      <p className="mt-3 text-xs leading-5 text-[#68756d]">{step.description}</p>
+      <div className="mt-3 flex items-start justify-between gap-2">
+        <p className="min-w-0 text-sm font-semibold text-[#1e2b23]">{step.label}</p>
+        <span
+          className={`shrink-0 rounded-md border px-2 py-0.5 text-[11px] font-semibold ${
+            step.ready
+              ? "border-[#bdd3c3] bg-white/70 text-[#2f6b45]"
+              : step.blocked
+                ? "border-[#d4be86] bg-white/75 text-[#775d20]"
+                : "border-[#d8ded9] bg-white/70 text-[#52635a]"
+          }`}
+        >
+          {status}
+        </span>
+      </div>
+      <p className="mt-2 line-clamp-2 text-xs leading-5 text-[#68756d] md:line-clamp-none">
+        {step.description}
+      </p>
     </>
   );
 

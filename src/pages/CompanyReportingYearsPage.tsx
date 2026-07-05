@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useEffect, useRef } from "react";
 import { Navigate, useParams } from "react-router-dom";
 import {
   createReportingYear as createReportingYearApi,
@@ -15,6 +16,7 @@ import { WorkspaceSidebar } from "../sections/workspace/WorkspaceSidebar";
 
 export function CompanyReportingYearsPage() {
   const { companyId } = useParams();
+  const reportingYearsWorkAreaRef = useRef<HTMLDivElement>(null);
   const queryClient = useQueryClient();
   const workspaceQuery = useQuery({
     queryKey: ["company-workspace", companyId],
@@ -36,6 +38,25 @@ export function CompanyReportingYearsPage() {
       ]);
     },
   });
+
+  useEffect(() => {
+    if (
+      !workspaceQuery.isSuccess ||
+      !reportingYearsQuery.isSuccess ||
+      !window.matchMedia("(max-width: 1023px)").matches
+    ) {
+      return;
+    }
+
+    const scrollTimer = window.setTimeout(() => {
+      reportingYearsWorkAreaRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }, 160);
+
+    return () => window.clearTimeout(scrollTimer);
+  }, [reportingYearsQuery.isSuccess, workspaceQuery.isSuccess]);
 
   if (!companyId) {
     return <Navigate replace to="/login" />;
@@ -90,7 +111,10 @@ export function CompanyReportingYearsPage() {
             totalSelectedActivities={totalSelectedActivities}
           />
 
-          <div className="grid gap-3 sm:gap-4 xl:grid-cols-[minmax(0,1fr)_400px] xl:gap-5 2xl:grid-cols-[minmax(0,1fr)_460px]">
+          <div
+            ref={reportingYearsWorkAreaRef}
+            className="grid scroll-mt-28 gap-3 sm:gap-4 xl:grid-cols-[minmax(0,1fr)_400px] xl:gap-5 2xl:grid-cols-[minmax(0,1fr)_460px]"
+          >
             <ReportingYearsList
               canManageSetup={canCreateReportingYear}
               companyId={company.id}

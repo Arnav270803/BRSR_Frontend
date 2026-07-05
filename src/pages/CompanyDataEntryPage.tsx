@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useEffect, useRef } from "react";
 import { Navigate, useParams } from "react-router-dom";
 import {
   createDataRecord,
@@ -21,6 +22,7 @@ import { WorkspaceSidebar } from "../sections/workspace/WorkspaceSidebar";
 
 export function CompanyDataEntryPage() {
   const { companyId, siteId, reportingYearId } = useParams();
+  const formRef = useRef<HTMLDivElement>(null);
   const queryClient = useQueryClient();
   const sessionQuery = useQuery({
     queryKey: ["auth", "me"],
@@ -60,6 +62,31 @@ export function CompanyDataEntryPage() {
       await queryClient.invalidateQueries({ queryKey: ["data-records", companyId, resolvedSiteId, reportingYearId] });
     },
   });
+
+  useEffect(() => {
+    if (
+      !sessionQuery.isSuccess ||
+      !workspaceQuery.isSuccess ||
+      !selectionsQuery.isSuccess ||
+      !recordsQuery.isSuccess ||
+      !window.matchMedia("(max-width: 1023px)").matches
+    ) {
+      return;
+    }
+
+    const scrollTimer = window.setTimeout(() => {
+      formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 160);
+
+    return () => window.clearTimeout(scrollTimer);
+  }, [
+    recordsQuery.isSuccess,
+    reportingYearId,
+    selectionsQuery.isSuccess,
+    sessionQuery.isSuccess,
+    siteId,
+    workspaceQuery.isSuccess,
+  ]);
 
   if (!companyId || !reportingYearId) {
     return <Navigate replace to="/login" />;
@@ -141,6 +168,7 @@ export function CompanyDataEntryPage() {
             company={company}
             reportingYear={reportingYear}
             selectedActivityCount={selectedActivities.length}
+            siteId={activeSite.id}
             viewerRole={viewerRole}
           />
 
@@ -158,11 +186,13 @@ export function CompanyDataEntryPage() {
               onDeleteRecord={removeRecord}
               viewerRole={viewerRole}
             />
-            <DataRecordForm
-              onAddRecord={addRecord}
-              records={records}
-              selectedActivities={selectedActivities}
-            />
+            <div ref={formRef} className="order-first scroll-mt-28 xl:order-none">
+              <DataRecordForm
+                onAddRecord={addRecord}
+                records={records}
+                selectedActivities={selectedActivities}
+              />
+            </div>
           </div>
         </section>
       </div>

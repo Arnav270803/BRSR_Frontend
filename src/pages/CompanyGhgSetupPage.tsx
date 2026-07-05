@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Navigate, useParams } from "react-router-dom";
 import {
@@ -31,6 +31,7 @@ function areSetsEqual(left: Set<string>, right: Set<string>) {
 
 export function CompanyGhgSetupPage() {
   const { companyId, siteId, reportingYearId } = useParams();
+  const catalogRef = useRef<HTMLDivElement>(null);
   const queryClient = useQueryClient();
   const workspaceQuery = useQuery({
     queryKey: ["company-workspace", companyId],
@@ -82,6 +83,31 @@ export function CompanyGhgSetupPage() {
       setSelectedActivityIds(initialSelectedIds);
     }
   }, [initialSelectedIds, selectionsQuery.data]);
+
+  useEffect(() => {
+    if (
+      !workspaceQuery.isSuccess ||
+      !categoriesQuery.isSuccess ||
+      !activitiesQuery.isSuccess ||
+      !selectionsQuery.isSuccess ||
+      !window.matchMedia("(max-width: 1023px)").matches
+    ) {
+      return;
+    }
+
+    const scrollTimer = window.setTimeout(() => {
+      catalogRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 160);
+
+    return () => window.clearTimeout(scrollTimer);
+  }, [
+    activitiesQuery.isSuccess,
+    categoriesQuery.isSuccess,
+    reportingYearId,
+    selectionsQuery.isSuccess,
+    siteId,
+    workspaceQuery.isSuccess,
+  ]);
 
   if (!companyId || !reportingYearId) {
     return <Navigate replace to="/login" />;
@@ -223,6 +249,7 @@ export function CompanyGhgSetupPage() {
             hasUnsavedChanges={hasUnsavedChanges}
             reportingYear={reportingYear}
             saveSelections={saveSelections}
+            siteId={activeSite.id}
             viewerRole={viewerRole}
           />
 
@@ -235,14 +262,16 @@ export function CompanyGhgSetupPage() {
           />
 
           <div className="grid gap-3 sm:gap-4 xl:grid-cols-[minmax(0,1fr)_420px] xl:gap-5 2xl:grid-cols-[minmax(0,1fr)_500px]">
-            <GhgActivityCatalog
-              activities={activities}
-              canEdit={canEdit}
-              categories={categories}
-              selectedActivityIds={selectedActivityIds}
-              selectCategory={selectCategory}
-              toggleActivity={toggleActivity}
-            />
+            <div ref={catalogRef} className="scroll-mt-28">
+              <GhgActivityCatalog
+                activities={activities}
+                canEdit={canEdit}
+                categories={categories}
+                selectedActivityIds={selectedActivityIds}
+                selectCategory={selectCategory}
+                toggleActivity={toggleActivity}
+              />
+            </div>
             <GhgSelectedPreview
               canEdit={canEdit}
               categories={categories}
