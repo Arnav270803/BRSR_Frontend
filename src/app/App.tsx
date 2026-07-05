@@ -7,6 +7,7 @@ import { CompanyOnboardingPage } from "../pages/CompanyOnboardingPage";
 import { CompanyGhgSetupPage } from "../pages/CompanyGhgSetupPage";
 import { CompanyReportingYearRedirectPage } from "../pages/CompanyReportingYearRedirectPage";
 import { CompanyReportingYearsPage } from "../pages/CompanyReportingYearsPage";
+import { CompanyReportsPage } from "../pages/CompanyReportsPage";
 import { CompanySettingsPage } from "../pages/CompanySettingsPage";
 import { CompanyWorkspacePage } from "../pages/CompanyWorkspacePage";
 import { LoginPage } from "../pages/LoginPage";
@@ -34,6 +35,7 @@ export default function App() {
           element={<CompanyReportingYearsPage />}
           path="/app/:companyId/reporting-years"
         />
+        <Route element={<CompanyReportsPage />} path="/app/:companyId/reports" />
         <Route
           element={<CompanyGhgSetupPage />}
           path="/app/:companyId/reporting-years/:reportingYearId/ghg-setup"

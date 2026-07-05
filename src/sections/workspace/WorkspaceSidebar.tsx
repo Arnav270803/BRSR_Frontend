@@ -2,6 +2,7 @@ import {
   Building2,
   CalendarDays,
   ClipboardList,
+  FileText,
   LayoutDashboard,
   Leaf,
   Settings,
@@ -16,6 +17,7 @@ export type WorkspaceNavKey =
   | "reportingYears"
   | "ghgSetup"
   | "dataEntry"
+  | "reports"
   | "employees"
   | "settings";
 
@@ -37,6 +39,7 @@ function getNavigation(viewerRole: WorkspaceRole, companyId: string): NavItem[] 
     },
     { key: "ghgSetup", label: "GHG setup", icon: Leaf },
     { key: "dataEntry", label: "Data entry", icon: ClipboardList },
+    { key: "reports", label: "Reports", icon: FileText, to: `/app/${companyId}/reports` },
     { key: "employees", label: "Employees", icon: Users, to: `/app/${companyId}/employees` },
     { key: "settings", label: "Settings", icon: Settings, to: `/app/${companyId}/settings` },
   ];
@@ -44,6 +47,7 @@ function getNavigation(viewerRole: WorkspaceRole, companyId: string): NavItem[] 
   const userNavigation: NavItem[] = [
     { key: "dashboard", label: "Dashboard", icon: LayoutDashboard, to: `/app/${companyId}` },
     { key: "dataEntry", label: "Data entry", icon: ClipboardList },
+    { key: "reports", label: "Reports", icon: FileText, to: `/app/${companyId}/reports` },
     { key: "settings", label: "Settings", icon: Settings, to: `/app/${companyId}/settings` },
   ];
 
@@ -100,6 +104,10 @@ export function WorkspaceSidebar({
   function getReportingYearRoute(reportingYearId: string) {
     if (activeItem === "ghgSetup") {
       return `/app/${companyId}/reporting-years/${reportingYearId}/ghg-setup`;
+    }
+
+    if (activeItem === "reports") {
+      return `/app/${companyId}/reports?year=${reportingYearId}`;
     }
 
     return `/app/${companyId}/reporting-years/${reportingYearId}/data`;

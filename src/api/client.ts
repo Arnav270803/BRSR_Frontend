@@ -97,3 +97,48 @@ export async function apiRequest<TData>(
 
   return response.json() as Promise<TData>;
 }
+
+function getFilenameFromDisposition(disposition: string | null) {
+  if (!disposition) {
+    return undefined;
+  }
+
+  const match = disposition.match(/filename="?([^"]+)"?/i);
+
+  return match?.[1];
+}
+
+export async function apiBlobRequest(
+  path: string,
+  options: RequestInit = {},
+): Promise<{ blob: Blob; filename?: string }> {
+  const response = await fetch(`${API_BASE_URL}${path}`, {
+    ...options,
+    credentials: "include",
+  });
+
+  if (!response.ok) {
+    if (response.status === 401 && canRefreshAuth(path) && (await refreshSession())) {
+      const retryResponse = await fetch(`${API_BASE_URL}${path}`, {
+        ...options,
+        credentials: "include",
+      });
+
+      if (retryResponse.ok) {
+        return {
+          blob: await retryResponse.blob(),
+          filename: getFilenameFromDisposition(retryResponse.headers.get("Content-Disposition")),
+        };
+      }
+
+      throw await parseApiError(retryResponse);
+    }
+
+    throw await parseApiError(response);
+  }
+
+  return {
+    blob: await response.blob(),
+    filename: getFilenameFromDisposition(response.headers.get("Content-Disposition")),
+  };
+}
