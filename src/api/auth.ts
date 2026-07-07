@@ -1,4 +1,4 @@
-import { apiRequest } from "./client";
+import { API_BASE_URL, apiRequest } from "./client";
 
 export type AuthMembership = {
   companyId: string;
@@ -28,6 +28,16 @@ export function loginWithGoogle(idToken: string) {
     method: "POST",
     body: JSON.stringify({ idToken }),
   });
+}
+
+export function getLinkedInLoginUrl(returnTo?: string | null) {
+  const loginUrl = new URL(`${API_BASE_URL}/auth/linkedin/start`);
+
+  if (returnTo?.startsWith("/") && !returnTo.startsWith("//")) {
+    loginUrl.searchParams.set("returnTo", returnTo);
+  }
+
+  return loginUrl.toString();
 }
 
 export function getCurrentSession() {

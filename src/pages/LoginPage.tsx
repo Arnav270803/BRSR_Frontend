@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { loginWithGoogle } from "../api/auth";
+import { getLinkedInLoginUrl, loginWithGoogle } from "../api/auth";
 import { ApiError } from "../api/client";
 
 const GOOGLE_SCRIPT_ID = "google-identity-services";
@@ -37,9 +37,13 @@ export function LoginPage() {
   const googleButtonRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
   const navigate = useNavigate();
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const authError = new URLSearchParams(location.search).get("authError");
+  const [errorMessage, setErrorMessage] = useState<string | null>(
+    getAuthErrorMessage(authError),
+  );
   const [isGoogleReady, setIsGoogleReady] = useState(false);
   const [isSigningIn, setIsSigningIn] = useState(false);
+  const [isLinkedInSigningIn, setIsLinkedInSigningIn] = useState(false);
   const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID as string | undefined;
   const fromPath =
     typeof location.state === "object" &&
@@ -139,6 +143,12 @@ export function LoginPage() {
     };
   }, [fromPath, googleClientId, navigate]);
 
+  function continueWithLinkedIn() {
+    setIsLinkedInSigningIn(true);
+    setErrorMessage(null);
+    window.location.assign(getLinkedInLoginUrl(fromPath));
+  }
+
   return (
     <main className="relative min-h-screen overflow-hidden bg-[#eef3ef] px-5 py-6 text-[#15211a]">
       <div className="absolute inset-0 bg-[linear-gradient(135deg,#f8faf6_0%,#e8f0ed_48%,#f7efe6_100%)]" />
@@ -171,7 +181,7 @@ export function LoginPage() {
               </div>
               <div className="border-t border-[#b8c7bd] pt-4">
                 <p className="font-semibold text-[#16221b]">Auth</p>
-                <p className="mt-1">Google sign-in</p>
+                <p className="mt-1">Google or LinkedIn</p>
               </div>
             </div>
           </div>
@@ -184,7 +194,7 @@ export function LoginPage() {
                   Continue securely
                 </h2>
                 <p className="mt-3 text-sm leading-6 text-[#647169]">
-                  Use the Google account linked with your company access.
+                  Use the Google or LinkedIn account linked with your company access.
                 </p>
               </div>
 
@@ -199,6 +209,26 @@ export function LoginPage() {
                   </p>
                 ) : null}
               </div>
+
+              <div className="my-4 flex items-center gap-3">
+                <span className="h-px flex-1 bg-[#d5dfd8]" />
+                <span className="text-xs font-semibold tracking-[0.12em] text-[#748078] uppercase">
+                  or
+                </span>
+                <span className="h-px flex-1 bg-[#d5dfd8]" />
+              </div>
+
+              <button
+                className="inline-flex h-12 w-full items-center justify-center gap-3 rounded-md border border-[#cdd8cf] bg-white/85 px-4 text-sm font-semibold text-[#17221b] shadow-sm transition hover:border-[#9fb5a6] hover:bg-white focus:ring-3 focus:ring-[#426a52]/20 focus:outline-none disabled:cursor-not-allowed disabled:opacity-70"
+                disabled={isLinkedInSigningIn}
+                type="button"
+                onClick={continueWithLinkedIn}
+              >
+                <span className="grid size-5 place-items-center rounded-[4px] bg-[#0a66c2] text-[11px] font-bold text-white">
+                  in
+                </span>
+                {isLinkedInSigningIn ? "Opening LinkedIn..." : "Sign in with LinkedIn"}
+              </button>
 
               {errorMessage ? (
                 <p className="mt-4 rounded-md border border-[#e2c6bd] bg-[#fff7f3] px-3 py-2 text-sm leading-6 text-[#8a3f2a]">
@@ -215,4 +245,20 @@ export function LoginPage() {
       </section>
     </main>
   );
+}
+
+function getAuthErrorMessage(authError: string | null) {
+  if (!authError) {
+    return null;
+  }
+
+  if (authError === "linkedin_not_configured") {
+    return "LinkedIn sign-in is not configured yet.";
+  }
+
+  if (authError === "no_workspace") {
+    return "No company workspace is available for this account yet.";
+  }
+
+  return "Unable to complete LinkedIn sign-in right now.";
 }
