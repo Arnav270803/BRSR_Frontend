@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { getLinkedInLoginUrl, loginWithGoogle } from "../api/auth";
 import { ApiError } from "../api/client";
 
@@ -238,6 +238,10 @@ export function LoginPage() {
 
               <p className="mt-5 text-center text-xs leading-5 text-[#778179]">
                 Your session will open the correct company workspace after sign-in.
+                <br />
+                <Link className="font-semibold text-[#426a52] hover:text-[#183f2a]" to="/privacy">
+                  Privacy policy
+                </Link>
               </p>
             </div>
           </div>

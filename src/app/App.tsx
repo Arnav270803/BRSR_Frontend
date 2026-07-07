@@ -12,12 +12,14 @@ import { CompanySettingsPage } from "../pages/CompanySettingsPage";
 import { CompanySitesPage } from "../pages/CompanySitesPage";
 import { CompanyWorkspacePage } from "../pages/CompanyWorkspacePage";
 import { LoginPage } from "../pages/LoginPage";
+import { PrivacyPolicyPage } from "../pages/PrivacyPolicyPage";
 
 export default function App() {
   return (
     <Routes>
       <Route element={<Navigate replace to="/login" />} path="/" />
       <Route element={<LoginPage />} path="/login" />
+      <Route element={<PrivacyPolicyPage />} path="/privacy" />
       <Route element={<RequireAuth />}>
         <Route element={<AcceptInvitationPage />} path="/invite" />
         <Route element={<RequireCompanyOnboarding />}>
