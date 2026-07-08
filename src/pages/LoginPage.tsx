@@ -272,8 +272,16 @@ function getAuthErrorMessage(authError: string | null) {
     return "LinkedIn token exchange failed. Please check the LinkedIn client secret and redirect URL.";
   }
 
+  if (authError === "linkedin_token_request_failed") {
+    return "Could not reach LinkedIn to complete sign-in. Please try again.";
+  }
+
   if (authError === "linkedin_state_missing" || authError === "linkedin_state_mismatch") {
     return "LinkedIn sign-in session expired. Please try again.";
+  }
+
+  if (authError === "linkedin_id_token_invalid") {
+    return "LinkedIn returned a sign-in token that could not be verified.";
   }
 
   if (authError === "invalid_linkedin_nonce" || authError === "invalid_linkedin_token") {
@@ -282,6 +290,14 @@ function getAuthErrorMessage(authError: string | null) {
 
   if (authError === "linkedin_userinfo_failed") {
     return "LinkedIn profile lookup failed after approval. Please try again.";
+  }
+
+  if (authError === "invalid_linkedin_profile") {
+    return "LinkedIn profile details were incomplete. Please try Google sign-in for now.";
+  }
+
+  if (authError === "linkedin_session_create_failed") {
+    return "LinkedIn sign-in worked, but creating your workspace session failed.";
   }
 
   if (authError === "no_workspace") {
