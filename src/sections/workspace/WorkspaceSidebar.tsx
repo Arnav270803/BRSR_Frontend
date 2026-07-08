@@ -300,7 +300,7 @@ export function WorkspaceSidebar({
         ) : null}
       </header>
 
-      <aside className="hidden rounded-lg border border-[#dfe8e2] bg-white/50 p-3 shadow-[0_18px_60px_rgba(35,47,38,0.10)] backdrop-blur-2xl sm:p-4 lg:sticky lg:top-4 lg:flex lg:h-[calc(100vh-2rem)] lg:w-72 lg:shrink-0 lg:flex-col xl:w-80 2xl:w-[340px] 2xl:p-5">
+      <aside className="hidden rounded-lg border border-[#dfe8e2] bg-white/70 p-3 shadow-[0_18px_60px_rgba(35,47,38,0.10)] backdrop-blur-2xl sm:p-4 lg:sticky lg:top-4 lg:flex lg:max-h-[calc(100vh-2rem)] lg:min-h-[calc(100vh-2rem)] lg:w-72 lg:shrink-0 lg:flex-col lg:overflow-y-auto xl:w-80 2xl:w-[340px] 2xl:p-5">
       <div className="flex items-center gap-3 border-b border-[#dce5df] pb-3 sm:pb-4">
         <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-[#1f5135] text-white sm:size-10">
           <Building2 className="size-5" strokeWidth={1.8} />
@@ -384,7 +384,7 @@ export function WorkspaceSidebar({
         )}
       </div>
 
-      <nav className="mt-3 grid gap-2 sm:mt-4 lg:flex lg:flex-col 2xl:gap-3">
+      <nav className="mt-3 grid gap-2 rounded-lg border border-[#d9e2dc] bg-white/45 p-2 sm:mt-4 lg:flex lg:flex-col 2xl:gap-3">
         {navigation.map((item) => {
           const Icon = item.icon;
           const isActive = item.key === activeItem;
