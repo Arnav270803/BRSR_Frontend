@@ -174,12 +174,6 @@ function HeroSection() {
             <a className="inline-flex items-center gap-1.5 transition hover:text-[#ffc34f]" href="#services">
               Services <ChevronDown size={16} />
             </a>
-            <a className="inline-flex items-center gap-1.5 transition hover:text-[#ffc34f]" href="#resources">
-              Resources <ChevronDown size={16} />
-            </a>
-            <a className="transition hover:text-[#ffc34f]" href="#about">
-              About Us
-            </a>
             <a className="transition hover:text-[#ffc34f]" href="#contact">
               Contact
             </a>
@@ -221,9 +215,6 @@ function HeroSection() {
             </a>
             <a className="rounded-md px-3 py-2 hover:bg-white/10" href="#services" onClick={() => setIsMenuOpen(false)}>
               Services
-            </a>
-            <a className="rounded-md px-3 py-2 hover:bg-white/10" href="#about" onClick={() => setIsMenuOpen(false)}>
-              About Us
             </a>
             <a className="rounded-md px-3 py-2 hover:bg-white/10" href="#contact" onClick={() => setIsMenuOpen(false)}>
               Contact
