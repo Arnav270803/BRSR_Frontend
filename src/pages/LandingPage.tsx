@@ -721,17 +721,11 @@ function Footer() {
               Bridging ESG obligations and business value for a sustainable tomorrow.
             </p>
             <div className="mt-5 flex gap-3">
-              <SocialIcon label="LinkedIn">
+              <SocialIcon
+                href="https://www.linkedin.com/company/procesg/posts/?feedView=all"
+                label="LinkedIn"
+              >
                 <span className="text-xs font-extrabold">in</span>
-              </SocialIcon>
-              <SocialIcon label="X">
-                <X size={17} />
-              </SocialIcon>
-              <SocialIcon label="YouTube">
-                <Play size={17} />
-              </SocialIcon>
-              <SocialIcon label="Email">
-                <Mail size={17} />
               </SocialIcon>
             </div>
           </div>
@@ -767,11 +761,21 @@ function Footer() {
   );
 }
 
-function SocialIcon({ label, children }: { label: string; children: React.ReactNode }) {
+function SocialIcon({
+  href,
+  label,
+  children,
+}: {
+  href: string;
+  label: string;
+  children: React.ReactNode;
+}) {
   return (
     <a
       className="grid size-9 place-items-center rounded-full border border-white/18 text-white/85 transition hover:border-[#ffc34f] hover:text-[#ffc34f]"
-      href="#top"
+      href={href}
+      rel="noreferrer"
+      target="_blank"
       aria-label={label}
     >
       {children}
