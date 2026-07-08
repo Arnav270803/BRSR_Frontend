@@ -179,7 +179,7 @@ export function WorkspaceSidebar({
             <Building2 className="size-5" strokeWidth={1.8} />
           </span>
           <div className="min-w-0 flex-1">
-            <p className="truncate text-sm font-semibold text-[#142019]">BRSR Workspace</p>
+            <p className="truncate text-sm font-semibold text-[#142019]">ESG Workspace</p>
             <p className="truncate text-xs text-[#68756d]">
               {companyName}
               {activeSite ? ` / ${activeSite.name}` : ""}
@@ -306,7 +306,7 @@ export function WorkspaceSidebar({
           <Building2 className="size-5" strokeWidth={1.8} />
         </span>
         <div className="min-w-0">
-          <p className="text-sm font-semibold text-[#142019]">BRSR Workspace</p>
+          <p className="text-sm font-semibold text-[#142019]">ESG Workspace</p>
           <p className="truncate text-xs text-[#68756d]">{companyName}</p>
         </div>
       </div>
