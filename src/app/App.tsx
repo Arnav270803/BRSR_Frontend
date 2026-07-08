@@ -11,13 +11,14 @@ import { CompanyReportsPage } from "../pages/CompanyReportsPage";
 import { CompanySettingsPage } from "../pages/CompanySettingsPage";
 import { CompanySitesPage } from "../pages/CompanySitesPage";
 import { CompanyWorkspacePage } from "../pages/CompanyWorkspacePage";
+import { LandingPage } from "../pages/LandingPage";
 import { LoginPage } from "../pages/LoginPage";
 import { PrivacyPolicyPage } from "../pages/PrivacyPolicyPage";
 
 export default function App() {
   return (
     <Routes>
-      <Route element={<Navigate replace to="/login" />} path="/" />
+      <Route element={<LandingPage />} path="/" />
       <Route element={<LoginPage />} path="/login" />
       <Route element={<PrivacyPolicyPage />} path="/privacy" />
       <Route element={<RequireAuth />}>
@@ -64,7 +65,7 @@ export default function App() {
         <Route element={<CompanyEmployeesPage />} path="/app/:companyId/employees" />
         <Route element={<CompanySettingsPage />} path="/app/:companyId/settings" />
       </Route>
-      <Route element={<Navigate replace to="/login" />} path="*" />
+      <Route element={<Navigate replace to="/" />} path="*" />
     </Routes>
   );
 }
