@@ -9,13 +9,10 @@ import {
   Database,
   Droplets,
   FileCheck2,
-  Globe2,
-  GraduationCap,
   Leaf,
   LineChart,
   Mail,
   Menu,
-  Phone,
   PieChart,
   Play,
   ShieldCheck,
@@ -266,11 +263,10 @@ function HeroSection() {
             </a>
           </div>
 
-          <div className="mt-9 grid max-w-3xl grid-cols-1 gap-5 text-sm text-[#d9e7f5] sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-9 grid max-w-3xl grid-cols-1 gap-5 text-sm text-[#d9e7f5] sm:grid-cols-3">
             <TrustItem icon={ShieldCheck} label="BRSR & SEBI Aligned" />
             <TrustItem icon={LineChart} label="Data to Value Framework" />
             <TrustItem icon={Leaf} label="Sustainability at Scale" />
-            <TrustItem icon={Globe2} label="India - APAC - Global Reach" />
           </div>
         </div>
 
@@ -750,15 +746,7 @@ function Footer() {
           <div className="grid gap-3 text-sm text-[#d9e7f5] lg:justify-end">
             <p className="flex items-center gap-3">
               <Mail size={18} className="text-[#ffc34f]" />
-              info@procesg.com
-            </p>
-            <p className="flex items-center gap-3">
-              <Phone size={18} className="text-[#ffc34f]" />
-              +91 22 4970 6423
-            </p>
-            <p className="flex items-center gap-3">
-              <Globe2 size={18} className="text-[#ffc34f]" />
-              India - APAC - Global
+              transform@procesg.com
             </p>
           </div>
         </div>
