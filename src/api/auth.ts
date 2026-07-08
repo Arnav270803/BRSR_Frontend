@@ -31,7 +31,7 @@ export function loginWithGoogle(idToken: string) {
 }
 
 export function getLinkedInLoginUrl(returnTo?: string | null) {
-  const loginUrl = new URL(`${API_BASE_URL}/auth/linkedin/start`);
+  const loginUrl = new URL(`${API_BASE_URL}/auth/linkedin/start`, window.location.origin);
 
   if (returnTo?.startsWith("/") && !returnTo.startsWith("//")) {
     loginUrl.searchParams.set("returnTo", returnTo);
