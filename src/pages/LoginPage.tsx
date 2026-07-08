@@ -260,6 +260,30 @@ function getAuthErrorMessage(authError: string | null) {
     return "LinkedIn sign-in is not configured yet.";
   }
 
+  if (authError === "linkedin_email_missing") {
+    return "LinkedIn did not share an email address for this account.";
+  }
+
+  if (authError === "linkedin_email_not_verified") {
+    return "LinkedIn returned an unverified email address. Please use Google sign-in for now.";
+  }
+
+  if (authError === "linkedin_token_exchange_failed") {
+    return "LinkedIn token exchange failed. Please check the LinkedIn client secret and redirect URL.";
+  }
+
+  if (authError === "linkedin_state_missing" || authError === "linkedin_state_mismatch") {
+    return "LinkedIn sign-in session expired. Please try again.";
+  }
+
+  if (authError === "invalid_linkedin_nonce" || authError === "invalid_linkedin_token") {
+    return "LinkedIn returned an invalid sign-in response. Please try again.";
+  }
+
+  if (authError === "linkedin_userinfo_failed") {
+    return "LinkedIn profile lookup failed after approval. Please try again.";
+  }
+
   if (authError === "no_workspace") {
     return "No company workspace is available for this account yet.";
   }
