@@ -129,7 +129,7 @@ const focusAreas = [
 ];
 
 const aboutCards = [
-  { label: "Founded", value: "2021 in India", tone: "bg-[#159f90]" },
+  { label: "Founded", value: "2020 in India", tone: "bg-[#159f90]" },
   { label: "Focus", value: "ESG, Sustainability & Digital Transformation", tone: "bg-[#1469b2]" },
   { label: "Reach", value: "India, APAC & Global", tone: "bg-[#268f2f]" },
   { label: "Expertise", value: "25+ years combined leadership experience", tone: "bg-[#1d3e6f]" },
@@ -646,7 +646,7 @@ function AboutSection() {
             </h2>
             <p className="mt-5 max-w-3xl text-lg leading-8 text-[#526173]">
               ProceSG is an India-focused ESG & Transformation Consultancy established
-              in 2021. We help organisations embed sustainability into strategy,
+              in 2020. We help organisations embed sustainability into strategy,
               operations, and reporting frameworks.
             </p>
           </div>
