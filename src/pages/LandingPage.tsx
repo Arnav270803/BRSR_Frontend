@@ -179,8 +179,8 @@ function HeroSection() {
 
       <header className="relative z-10 border-b border-white/10 bg-[#001326]/78 backdrop-blur-xl">
         <div className="mx-auto flex h-20 max-w-[1720px] items-center justify-between px-4 sm:h-24 sm:px-8 lg:px-10">
-          <a className="flex items-center" href="#top" aria-label="ProceSG home">
-            <img className="h-16 w-auto sm:h-20" src={procesgLogo} alt="ProceSG - ESG to Value Creation" />
+          <a className="flex items-center" href="#top" aria-label="ProcesG home">
+            <img className="h-16 w-auto sm:h-20" src={procesgLogo} alt="ProcesG - ESG to Value Creation" />
           </a>
 
           <nav className="hidden items-center gap-9 text-[15px] font-medium text-white/92 lg:flex">
@@ -271,7 +271,7 @@ function HeroSection() {
           </p>
 
           <p className="mt-5 max-w-2xl text-base leading-7 text-[#d9e6f4] sm:text-[20px] sm:leading-8">
-            ProceSG helps organisations simplify ESG reporting, meet regulatory mandates,
+            ProcesG helps organisations simplify ESG reporting, meet regulatory mandates,
             and drive sustainable growth.
           </p>
 
@@ -446,7 +446,7 @@ function FrameworkSection() {
             ESG to Value Creation
           </p>
           <h2 className="mt-3 text-3xl font-extrabold tracking-normal text-[#07182e] sm:text-4xl md:text-5xl">
-            Introducing the ProceSG Framework
+            Introducing the ProcesG Framework
           </h2>
           <p className="mt-4 text-lg leading-8 text-[#526173]">
             A practical path from ESG compliance to business value.
@@ -661,13 +661,13 @@ function AboutSection() {
         <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
           <div>
             <p className="text-sm font-bold tracking-[0.18em] text-[#159f90] uppercase">
-              About ProceSG
+              About ProcesG
             </p>
             <h2 className="mt-3 text-3xl font-extrabold tracking-normal text-[#07182e] sm:text-4xl md:text-5xl">
               Who We Are
             </h2>
             <p className="mt-5 max-w-3xl text-lg leading-8 text-[#526173]">
-              ProceSG is an India-focused ESG & Transformation Consultancy established
+              ProcesG is an India-focused ESG & Transformation Consultancy established
               in 2020. We help organisations embed social priorities into strategy,
               operations, and reporting frameworks.
             </p>
@@ -696,7 +696,7 @@ function AboutSection() {
                 Ready to turn ESG into value?
               </h2>
               <p className="mt-5 max-w-2xl text-lg leading-8 text-[#d9e7f5]">
-                See how ProceSG can simplify ESG/BRSR compliance, executive reporting and
+                See how ProcesG can simplify ESG/BRSR compliance, executive reporting and
                 ESG transformation for your organisation.
               </p>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
@@ -745,7 +745,7 @@ function Footer() {
       <div className="mx-auto max-w-[1480px]">
         <div className="grid gap-9 border-b border-white/14 pb-8 lg:grid-cols-[1.15fr_0.85fr_1fr] lg:items-start">
           <div>
-            <img className="h-20 w-auto" src={procesgLogo} alt="ProceSG - ESG to Value Creation" />
+            <img className="h-20 w-auto" src={procesgLogo} alt="ProcesG - ESG to Value Creation" />
             <p className="mt-4 max-w-sm text-sm leading-6 text-[#d9e7f5]">
               Bridging ESG obligations and business value for a sustainable tomorrow.
             </p>
@@ -775,7 +775,7 @@ function Footer() {
         </div>
 
         <div className="flex flex-col gap-4 pt-6 text-xs text-[#b7c6d7] sm:flex-row sm:items-center sm:justify-between">
-          <p>(c) 2024 ProceSG. All rights reserved.</p>
+          <p>(c) 2024 ProcesG. All rights reserved.</p>
           <div className="flex gap-6">
             <Link className="transition hover:text-white" to="/privacy">
               Privacy Policy
