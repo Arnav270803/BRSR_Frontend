@@ -24,7 +24,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import procesgLogo from "../assets/procesg-logo.svg";
+import procesgLogo from "../assets/procesg-logo-official.png";
 
 const frameworkCards = [
   {
@@ -158,7 +158,7 @@ function HeroSection() {
       <header className="relative z-10 border-b border-white/10 bg-[#001326]/78 backdrop-blur-xl">
         <div className="mx-auto flex h-20 max-w-[1720px] items-center justify-between px-4 sm:h-24 sm:px-8 lg:px-10">
           <a className="flex items-center" href="#top" aria-label="ProceSG home">
-            <img className="h-12 w-auto sm:h-16" src={procesgLogo} alt="ProceSG - ESG to Value Creation" />
+            <img className="h-16 w-auto sm:h-20" src={procesgLogo} alt="ProceSG - ESG to Value Creation" />
           </a>
 
           <nav className="hidden items-center gap-9 text-[15px] font-medium text-white/92 lg:flex">
@@ -723,7 +723,7 @@ function Footer() {
       <div className="mx-auto max-w-[1480px]">
         <div className="grid gap-9 border-b border-white/14 pb-8 lg:grid-cols-[1.15fr_0.85fr_1fr] lg:items-start">
           <div>
-            <img className="h-14 w-auto" src={procesgLogo} alt="ProceSG - ESG to Value Creation" />
+            <img className="h-20 w-auto" src={procesgLogo} alt="ProceSG - ESG to Value Creation" />
             <p className="mt-4 max-w-sm text-sm leading-6 text-[#d9e7f5]">
               Bridging ESG obligations and business value for a sustainable tomorrow.
             </p>
