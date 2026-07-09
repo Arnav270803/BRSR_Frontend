@@ -137,7 +137,7 @@ const aboutCards = [
 
 export function LandingPage() {
   return (
-    <main className="landing-page min-h-screen bg-[#f6f8fb] text-[#07182e]">
+    <main className="landing-page min-h-screen overflow-x-clip bg-[#f6f8fb] text-[#07182e]">
       <HeroSection />
       <FrameworkSection />
       <PlatformSection />
@@ -156,9 +156,9 @@ function HeroSection() {
       <div className="absolute inset-x-0 bottom-0 h-36 opacity-50 [background-image:radial-gradient(circle_at_center,rgba(34,152,222,0.65)_1px,transparent_1.5px)] [background-size:28px_18px]" />
 
       <header className="relative z-10 border-b border-white/10 bg-[#001326]/78 backdrop-blur-xl">
-        <div className="mx-auto flex h-24 max-w-none items-center justify-between px-5 sm:px-8 lg:px-10">
+        <div className="mx-auto flex h-20 max-w-[1720px] items-center justify-between px-4 sm:h-24 sm:px-8 lg:px-10">
           <a className="flex items-center" href="#top" aria-label="ProceSG home">
-            <img className="h-16 w-auto" src={procesgLogo} alt="ProceSG - ESG to Value Creation" />
+            <img className="h-12 w-auto sm:h-16" src={procesgLogo} alt="ProceSG - ESG to Value Creation" />
           </a>
 
           <nav className="hidden items-center gap-9 text-[15px] font-medium text-white/92 lg:flex">
@@ -228,20 +228,27 @@ function HeroSection() {
         ) : null}
       </header>
 
-      <div id="top" className="relative z-10 mx-auto grid max-w-none items-center gap-12 px-5 py-16 sm:px-8 lg:grid-cols-[0.92fr_1.08fr] lg:px-10 lg:py-20 xl:py-24">
+      <div id="top" className="relative z-10 mx-auto grid max-w-[1720px] items-center gap-10 px-4 py-12 sm:gap-12 sm:px-8 sm:py-16 lg:grid-cols-[0.92fr_1.08fr] lg:px-10 lg:py-20 xl:py-24">
         <div>
-          <p className="inline-flex items-center gap-2 rounded-full border border-[#18bfb4]/65 bg-[#031e37]/72 px-4 py-2 text-sm font-semibold text-[#18d8ca] shadow-[0_10px_34px_rgba(0,0,0,0.18)]">
+          <p className="inline-flex max-w-full items-center gap-2 rounded-full border border-[#18bfb4]/65 bg-[#031e37]/72 px-3 py-2 text-xs font-semibold text-[#18d8ca] shadow-[0_10px_34px_rgba(0,0,0,0.18)] sm:px-4 sm:text-sm">
             <ShieldCheck size={16} />
-            India's Trusted ESG & BRSR Platform
+            <span className="min-w-0">India's Trusted ESG & BRSR Platform</span>
           </p>
 
-          <h1 className="mt-7 max-w-[840px] text-5xl leading-[1.1] font-bold tracking-normal text-white sm:text-6xl lg:text-[64px] xl:text-[70px]">
-            <span className="block">Turn BRSR compliance</span>
-            <span className="block">into measurable</span>
-            <span className="lp-accent block">ESG value</span>
+          <h1 className="mt-7 max-w-[840px] text-4xl leading-[1.1] font-bold tracking-normal text-white sm:text-5xl md:text-6xl lg:text-[64px] xl:text-[70px]">
+            <span className="block">Transforming ESG Complexity</span>
+            <span className="block">
+              into <span className="lp-accent">Business Opportunity</span>
+            </span>
           </h1>
 
-          <p className="mt-6 max-w-2xl text-[20px] leading-8 text-[#d9e6f4]">
+          <p className="mt-6 flex flex-wrap items-center gap-x-3 gap-y-1 text-lg font-semibold text-[#b9dfc0] sm:text-2xl">
+            <span>Established 2020</span>
+            <span aria-hidden="true">&bull;</span>
+            <span>Singapore</span>
+          </p>
+
+          <p className="mt-5 max-w-2xl text-base leading-7 text-[#d9e6f4] sm:text-[20px] sm:leading-8">
             ProceSG helps organisations simplify ESG reporting, meet regulatory mandates,
             and drive sustainable growth.
           </p>
@@ -289,14 +296,14 @@ function TrustItem({ icon: Icon, label }: { icon: typeof ShieldCheck; label: str
 
 function HeroDashboard() {
   return (
-    <div className="relative min-h-[520px] lg:min-h-[580px]">
-      <div className="absolute top-5 right-5 left-0 rounded-lg border border-white/55 bg-white p-5 text-[#07182e] shadow-[0_30px_90px_rgba(0,0,0,0.34)] lg:left-8">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
+    <div className="relative min-h-0 lg:min-h-[580px]">
+      <div className="relative rounded-lg border border-white/55 bg-white p-4 text-[#07182e] shadow-[0_30px_90px_rgba(0,0,0,0.34)] sm:p-5 lg:absolute lg:top-5 lg:right-5 lg:left-8">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="flex min-w-0 items-center gap-3">
             <span className="grid size-12 place-items-center rounded-md bg-[#001b3b] text-[#73e1cf]">
               <Leaf size={24} />
             </span>
-            <div>
+            <div className="min-w-0">
               <p className="text-xl font-semibold">ESG Overview</p>
               <p className="text-xs font-semibold text-[#6d7890]">FY 2024-25</p>
             </div>
@@ -306,7 +313,7 @@ function HeroDashboard() {
           </button>
         </div>
 
-        <div className="mt-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
+        <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <ScoreRing label="Overall ESG Score" value="78" color="#1469b2" />
           <ScoreRing label="Environmental" value="82" color="#268f2f" />
           <ScoreRing label="Social" value="73" color="#f2a50c" />
@@ -318,11 +325,11 @@ function HeroDashboard() {
             <p className="font-semibold text-[#07182e]">BRSR Compliance</p>
             <div className="mt-4 space-y-3">
               {["General Disclosures", "Management & Process Disclosures", "Principle-wise Performance", "Core Indicators", "Leadership Indicators"].map((item) => (
-                <div className="flex items-center gap-2 text-xs font-medium text-[#41516a]" key={item}>
+                <div className="flex min-w-0 items-center gap-2 text-xs font-medium text-[#41516a]" key={item}>
                   <span className="grid size-5 place-items-center rounded-full bg-[#268f2f] text-white">
                     <Check size={13} />
                   </span>
-                  {item}
+                  <span className="min-w-0">{item}</span>
                 </div>
               ))}
             </div>
@@ -333,15 +340,15 @@ function HeroDashboard() {
           </div>
 
           <div className="rounded-lg border border-[#e1e7ef] bg-white p-4 shadow-sm">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-wrap items-center justify-between gap-3">
               <p className="font-semibold text-[#07182e]">Performance Trend</p>
-              <div className="flex gap-3 text-[10px] font-semibold text-[#6d7890]">
+              <div className="flex flex-wrap gap-3 text-[10px] font-semibold text-[#6d7890]">
                 <span className="inline-flex items-center gap-1"><i className="size-2 rounded-sm bg-[#b9cddd]" /> FY 22-23</span>
                 <span className="inline-flex items-center gap-1"><i className="size-2 rounded-sm bg-[#1469b2]" /> FY 23-24</span>
                 <span className="inline-flex items-center gap-1"><i className="size-2 rounded-sm bg-[#268f2f]" /> FY 24-25</span>
               </div>
             </div>
-            <div className="mt-6 grid h-44 grid-cols-3 items-end gap-7 border-b border-[#dce5ec] px-4">
+            <div className="mt-6 grid h-44 grid-cols-3 items-end gap-2 border-b border-[#dce5ec] px-1 sm:gap-7 sm:px-4">
               <MiniBars values={[54, 38, 48]} labels={["Environment"]} />
               <MiniBars values={[62, 44, 52]} labels={["Social"]} />
               <MiniBars values={[78, 58, 72]} labels={["Governance"]} />
@@ -350,7 +357,7 @@ function HeroDashboard() {
         </div>
       </div>
 
-      <div className="absolute right-0 bottom-4 w-[88%] rounded-lg border border-[#e5ebf1] bg-white p-5 text-[#07182e] shadow-[0_26px_70px_rgba(0,0,0,0.26)] sm:w-[58%] lg:w-[44%]">
+      <div className="relative mt-4 w-full rounded-lg border border-[#e5ebf1] bg-white p-5 text-[#07182e] shadow-[0_26px_70px_rgba(0,0,0,0.26)] lg:absolute lg:right-0 lg:bottom-4 lg:mt-0 lg:w-[44%]">
         <p className="font-bold">Top Focus Areas</p>
         <div className="mt-5 space-y-4">
           {focusAreas.map((area) => (
@@ -416,7 +423,7 @@ function FrameworkSection() {
           <p className="text-sm font-bold tracking-[0.18em] text-[#159f90] uppercase">
             ESG to Value Creation
           </p>
-          <h2 className="mt-3 text-4xl font-extrabold tracking-normal text-[#07182e] sm:text-5xl">
+          <h2 className="mt-3 text-3xl font-extrabold tracking-normal text-[#07182e] sm:text-4xl md:text-5xl">
             Introducing the ProceSG Framework
           </h2>
           <p className="mt-4 text-lg leading-8 text-[#526173]">
@@ -493,7 +500,7 @@ function PlatformSection() {
               <p className="text-sm font-bold tracking-[0.18em] text-[#5ee0d0] uppercase">
                 Platform
               </p>
-              <h2 className="mt-3 text-4xl font-extrabold tracking-normal sm:text-5xl">
+              <h2 className="mt-3 text-3xl font-extrabold tracking-normal sm:text-4xl md:text-5xl">
                 From fragmented ESG data to board-ready BRSR reports
               </h2>
               <p className="mt-5 text-lg leading-8 text-[#d9e7f5]">
@@ -537,11 +544,11 @@ function PlatformSection() {
                     ["GHG Scope Data", "In Progress", "68%"],
                     ["Leadership Indicators", "Evidence Needed", "51%"],
                   ].map(([name, status, progress]) => (
-                    <div className="grid grid-cols-[1fr_auto_90px] items-center gap-4 border-b border-[#e1e7ef] px-4 py-4 last:border-b-0" key={name}>
+                    <div className="grid grid-cols-1 items-center gap-2 border-b border-[#e1e7ef] px-4 py-4 last:border-b-0 sm:grid-cols-[1fr_auto_90px] sm:gap-4" key={name}>
                       <p className="text-sm font-bold">{name}</p>
                       <p className="text-xs font-semibold text-[#526173]">{status}</p>
                       <div>
-                        <p className="mb-1 text-right text-xs font-bold text-[#1469b2]">{progress}</p>
+                        <p className="mb-1 text-xs font-bold text-[#1469b2] sm:text-right">{progress}</p>
                         <div className="h-1.5 rounded-full bg-[#e6edf1]">
                           <div className="h-full rounded-full bg-[#1469b2]" style={{ width: progress }} />
                         </div>
@@ -591,7 +598,7 @@ function PlatformSection() {
               <p className="text-sm font-bold tracking-[0.18em] text-[#159f90] uppercase">
                 Services
               </p>
-              <h2 className="mt-3 text-4xl font-extrabold tracking-normal text-[#07182e] sm:text-5xl">
+              <h2 className="mt-3 text-3xl font-extrabold tracking-normal text-[#07182e] sm:text-4xl md:text-5xl">
                 Built for every ESG team
               </h2>
             </div>
@@ -634,7 +641,7 @@ function AboutSection() {
             <p className="text-sm font-bold tracking-[0.18em] text-[#159f90] uppercase">
               About ProceSG
             </p>
-            <h2 className="mt-3 text-4xl font-extrabold tracking-normal text-[#07182e] sm:text-5xl">
+            <h2 className="mt-3 text-3xl font-extrabold tracking-normal text-[#07182e] sm:text-4xl md:text-5xl">
               Who We Are
             </h2>
             <p className="mt-5 max-w-3xl text-lg leading-8 text-[#526173]">
@@ -663,7 +670,7 @@ function AboutSection() {
               <p className="text-sm font-bold tracking-[0.18em] text-[#5ee0d0] uppercase">
                 Final step
               </p>
-              <h2 className="mt-4 max-w-3xl text-4xl font-extrabold tracking-normal sm:text-5xl">
+              <h2 className="mt-4 max-w-3xl text-3xl font-extrabold tracking-normal sm:text-4xl md:text-5xl">
                 Ready to turn ESG into value?
               </h2>
               <p className="mt-5 max-w-2xl text-lg leading-8 text-[#d9e7f5]">

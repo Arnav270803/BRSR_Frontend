@@ -51,7 +51,7 @@ textarea {
 .landing-page h3 {
   font-family:
     "Aptos Display", Aptos, "Segoe UI", Inter, ui-sans-serif, system-ui, sans-serif;
-  letter-spacing: -0.012em;
+  letter-spacing: 0;
 }
 
 .landing-page h1 {
