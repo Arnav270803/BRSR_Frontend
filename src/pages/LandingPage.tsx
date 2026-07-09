@@ -64,7 +64,7 @@ const frameworkCards = [
   },
   {
     letter: "S",
-    title: "Sustainability",
+    title: "Social",
     icon: Users,
     tone: "gold",
     copy: "Build fair, inclusive workplaces and responsible supply chains that people and investors can trust.",
@@ -114,7 +114,7 @@ const workflow = [
 
 const serviceCards = [
   { title: "ESG/BRSR Reporting", copy: "Disclosure readiness, indicator mapping and report workflows.", icon: FileCheck2 },
-  { title: "ESG Strategy", copy: "Roadmaps that connect sustainability ambition to operating plans.", icon: Target },
+  { title: "ESG Strategy", copy: "Roadmaps that connect social ambition to operating plans.", icon: Target },
   { title: "SEBI Compliance", copy: "Controls, evidence and governance checks for mandated reporting.", icon: ShieldCheck },
   { title: "Green Finance Readiness", copy: "Performance narratives and data packs for lenders and investors.", icon: LineChart },
   { title: "Supply Chain ESG", copy: "Supplier accountability, risk visibility and improvement tracking.", icon: Users },
@@ -130,7 +130,7 @@ const focusAreas = [
 
 const aboutCards = [
   { label: "Founded", value: "2020 in India", tone: "bg-[#159f90]" },
-  { label: "Focus", value: "ESG, Sustainability & Digital Transformation", tone: "bg-[#1469b2]" },
+  { label: "Focus", value: "ESG, Social & Digital Transformation", tone: "bg-[#1469b2]" },
   { label: "Reach", value: "India, APAC & Global", tone: "bg-[#268f2f]" },
   { label: "Expertise", value: "25+ years combined leadership experience", tone: "bg-[#1d3e6f]" },
 ];
@@ -232,7 +232,7 @@ function HeroSection() {
         <div>
           <p className="inline-flex max-w-full items-center gap-2 rounded-full border border-[#18bfb4]/65 bg-[#031e37]/72 px-3 py-2 text-xs font-semibold text-[#18d8ca] shadow-[0_10px_34px_rgba(0,0,0,0.18)] sm:px-4 sm:text-sm">
             <ShieldCheck size={16} />
-            <span className="min-w-0">India's Trusted ESG/BRSR Platform</span>
+            <span className="min-w-0">Globally Trusted ESG/BRSR Platform</span>
           </p>
 
           <h1 className="mt-7 max-w-[840px] text-4xl leading-[1.1] font-bold tracking-normal text-white sm:text-5xl md:text-6xl lg:text-[64px] xl:text-[70px]">
@@ -273,7 +273,7 @@ function HeroSection() {
           <div className="mt-9 grid max-w-3xl grid-cols-1 gap-5 text-sm text-[#d9e7f5] sm:grid-cols-3">
             <TrustItem icon={ShieldCheck} label="ESG/BRSR & SEBI Aligned" />
             <TrustItem icon={LineChart} label="Data to Value Framework" />
-            <TrustItem icon={Leaf} label="Sustainability at Scale" />
+            <TrustItem icon={Leaf} label="Social at Scale" />
           </div>
         </div>
 
@@ -646,7 +646,7 @@ function AboutSection() {
             </h2>
             <p className="mt-5 max-w-3xl text-lg leading-8 text-[#526173]">
               ProceSG is an India-focused ESG & Transformation Consultancy established
-              in 2020. We help organisations embed sustainability into strategy,
+              in 2020. We help organisations embed social priorities into strategy,
               operations, and reporting frameworks.
             </p>
           </div>
