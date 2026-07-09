@@ -53,7 +53,7 @@ const frameworkCards = [
     title: "Compliance",
     icon: FileCheck2,
     tone: "gold",
-    copy: "Meet SEBI, BRSR, GRI, TCFD and ISSB mandates with confidence and credibility.",
+    copy: "Meet SEBI, ESG/BRSR, GRI, TCFD and ISSB mandates with confidence and credibility.",
   },
   {
     letter: "E",
@@ -81,7 +81,7 @@ const frameworkCards = [
 const stats = [
   {
     value: "90%",
-    label: "of NSE 100 companies now publish BRSR reports",
+    label: "of NSE 100 companies now publish ESG/BRSR reports",
     icon: Building2,
     accent: "text-[#159f90]",
   },
@@ -99,7 +99,7 @@ const stats = [
   },
   {
     value: "2030",
-    label: "India Net Zero target - align with BRSR and SEBI now",
+    label: "India Net Zero target - align with ESG/BRSR and SEBI now",
     icon: Target,
     accent: "text-[#1d3e6f]",
   },
@@ -107,13 +107,13 @@ const stats = [
 
 const workflow = [
   { title: "Collect Data", copy: "Bring site, supplier and operational inputs into one ESG data hub.", icon: Database },
-  { title: "Validate Compliance", copy: "Map evidence to BRSR, SEBI and governance requirements.", icon: ClipboardCheck },
-  { title: "Generate Reports", copy: "Create board-ready BRSR outputs and leadership summaries.", icon: FileCheck2 },
+  { title: "Validate Compliance", copy: "Map evidence to ESG/BRSR, SEBI and governance requirements.", icon: ClipboardCheck },
+  { title: "Generate Reports", copy: "Create board-ready ESG/BRSR outputs and leadership summaries.", icon: FileCheck2 },
   { title: "Unlock Value", copy: "Convert disclosures into ESG performance, finance and strategy actions.", icon: Sparkles },
 ];
 
 const serviceCards = [
-  { title: "BRSR Reporting", copy: "Disclosure readiness, indicator mapping and report workflows.", icon: FileCheck2 },
+  { title: "ESG/BRSR Reporting", copy: "Disclosure readiness, indicator mapping and report workflows.", icon: FileCheck2 },
   { title: "ESG Strategy", copy: "Roadmaps that connect sustainability ambition to operating plans.", icon: Target },
   { title: "SEBI Compliance", copy: "Controls, evidence and governance checks for mandated reporting.", icon: ShieldCheck },
   { title: "Green Finance Readiness", copy: "Performance narratives and data packs for lenders and investors.", icon: LineChart },
@@ -232,7 +232,7 @@ function HeroSection() {
         <div>
           <p className="inline-flex max-w-full items-center gap-2 rounded-full border border-[#18bfb4]/65 bg-[#031e37]/72 px-3 py-2 text-xs font-semibold text-[#18d8ca] shadow-[0_10px_34px_rgba(0,0,0,0.18)] sm:px-4 sm:text-sm">
             <ShieldCheck size={16} />
-            <span className="min-w-0">India's Trusted ESG & BRSR Platform</span>
+            <span className="min-w-0">India's Trusted ESG/BRSR Platform</span>
           </p>
 
           <h1 className="mt-7 max-w-[840px] text-4xl leading-[1.1] font-bold tracking-normal text-white sm:text-5xl md:text-6xl lg:text-[64px] xl:text-[70px]">
@@ -271,7 +271,7 @@ function HeroSection() {
           </div>
 
           <div className="mt-9 grid max-w-3xl grid-cols-1 gap-5 text-sm text-[#d9e7f5] sm:grid-cols-3">
-            <TrustItem icon={ShieldCheck} label="BRSR & SEBI Aligned" />
+            <TrustItem icon={ShieldCheck} label="ESG/BRSR & SEBI Aligned" />
             <TrustItem icon={LineChart} label="Data to Value Framework" />
             <TrustItem icon={Leaf} label="Sustainability at Scale" />
           </div>
@@ -322,7 +322,7 @@ function HeroDashboard() {
 
         <div className="mt-6 grid gap-4 lg:grid-cols-[1fr_1.25fr]">
           <div className="rounded-lg border border-[#e1e7ef] bg-white p-4 shadow-sm">
-            <p className="font-semibold text-[#07182e]">BRSR Compliance</p>
+            <p className="font-semibold text-[#07182e]">ESG/BRSR Compliance</p>
             <div className="mt-4 space-y-3">
               {["General Disclosures", "Management & Process Disclosures", "Principle-wise Performance", "Core Indicators", "Leadership Indicators"].map((item) => (
                 <div className="flex min-w-0 items-center gap-2 text-xs font-medium text-[#41516a]" key={item}>
@@ -501,7 +501,7 @@ function PlatformSection() {
                 Platform
               </p>
               <h2 className="mt-3 text-3xl font-extrabold tracking-normal sm:text-4xl md:text-5xl">
-                From fragmented ESG data to board-ready BRSR reports
+                From fragmented ESG data to board-ready ESG/BRSR reports
               </h2>
               <p className="mt-5 text-lg leading-8 text-[#d9e7f5]">
                 A focused workflow that moves teams from raw evidence to credible disclosures,
@@ -531,7 +531,7 @@ function PlatformSection() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm font-bold text-[#159f90]">Action Plan</p>
-                    <h3 className="mt-1 text-2xl font-extrabold">BRSR readiness dashboard</h3>
+                    <h3 className="mt-1 text-2xl font-extrabold">ESG/BRSR readiness dashboard</h3>
                   </div>
                   <span className="rounded-md bg-[#edf7f3] px-3 py-2 text-xs font-bold text-[#159f90]">
                     82% Ready
@@ -674,7 +674,7 @@ function AboutSection() {
                 Ready to turn ESG into value?
               </h2>
               <p className="mt-5 max-w-2xl text-lg leading-8 text-[#d9e7f5]">
-                See how ProceSG can simplify BRSR compliance, executive reporting and
+                See how ProceSG can simplify ESG/BRSR compliance, executive reporting and
                 ESG transformation for your organisation.
               </p>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
