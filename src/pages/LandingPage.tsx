@@ -1,6 +1,5 @@
 import {
   ArrowRight,
-  BarChart3,
   Building2,
   CalendarDays,
   Check,
@@ -112,12 +111,36 @@ const workflow = [
 ];
 
 const serviceCards = [
-  { title: "ESG/BRSR Reporting", copy: "Disclosure readiness, indicator mapping and report workflows.", icon: FileCheck2 },
-  { title: "ESG Strategy", copy: "Roadmaps that connect social ambition to operating plans.", icon: Target },
-  { title: "SEBI Compliance", copy: "Controls, evidence and governance checks for mandated reporting.", icon: ShieldCheck },
-  { title: "Green Finance Readiness", copy: "Performance narratives and data packs for lenders and investors.", icon: LineChart },
-  { title: "Supply Chain ESG", copy: "Supplier accountability, risk visibility and improvement tracking.", icon: Users },
-  { title: "Board Dashboards", copy: "Executive scorecards for focus areas, gaps and progress.", icon: BarChart3 },
+  {
+    title: "ESG Strategy & Roadmapping",
+    copy: "Bespoke ESG frameworks, materiality assessments, gap analysis & sustainability strategy.",
+    icon: Target,
+  },
+  {
+    title: "ESG Reporting & Disclosure",
+    copy: "GRI, TCFD, ISSB, SGX compliance. Sustainability reports and stakeholder communications.",
+    icon: FileCheck2,
+  },
+  {
+    title: "Net Zero & Decarbonisation",
+    copy: "Carbon footprint measurement, SBTi pathway development and net zero roadmaps.",
+    icon: Leaf,
+  },
+  {
+    title: "Carbon Credits & Green Markets",
+    copy: "CIX navigation, Article 6 / ITMO transactions, ASEAN green credit sourcing and offset strategy.",
+    icon: LineChart,
+  },
+  {
+    title: "Digital Transformation",
+    copy: "Cloud ESG tech stack, process automation, advanced analytics and data governance.",
+    icon: Database,
+  },
+  {
+    title: "ESG Training & Capacity Building",
+    copy: "Board-level and staff ESG literacy programs, certified workshops and change management.",
+    icon: Users,
+  },
 ];
 
 const focusAreas = [
