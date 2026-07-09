@@ -4,7 +4,6 @@ import {
   Building2,
   CalendarDays,
   Check,
-  ChevronDown,
   ClipboardCheck,
   Database,
   Droplets,
@@ -162,14 +161,14 @@ function HeroSection() {
           </a>
 
           <nav className="hidden items-center gap-9 text-[15px] font-medium text-white/92 lg:flex">
-            <a className="inline-flex items-center gap-1.5 transition hover:text-[#ffc34f]" href="#solutions">
-              Solutions <ChevronDown size={16} />
+            <a className="transition hover:text-[#ffc34f]" href="#solutions">
+              Solutions
             </a>
-            <a className="inline-flex items-center gap-1.5 transition hover:text-[#ffc34f]" href="#platform">
-              Platform <ChevronDown size={16} />
+            <a className="transition hover:text-[#ffc34f]" href="#platform">
+              Platform
             </a>
-            <a className="inline-flex items-center gap-1.5 transition hover:text-[#ffc34f]" href="#services">
-              Services <ChevronDown size={16} />
+            <a className="transition hover:text-[#ffc34f]" href="#services">
+              Services
             </a>
             <a className="transition hover:text-[#ffc34f]" href="#contact">
               Contact
