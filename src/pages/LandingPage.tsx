@@ -152,9 +152,9 @@ const focusAreas = [
 
 const aboutCards = [
   { label: "Founded", value: "2020 in Singapore", tone: "bg-[#159f90]" },
-  { label: "Focus", value: "ESG Digital Transformation", tone: "bg-[#1469b2]" },
+  { label: "Focus", value: "ESG & Digital Transformation", tone: "bg-[#1469b2]" },
   { label: "Reach", value: "Singapore, APAC & Global", tone: "bg-[#268f2f]" },
-  { label: "Expertise", value: "25+ years combined leadership experience", tone: "bg-[#1d3e6f]" },
+  { label: "Expertise", value: "25+ years of leadership experience", tone: "bg-[#1d3e6f]" },
 ];
 
 export function LandingPage() {
