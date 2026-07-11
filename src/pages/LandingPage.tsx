@@ -254,7 +254,7 @@ function HeroSection() {
         <div>
           <p className="inline-flex max-w-full items-center gap-2 rounded-full border border-[#18bfb4]/65 bg-[#031e37]/72 px-3 py-2 text-xs font-semibold text-[#18d8ca] shadow-[0_10px_34px_rgba(0,0,0,0.18)] sm:px-4 sm:text-sm">
             <ShieldCheck size={16} />
-            <span className="min-w-0">Globally Trusted ESG/BRSR Platform</span>
+            <span className="min-w-0">Globally Trusted ESG/BRSR Consultancy</span>
           </p>
 
           <h1 className="mt-7 max-w-[840px] text-4xl leading-[1.1] font-bold tracking-normal text-white sm:text-5xl md:text-6xl lg:text-[64px] xl:text-[70px]">
