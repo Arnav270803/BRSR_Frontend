@@ -271,8 +271,9 @@ function HeroSection() {
           </p>
 
           <p className="mt-5 max-w-2xl text-base leading-7 text-[#d9e6f4] sm:text-[20px] sm:leading-8">
-            ProcesG helps organisations simplify ESG reporting, meet regulatory mandates,
-            and drive sustainable growth.
+            ProcesG helps organizations simplify ESG reporting, navigate evolving regulations,
+            and turn sustainability into measurable business value. By embedding transformation
+            into ESG, we drive efficiency, resilience, and sustainable growth.
           </p>
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
