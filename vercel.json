@@ -3,7 +3,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://brsr-org-backend.onrender.com/api/:path*"
+      "destination": "https://brsrorgbackend-production.up.railway.app/api/:path*"
     },
     {
       "source": "/(.*)",
