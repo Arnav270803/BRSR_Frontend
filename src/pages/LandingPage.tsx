@@ -177,44 +177,45 @@ function HeroSection() {
       <div className="absolute inset-0 opacity-[0.18] [background-image:linear-gradient(135deg,rgba(54,197,205,0.18)_1px,transparent_1px)] [background-size:36px_36px]" />
       <div className="absolute inset-x-0 bottom-0 h-36 opacity-50 [background-image:radial-gradient(circle_at_center,rgba(34,152,222,0.65)_1px,transparent_1.5px)] [background-size:28px_18px]" />
 
-      <header className="relative z-10 border-b border-white/10 bg-[#001326]/78 backdrop-blur-xl">
-        <div className="mx-auto flex h-20 max-w-[1720px] items-center justify-between px-4 sm:h-24 sm:px-8 lg:px-10">
+      <header className="relative z-20 border-b border-[#d9ddd8] bg-[#faf7f0] text-[#07182e]">
+        <div className="mx-auto flex h-[76px] max-w-[1800px] items-center justify-between px-4 sm:h-[88px] sm:px-8 lg:px-12 xl:px-14">
           <a className="flex items-center" href="#top" aria-label="ProcesG home">
-            <img className="h-16 w-auto sm:h-20" src={procesgLogo} alt="ProcesG - ESG to Value Creation" />
+            <img className="h-[62px] w-auto sm:h-[72px]" src={procesgLogo} alt="ProcesG - ESG to Value Creation" />
           </a>
 
-          <nav className="hidden items-center gap-9 text-[15px] font-medium text-white/92 lg:flex">
-            <a className="transition hover:text-[#ffc34f]" href="#solutions">
+          <nav className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-9 text-[15px] font-semibold text-[#07182e] lg:flex xl:gap-12">
+            <a className="relative py-3 transition hover:text-[#176b4d] after:absolute after:inset-x-0 after:bottom-0 after:mx-auto after:h-0.5 after:w-12 after:bg-[#268f2f]" href="#solutions">
               Solutions
             </a>
-            <a className="transition hover:text-[#ffc34f]" href="#platform">
+            <a className="py-3 transition hover:text-[#176b4d]" href="#platform">
               Platform
             </a>
-            <a className="transition hover:text-[#ffc34f]" href="#services">
+            <a className="py-3 transition hover:text-[#176b4d]" href="#services">
               Services
             </a>
-            <a className="transition hover:text-[#ffc34f]" href="#contact">
+            <a className="py-3 transition hover:text-[#176b4d]" href="#contact">
               Contact
             </a>
           </nav>
 
-          <div className="hidden items-center gap-3 sm:flex">
+          <div className="hidden items-center gap-6 lg:flex">
             <Link
-              className="inline-flex h-12 min-w-28 items-center justify-center rounded-md border border-white/75 px-6 text-sm font-semibold text-white transition hover:bg-white hover:text-[#001326]"
+              className="inline-flex h-11 items-center justify-center px-2 text-sm font-semibold text-[#07182e] transition hover:text-[#176b4d]"
               to="/login"
             >
               Login
             </Link>
             <Link
-              className="inline-flex h-12 min-w-32 items-center justify-center rounded-md bg-[#ffc34f] px-6 text-sm font-bold text-[#07182e] shadow-[0_12px_34px_rgba(255,195,79,0.28)] transition hover:bg-[#ffd36f]"
+              className="inline-flex h-11 min-w-32 items-center justify-center gap-4 rounded-md bg-[#001f3b] px-5 text-sm font-semibold text-white shadow-[0_8px_22px_rgba(0,31,59,0.14)] transition hover:bg-[#073657]"
               to="/login"
             >
-              Sign Up
+              <span>Sign Up</span>
+              <ArrowRight className="text-[#e9b949]" size={18} strokeWidth={2.2} />
             </Link>
           </div>
 
           <button
-            className="grid size-11 place-items-center rounded-md border border-white/25 bg-white/10 text-white lg:hidden"
+            className="grid size-10 place-items-center rounded-md border border-[#cad2cc] bg-white/55 text-[#07182e] lg:hidden"
             type="button"
             aria-expanded={isMenuOpen}
             aria-label="Open navigation"
@@ -225,25 +226,26 @@ function HeroSection() {
         </div>
 
         {isMenuOpen ? (
-          <nav className="grid gap-3 border-t border-white/10 px-5 py-5 text-sm font-semibold text-white/90 sm:px-8 lg:hidden">
-            <a className="rounded-md px-3 py-2 hover:bg-white/10" href="#solutions" onClick={() => setIsMenuOpen(false)}>
+          <nav className="grid gap-2 border-t border-[#d9ddd8] bg-[#faf7f0] px-5 py-4 text-sm font-semibold text-[#07182e] sm:px-8 lg:hidden">
+            <a className="rounded-md bg-[#eef3ec] px-3 py-2.5 text-[#176b4d]" href="#solutions" onClick={() => setIsMenuOpen(false)}>
               Solutions
             </a>
-            <a className="rounded-md px-3 py-2 hover:bg-white/10" href="#platform" onClick={() => setIsMenuOpen(false)}>
+            <a className="rounded-md px-3 py-2.5 hover:bg-[#eef3ec]" href="#platform" onClick={() => setIsMenuOpen(false)}>
               Platform
             </a>
-            <a className="rounded-md px-3 py-2 hover:bg-white/10" href="#services" onClick={() => setIsMenuOpen(false)}>
+            <a className="rounded-md px-3 py-2.5 hover:bg-[#eef3ec]" href="#services" onClick={() => setIsMenuOpen(false)}>
               Services
             </a>
-            <a className="rounded-md px-3 py-2 hover:bg-white/10" href="#contact" onClick={() => setIsMenuOpen(false)}>
+            <a className="rounded-md px-3 py-2.5 hover:bg-[#eef3ec]" href="#contact" onClick={() => setIsMenuOpen(false)}>
               Contact
             </a>
             <div className="grid grid-cols-2 gap-3 pt-2">
-              <Link className="inline-flex h-11 items-center justify-center rounded-md border border-white/60 text-white" to="/login">
+              <Link className="inline-flex h-11 items-center justify-center rounded-md border border-[#aebcb4] text-[#07182e]" to="/login">
                 Login
               </Link>
-              <Link className="inline-flex h-11 items-center justify-center rounded-md bg-[#ffc34f] font-bold text-[#07182e]" to="/login">
-                Sign Up
+              <Link className="inline-flex h-11 items-center justify-center gap-2 rounded-md bg-[#001f3b] font-semibold text-white" to="/login">
+                <span>Sign Up</span>
+                <ArrowRight className="text-[#e9b949]" size={17} />
               </Link>
             </div>
           </nav>
