@@ -3,15 +3,16 @@ import {
   Building2,
   CalendarDays,
   Check,
+  CircleDollarSign,
   ClipboardCheck,
   Database,
   Droplets,
   FileCheck2,
+  Globe2,
   Leaf,
   LineChart,
   Mail,
   Menu,
-  PieChart,
   Play,
   ShieldCheck,
   Sparkles,
@@ -76,32 +77,74 @@ const frameworkCards = [
   },
 ];
 
-const stats = [
+const regionalAlignmentRows = [
   {
-    value: "90%",
-    label: "of NSE 100 companies now publish ESG/BRSR reports",
-    icon: Building2,
-    accent: "text-[#159f90]",
+    theme: "Reporting adoption",
+    icon: FileCheck2,
+    world: {
+      highlight: "95%",
+      copy: "of the world's top 250 companies now publish carbon targets",
+    },
+    apac: {
+      copy: "Mandatory ISSB disclosure phasing in across Australia, Singapore, Hong Kong, Malaysia & South Korea (2025–29)",
+    },
+    india: {
+      highlight: "90%+",
+      copy: "of NSE 100 companies now publish BRSR reports",
+    },
   },
   {
-    value: "Rs35,000Cr+",
-    label: "green loans and RBI green finance available",
-    icon: PieChart,
-    accent: "text-[#1469b2]",
+    theme: "Green finance",
+    icon: CircleDollarSign,
+    world: {
+      prefix: "Global sustainable finance:",
+      highlight: "$15.06T",
+      copy: "in 2026, projected ~$27T by 2031",
+    },
+    apac: {
+      prefix: "APAC sustainable bonds hit",
+      highlight: "$1T",
+      copy: "outstanding (18.5% of global total); fastest-growing region at 21%+ CAGR",
+    },
+    india: {
+      highlight: "₹35,000Cr+",
+      copy: "green loans & RBI green finance available*",
+    },
   },
   {
-    value: "3x",
-    label: "ESG-aligned firms outperform peers on ROI over 5 years",
+    theme: "Performance signal",
     icon: LineChart,
-    accent: "text-[#268f2f]",
+    world: {
+      copy: "ESG-aligned firms widely cited as outperforming peers on long-run ROI",
+    },
+    apac: {
+      copy: "Same ROI signal, reinforced by mandatory-disclosure capital access",
+    },
+    india: {
+      highlight: "3x",
+      copy: "ROI outperformance cited for ESG-aligned firms*",
+    },
   },
   {
-    value: "2030",
-    label: "India Net Zero target - align with ESG/BRSR and SEBI now",
+    theme: "Net-zero targets",
     icon: Target,
-    accent: "text-[#1d3e6f]",
+    world: {
+      copy: "Most developed economies target net zero by 2050",
+    },
+    apac: {
+      copy: "China: 2060 · Japan / South Korea: 2050 · region clusters 2050–2060",
+    },
+    india: {
+      copy: "Net zero by 2070, with a 2030 interim milestone (500GW non-fossil, 45% emissions-intensity cut)",
+    },
   },
 ];
+
+const regionalAlignmentRegions = [
+  { key: "world", label: "World", color: "#0b3158" },
+  { key: "apac", label: "APAC", color: "#159f90" },
+  { key: "india", label: "India", color: "#268f2f" },
+] as const;
 
 const workflow = [
   { title: "Collect Data", copy: "Bring site, supplier and operational inputs into one ESG data hub.", icon: Database },
@@ -162,6 +205,7 @@ export function LandingPage() {
     <main className="landing-page min-h-screen overflow-x-clip bg-[#f6f8fb] text-[#07182e]">
       <HeroSection />
       <FrameworkSection />
+      <RegionalAlignmentSection />
       <PlatformSection />
       <AboutSection />
     </main>
@@ -462,19 +506,162 @@ function FrameworkSection() {
           ))}
         </div>
 
-        <div className="mt-8 grid gap-5 rounded-lg bg-white p-5 shadow-[0_18px_60px_rgba(10,35,70,0.10)] sm:grid-cols-2 lg:grid-cols-4 lg:p-7">
-          {stats.map((stat) => (
-            <div className="flex items-start gap-4 border-[#dce3eb] lg:border-r lg:pr-6 lg:last:border-r-0" key={stat.value}>
-              <stat.icon className="mt-1 shrink-0 text-[#07182e]" size={38} />
-              <div>
-                <p className={`text-2xl font-extrabold ${stat.accent}`}>{stat.value}</p>
-                <p className="mt-1 text-sm leading-6 text-[#41516a]">{stat.label}</p>
-              </div>
+      </div>
+    </section>
+  );
+}
+
+function RegionalAlignmentSection() {
+  return (
+    <section className="bg-[#faf7f0] py-16 sm:py-20 lg:py-24" aria-labelledby="regional-alignment-title">
+      <div className="mx-auto max-w-[1480px] px-5 sm:px-8 lg:px-14">
+        <div className="grid items-center gap-10 lg:grid-cols-[1.25fr_0.75fr]">
+          <div>
+            <p className="text-sm font-bold tracking-[0.16em] text-[#159f90] uppercase">
+              Global ESG landscape
+            </p>
+            <h2
+              id="regional-alignment-title"
+              className="mt-3 max-w-4xl font-serif text-3xl leading-tight font-bold tracking-normal text-[#07182e] sm:text-4xl md:text-5xl"
+            >
+              ESG Alignment Across World, APAC &amp; India
+            </h2>
+            <p className="mt-4 max-w-4xl text-base leading-7 text-[#41516a] italic sm:text-lg">
+              Reporting adoption, green finance, performance signal, and net-zero targets — one view by region
+            </p>
+          </div>
+
+          <RegionalRoute />
+        </div>
+
+        <div className="mt-12 hidden overflow-hidden border-y border-[#d7dfd7] lg:block">
+          <div className="grid grid-cols-[250px_repeat(3,minmax(0,1fr))] items-end border-b border-[#d7dfd7]">
+            <div className="px-6 py-5 text-xs font-bold tracking-[0.14em] text-[#718078] uppercase">
+              Comparison theme
             </div>
+            {regionalAlignmentRegions.map((region) => (
+              <div className="relative px-8 py-5 text-center" key={region.key}>
+                <span
+                  className="mx-auto mb-3 block size-3 rounded-full ring-4 ring-[#faf7f0]"
+                  style={{ backgroundColor: region.color }}
+                />
+                <p className="text-xl font-extrabold" style={{ color: region.color }}>
+                  {region.label}
+                </p>
+                <span
+                  className="absolute inset-x-0 top-[26px] -z-0 h-px opacity-25"
+                  style={{ backgroundColor: region.color }}
+                />
+              </div>
+            ))}
+          </div>
+
+          {regionalAlignmentRows.map((row) => (
+            <div
+              className="grid min-h-[166px] grid-cols-[250px_repeat(3,minmax(0,1fr))] border-b border-[#d7dfd7] last:border-b-0"
+              key={row.theme}
+            >
+              <div className="flex items-center gap-5 px-5 py-7">
+                <span className="grid size-16 shrink-0 place-items-center rounded-full bg-[#e9f0e9] text-[#159f90]">
+                  <row.icon size={31} strokeWidth={1.8} />
+                </span>
+                <h3 className="text-lg leading-6 font-extrabold text-[#07182e]">{row.theme}</h3>
+              </div>
+              {regionalAlignmentRegions.map((region) => (
+                <RegionalAlignmentCell
+                  cell={row[region.key]}
+                  color={region.color}
+                  finance={row.theme === "Green finance"}
+                  key={region.key}
+                />
+              ))}
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-10 space-y-8 lg:hidden">
+          {regionalAlignmentRegions.map((region) => (
+            <article className="border-t-2 pt-5" style={{ borderColor: region.color }} key={region.key}>
+              <div className="flex items-center gap-3">
+                <span className="size-3 rounded-full" style={{ backgroundColor: region.color }} />
+                <h3 className="text-2xl font-extrabold" style={{ color: region.color }}>
+                  {region.label}
+                </h3>
+              </div>
+              <div className="mt-4 divide-y divide-[#d7dfd7]">
+                {regionalAlignmentRows.map((row) => (
+                  <div className="grid gap-3 py-5 sm:grid-cols-[180px_1fr]" key={row.theme}>
+                    <div className="flex items-center gap-3">
+                      <span className="grid size-10 shrink-0 place-items-center rounded-full bg-[#e9f0e9] text-[#159f90]">
+                        <row.icon size={20} />
+                      </span>
+                      <p className="font-bold text-[#07182e]">{row.theme}</p>
+                    </div>
+                    <RegionalAlignmentCell
+                      cell={row[region.key]}
+                      color={region.color}
+                      finance={row.theme === "Green finance"}
+                      mobile
+                    />
+                  </div>
+                ))}
+              </div>
+            </article>
           ))}
         </div>
       </div>
     </section>
+  );
+}
+
+function RegionalRoute() {
+  return (
+    <div className="relative mx-auto hidden h-40 w-full max-w-[430px] overflow-hidden lg:block" aria-hidden="true">
+      <Globe2 className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-[#dfe9dc]" size={176} strokeWidth={0.7} />
+      <div className="absolute inset-x-5 top-[76px] h-px bg-[#9eb3aa]" />
+      <div className="absolute inset-x-2 top-[58px] flex items-start justify-between">
+        {regionalAlignmentRegions.map((region) => (
+          <div className="grid justify-items-center gap-2" key={region.key}>
+            <span
+              className="size-5 rounded-full border-4 border-[#faf7f0] shadow-[0_4px_12px_rgba(7,24,46,0.18)]"
+              style={{ backgroundColor: region.color }}
+            />
+            <span className="text-xs font-extrabold tracking-[0.08em] uppercase" style={{ color: region.color }}>
+              {region.label}
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function RegionalAlignmentCell({
+  cell,
+  color,
+  finance,
+  mobile = false,
+}: {
+  cell: { prefix?: string; highlight?: string; copy: string };
+  color: string;
+  finance: boolean;
+  mobile?: boolean;
+}) {
+  return (
+    <div className={mobile ? "min-w-0" : "flex min-w-0 flex-col justify-center border-l border-[#d7dfd7] px-8 py-7"}>
+      {cell.prefix ? <p className="text-sm leading-6 text-[#41516a]">{cell.prefix}</p> : null}
+      {cell.highlight ? (
+        <p
+          className="mt-1 text-3xl leading-none font-extrabold"
+          style={{ color: finance ? "#d79b00" : color }}
+        >
+          {cell.highlight}
+        </p>
+      ) : null}
+      <p className={["leading-7 text-[#31435a]", cell.highlight ? "mt-2" : "", mobile ? "text-sm sm:text-base" : "text-base"].join(" ")}>
+        {cell.copy}
+      </p>
+    </div>
   );
 }
 
