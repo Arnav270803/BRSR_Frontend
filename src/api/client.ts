@@ -1,10 +1,10 @@
 const configuredApiBaseUrl = import.meta.env.VITE_API_BASE_URL as string | undefined;
-const isVercelHost =
-  typeof window !== "undefined" && window.location.hostname.endsWith(".vercel.app");
+const isLocalHost =
+  typeof window !== "undefined" &&
+  ["localhost", "127.0.0.1"].includes(window.location.hostname);
 
-export const API_BASE_URL = isVercelHost
-  ? "/api"
-  : configuredApiBaseUrl ?? "http://localhost:4000/api";
+export const API_BASE_URL =
+  configuredApiBaseUrl ?? (isLocalHost ? "http://localhost:4000/api" : "/api");
 
 export class ApiError extends Error {
   status: number;
