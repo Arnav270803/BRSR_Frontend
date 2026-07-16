@@ -533,7 +533,7 @@ function FrameworkSection() {
             ESG to Value Creation
           </p>
           <h2 className="mt-3 text-3xl font-extrabold tracking-normal text-[#07182e] sm:text-4xl md:text-5xl">
-            Introducing the ProcesG Framework
+            Introducing the ProcesG
           </h2>
           <p className="mt-4 text-lg leading-8 text-[#526173]">
             A practical path from ESG compliance to business value.
