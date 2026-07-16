@@ -237,6 +237,7 @@ export function CompanyGhgSetupPage() {
           companyName={company.displayName}
           currentSiteId={activeSite.id}
           currentReportingYearId={reportingYear.id}
+          isPlatformOwner={workspace.isPlatformOwner}
           reportingYears={workspace.reportingYears}
           sites={workspace.sites}
           viewerRole={viewerRole}

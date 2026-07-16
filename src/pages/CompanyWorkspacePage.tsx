@@ -64,6 +64,7 @@ export function CompanyWorkspacePage() {
           companyId={currentWorkspace.company.id}
           companyName={currentWorkspace.company.displayName}
           currentSiteId={currentSite.id}
+          isPlatformOwner={currentWorkspace.isPlatformOwner}
           reportingYears={currentWorkspace.reportingYears}
           sites={currentWorkspace.sites}
           viewerRole={currentWorkspace.viewerRole}

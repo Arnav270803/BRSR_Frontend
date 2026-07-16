@@ -92,6 +92,7 @@ export function CompanyReportingYearsPage() {
           companyId={company.id}
           companyName={company.displayName}
           currentSiteId={activeSite?.id}
+          isPlatformOwner={workspace.isPlatformOwner}
           reportingYears={reportingYears}
           sites={workspace.sites}
           viewerRole={viewerRole}

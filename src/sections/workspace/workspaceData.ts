@@ -1,4 +1,4 @@
-export type WorkspaceRole = "SUPER_ADMIN" | "ADMIN" | "USER";
+export type WorkspaceRole = "ADMIN" | "USER";
 
 export type ReportingYear = {
   id: string;
@@ -42,6 +42,7 @@ export type CompanyWorkspace = {
     status: string;
   };
   viewerRole: WorkspaceRole;
+  isPlatformOwner: boolean;
   activeMemberCount: number;
   sites: CompanySite[];
   reportingYears: ReportingYear[];
@@ -62,6 +63,7 @@ export const demoWorkspace: CompanyWorkspace = {
     status: "ACTIVE",
   },
   viewerRole: "ADMIN",
+  isPlatformOwner: false,
   activeMemberCount: 24,
   sites: [
     {

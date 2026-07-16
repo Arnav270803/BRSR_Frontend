@@ -111,6 +111,7 @@ export function CompanyEmployeesPage() {
           companyId={company.id}
           companyName={company.displayName}
           currentSiteId={activeSite?.id}
+          isPlatformOwner={workspace.isPlatformOwner}
           reportingYears={workspace.reportingYears}
           sites={workspace.sites}
           viewerRole={viewerRole}

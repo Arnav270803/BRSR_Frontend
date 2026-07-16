@@ -114,6 +114,7 @@ export function CompanySitesPage() {
           companyId={workspace.company.id}
           companyName={workspace.company.displayName}
           currentSiteId={activeSite?.id}
+          isPlatformOwner={workspace.isPlatformOwner}
           reportingYears={workspace.reportingYears}
           sites={workspace.sites}
           viewerRole={workspace.viewerRole}

@@ -71,6 +71,7 @@ export function WorkspaceSidebar({
   companyName,
   currentSiteId,
   currentReportingYearId,
+  isPlatformOwner,
   reportingYears,
   sites = [],
   viewerRole,
@@ -80,6 +81,7 @@ export function WorkspaceSidebar({
   companyName: string;
   currentSiteId?: string;
   currentReportingYearId?: string;
+  isPlatformOwner: boolean;
   reportingYears: ReportingYear[];
   sites?: CompanySite[];
   viewerRole: WorkspaceRole;
@@ -296,6 +298,12 @@ export function WorkspaceSidebar({
                 </button>
               );
             })}
+            {isPlatformOwner ? (
+              <div className="mt-1 rounded-md border border-[#bfd2c4] bg-[#edf6ef] px-3 py-2">
+                <p className="text-xs font-semibold text-[#1f5135]">Platform owner</p>
+                <p className="mt-0.5 text-[11px] text-[#66736b]">Internal access</p>
+              </div>
+            ) : null}
           </nav>
         ) : null}
       </header>
@@ -418,9 +426,13 @@ export function WorkspaceSidebar({
       </nav>
 
       <div className="mt-4 hidden rounded-lg border border-[#d9e2dc] bg-white/45 p-4 text-sm text-[#65716a] lg:mt-auto lg:block">
-        <p className="font-semibold text-[#243128]">Role access</p>
+        <p className="font-semibold text-[#243128]">
+          {isPlatformOwner ? "Platform owner" : "Role access"}
+        </p>
         <p className="mt-2 leading-6">
-          {viewerRole === "USER"
+          {isPlatformOwner
+            ? "Internal access across company workspaces"
+            : viewerRole === "USER"
             ? "Data entry access"
             : "Company setup and data access"}
         </p>

@@ -119,6 +119,7 @@ export function CompanyReportsPage() {
           companyName={currentWorkspace.company.displayName}
           currentSiteId={currentSite.id}
           currentReportingYearId={selectedReportingYearId}
+          isPlatformOwner={currentWorkspace.isPlatformOwner}
           reportingYears={reportingYears}
           sites={currentWorkspace.sites}
           viewerRole={currentWorkspace.viewerRole}

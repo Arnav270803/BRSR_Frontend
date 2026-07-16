@@ -13,7 +13,7 @@ export type AuthSession = {
     email: string;
     name: string | null;
     avatarUrl: string | null;
-    isSuperAdmin: boolean;
+    isPlatformOwner: boolean;
   };
   memberships: AuthMembership[];
   needsCompanyOnboarding: boolean;
