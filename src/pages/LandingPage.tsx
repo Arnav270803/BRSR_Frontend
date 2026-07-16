@@ -186,6 +186,45 @@ const serviceCards = [
   },
 ];
 
+const engagementSteps = [
+  {
+    number: "01",
+    title: "Diagnose",
+    copy: "ESG maturity assessment, stakeholder mapping, material issues identification and regulatory gap analysis.",
+    icon: LineChart,
+    color: "#2379b8",
+  },
+  {
+    number: "02",
+    title: "Design",
+    copy: "Bespoke ESG strategy, KPI framework, governance structure and transformation roadmap tailored to your sector.",
+    icon: ClipboardCheck,
+    color: "#169b86",
+  },
+  {
+    number: "03",
+    title: "Deploy",
+    copy: "Project execution with embedded consultants, technology integration, training and change management.",
+    icon: Sparkles,
+    color: "#2e9132",
+  },
+  {
+    number: "04",
+    title: "Disclose",
+    copy: "ESG report creation, investor communications, regulatory submissions and stakeholder engagement.",
+    icon: FileCheck2,
+    color: "#0b3158",
+  },
+  {
+    number: "05",
+    title: "Drive Value",
+    copy: "Continuous performance tracking, benchmarking, and ongoing optimisation to embed ESG into business DNA.",
+    icon: LineChart,
+    color: "#f2a51a",
+    featured: true,
+  },
+];
+
 const focusAreas = [
   { title: "Reduce Emissions", copy: "Track and cut carbon footprint", icon: Sprout, color: "text-[#268f2f]" },
   { title: "Water Stewardship", copy: "Measure, manage, improve", icon: Droplets, color: "text-[#1469b2]" },
@@ -207,6 +246,7 @@ export function LandingPage() {
       <FrameworkSection />
       <RegionalAlignmentSection />
       <PlatformSection />
+      <EngagementApproachSection />
       <AboutSection />
     </main>
   );
@@ -835,6 +875,70 @@ function PlatformSection() {
                 <a className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-[#1469b2]" href="#contact">
                   Book Demo <ArrowRight size={16} />
                 </a>
+              </article>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function EngagementApproachSection() {
+  return (
+    <section id="engagement" className="bg-[#f7f8f6] py-16 sm:py-20 lg:py-24" aria-labelledby="engagement-approach-title">
+      <div className="mx-auto max-w-[1480px] px-5 sm:px-8 lg:px-14">
+        <div className="max-w-4xl">
+          <p className="text-sm font-bold tracking-[0.2em] text-[#159f90] uppercase">
+            How We Work
+          </p>
+          <h2
+            id="engagement-approach-title"
+            className="mt-3 text-3xl font-extrabold tracking-normal text-[#07182e] sm:text-4xl md:text-5xl"
+          >
+            Our Engagement Approach
+          </h2>
+          <p className="mt-4 text-base leading-7 text-[#526173] sm:text-lg">
+            A clear path from ESG ambition to measurable business value.
+          </p>
+        </div>
+
+        <div className="relative mt-12 lg:mt-16">
+          <div className="absolute top-16 right-[8%] left-[8%] hidden h-px bg-[#0b3158] xl:block" aria-hidden="true" />
+          <div className="absolute top-[57px] left-[20%] hidden w-[60%] justify-between text-[#0b3158] xl:flex" aria-hidden="true">
+            {[0, 1, 2, 3].map((marker) => (
+              <ArrowRight className="bg-[#f7f8f6] px-1" key={marker} size={24} strokeWidth={1.8} />
+            ))}
+          </div>
+
+          <div className="relative grid gap-7 md:grid-cols-2 xl:grid-cols-5 xl:gap-6">
+            {engagementSteps.map((step) => (
+              <article
+                className={[
+                  "relative min-w-0 px-5 py-6 sm:px-6 xl:px-3 xl:py-0",
+                  step.featured ? "bg-[#fff5dc]" : "bg-white/70 xl:bg-transparent",
+                ].join(" ")}
+                key={step.number}
+              >
+                <div className="relative mx-auto w-fit xl:h-36">
+                  <span
+                    className="grid size-28 place-items-center rounded-full text-white shadow-[0_14px_34px_rgba(7,24,46,0.16)] sm:size-32"
+                    style={{ backgroundColor: step.color }}
+                  >
+                    <step.icon size={48} strokeWidth={1.7} />
+                  </span>
+                  <span
+                    className="absolute -top-3 -left-4 grid size-14 place-items-center rounded-full border-[3px] bg-[#f7f8f6] text-xl font-extrabold sm:size-16 sm:text-2xl"
+                    style={{ borderColor: step.color, color: step.color }}
+                  >
+                    {step.number}
+                  </span>
+                </div>
+
+                <div className="mt-6 border-l-[3px] pl-5 xl:mt-5" style={{ borderColor: step.color }}>
+                  <h3 className="text-xl font-extrabold text-[#07182e] sm:text-2xl">{step.title}</h3>
+                  <p className="mt-4 text-sm leading-7 text-[#45546a] sm:text-base">{step.copy}</p>
+                </div>
               </article>
             ))}
           </div>
