@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef } from "react";
-import { Navigate, useParams } from "react-router-dom";
+import { Navigate, useParams, useSearchParams } from "react-router-dom";
 import {
   createDataRecord,
   deleteDataRecord,
@@ -22,6 +22,8 @@ import { WorkspaceSidebar } from "../sections/workspace/WorkspaceSidebar";
 
 export function CompanyDataEntryPage() {
   const { companyId, siteId, reportingYearId } = useParams();
+  const [searchParams] = useSearchParams();
+  const initialScope = searchParams.get("scope");
   const formRef = useRef<HTMLDivElement>(null);
   const queryClient = useQueryClient();
   const sessionQuery = useQuery({
@@ -52,14 +54,24 @@ export function CompanyDataEntryPage() {
     mutationFn: (values: CreateDataRecordValues) =>
       createDataRecord(companyId!, reportingYearId!, toCreateRecordPayload(values), resolvedSiteId),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["data-records", companyId, resolvedSiteId, reportingYearId] });
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: ["data-records", companyId, resolvedSiteId, reportingYearId],
+        }),
+        queryClient.invalidateQueries({ queryKey: ["emissions-summary", companyId] }),
+      ]);
     },
   });
   const deleteRecordMutation = useMutation({
     mutationFn: (dataRecordId: string) =>
       deleteDataRecord(companyId!, reportingYearId!, dataRecordId, resolvedSiteId),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["data-records", companyId, resolvedSiteId, reportingYearId] });
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: ["data-records", companyId, resolvedSiteId, reportingYearId],
+        }),
+        queryClient.invalidateQueries({ queryKey: ["emissions-summary", companyId] }),
+      ]);
     },
   });
 
@@ -189,6 +201,7 @@ export function CompanyDataEntryPage() {
             />
             <div ref={formRef} className="order-first scroll-mt-28 xl:order-none">
               <DataRecordForm
+                initialScope={initialScope}
                 onAddRecord={addRecord}
                 records={records}
                 selectedActivities={selectedActivities}

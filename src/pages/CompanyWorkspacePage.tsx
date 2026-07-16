@@ -1,7 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
-import { Navigate, useParams } from "react-router-dom";
-import { listDataRecordsForSite } from "../api/dataRecords";
+import { Navigate, useParams, useSearchParams } from "react-router-dom";
+import { getEmissionsSummary } from "../api/emissions";
 import { getCompanyWorkspace } from "../api/workspace";
+import { EmissionsOverview } from "../sections/workspace/EmissionsOverview";
 import { ReportingYearsPanel } from "../sections/workspace/ReportingYearsPanel";
 import { SetupProgress } from "../sections/workspace/SetupProgress";
 import { WorkspaceHeader } from "../sections/workspace/WorkspaceHeader";
@@ -11,6 +12,7 @@ import { WorkspaceSidebar } from "../sections/workspace/WorkspaceSidebar";
 
 export function CompanyWorkspacePage() {
   const { companyId, siteId } = useParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const workspaceQuery = useQuery({
     queryKey: ["company-workspace", companyId],
     queryFn: () => getCompanyWorkspace(companyId!),
@@ -18,12 +20,39 @@ export function CompanyWorkspacePage() {
   });
   const workspace = workspaceQuery.data?.data;
   const activeSite = workspace?.sites.find((site) => site.id === siteId) ?? workspace?.sites[0];
-  const defaultReportingYearId = workspaceQuery.data?.data.reportingYears[0]?.id;
-  const dataRecordsQuery = useQuery({
-    queryKey: ["data-records", companyId, activeSite?.id, defaultReportingYearId, "dashboard"],
-    queryFn: () => listDataRecordsForSite(companyId!, activeSite!.id, defaultReportingYearId!),
-    enabled: Boolean(companyId && activeSite && defaultReportingYearId),
+  const requestedReportingYearId = searchParams.get("reportingYearId");
+  const selectedReportingYear =
+    workspace?.reportingYears.find(
+      (reportingYear) => reportingYear.id === requestedReportingYearId,
+    ) ?? workspace?.reportingYears[0];
+  const selectedReportingYearId = selectedReportingYear?.id;
+  const isCompanyAggregation =
+    workspace?.viewerRole === "ADMIN" && searchParams.get("emissionsScope") === "company";
+  const siteEmissionsQuery = useQuery({
+    queryKey: [
+      "emissions-summary",
+      companyId,
+      activeSite?.id,
+      selectedReportingYearId,
+    ],
+    queryFn: () =>
+      getEmissionsSummary(companyId!, selectedReportingYearId!, activeSite!.id),
+    enabled: Boolean(companyId && activeSite && selectedReportingYearId),
+    staleTime: 15_000,
+    refetchInterval: 30_000,
+    refetchOnWindowFocus: true,
   });
+  const companyEmissionsQuery = useQuery({
+    queryKey: ["emissions-summary", companyId, "all-sites", selectedReportingYearId],
+    queryFn: () => getEmissionsSummary(companyId!, selectedReportingYearId!),
+    enabled: Boolean(companyId && selectedReportingYearId && isCompanyAggregation),
+    staleTime: 15_000,
+    refetchInterval: 30_000,
+    refetchOnWindowFocus: true,
+  });
+  const visibleEmissionsQuery = isCompanyAggregation
+    ? companyEmissionsQuery
+    : siteEmissionsQuery;
 
   if (!companyId) {
     return <Navigate replace to="/login" />;
@@ -53,6 +82,18 @@ export function CompanyWorkspacePage() {
     0,
   );
 
+  function updateSearchParam(key: string, value?: string) {
+    const nextSearchParams = new URLSearchParams(searchParams);
+
+    if (value) {
+      nextSearchParams.set(key, value);
+    } else {
+      nextSearchParams.delete(key);
+    }
+
+    setSearchParams(nextSearchParams, { replace: true });
+  }
+
   return (
     <main className="relative min-h-screen overflow-x-hidden bg-[#eef3ef] text-[#16211b]">
       <div className="absolute inset-0 bg-[linear-gradient(135deg,#f8faf6_0%,#e9f1ed_46%,#f7efe4_100%)]" />
@@ -64,6 +105,7 @@ export function CompanyWorkspacePage() {
           companyId={currentWorkspace.company.id}
           companyName={currentWorkspace.company.displayName}
           currentSiteId={currentSite.id}
+          currentReportingYearId={selectedReportingYearId}
           isPlatformOwner={currentWorkspace.isPlatformOwner}
           reportingYears={currentWorkspace.reportingYears}
           sites={currentWorkspace.sites}
@@ -71,7 +113,30 @@ export function CompanyWorkspacePage() {
         />
 
         <section className="flex min-w-0 flex-1 flex-col gap-3 sm:gap-4 lg:py-2 xl:gap-5">
-          <WorkspaceHeader activeSite={currentSite} workspace={currentWorkspace} />
+          <WorkspaceHeader
+            activeSite={currentSite}
+            currentReportingYearId={selectedReportingYearId}
+            workspace={currentWorkspace}
+          />
+
+          <EmissionsOverview
+            aggregationScope={isCompanyAggregation ? "company" : "site"}
+            canViewCompany={currentWorkspace.viewerRole === "ADMIN"}
+            companyId={currentWorkspace.company.id}
+            isError={visibleEmissionsQuery.isError}
+            isLoading={visibleEmissionsQuery.isLoading}
+            reportingYears={currentWorkspace.reportingYears}
+            selectedReportingYearId={selectedReportingYearId}
+            siteId={currentSite.id}
+            siteName={currentSite.name}
+            summary={visibleEmissionsQuery.data?.data}
+            onAggregationScopeChange={(scope) =>
+              updateSearchParam("emissionsScope", scope === "company" ? "company" : undefined)
+            }
+            onReportingYearChange={(reportingYearId) =>
+              updateSearchParam("reportingYearId", reportingYearId)
+            }
+          />
 
           <WorkspaceMetricCards
             activeMemberCount={currentWorkspace.activeMemberCount}
@@ -82,10 +147,10 @@ export function CompanyWorkspacePage() {
           />
 
           <SetupProgress
-            activeReportingYear={currentWorkspace.reportingYears[0]}
+            activeReportingYear={selectedReportingYear}
             companyId={currentWorkspace.company.id}
-            dataRecordCount={dataRecordsQuery.data?.data.length ?? 0}
-            isDataRecordCountLoading={dataRecordsQuery.isLoading}
+            dataRecordCount={siteEmissionsQuery.data?.data.coverage.totalRecords ?? 0}
+            isDataRecordCountLoading={siteEmissionsQuery.isLoading}
             siteId={currentSite.id}
             workspace={currentWorkspace}
           />

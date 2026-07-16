@@ -38,6 +38,10 @@ export type DataRecord = {
   unit: string;
   factorKgCo2e: string | null;
   calculatedKgCo2e: string | null;
+  scope: string | null;
+  factorSourceSheet: string | null;
+  factorSourceYear: number | null;
+  factorSourceVersion: string | null;
   notes: string | null;
   metadata: unknown;
   createdByUserId: string;
@@ -173,6 +177,10 @@ export const demoDataRecords: DataRecord[] = [
     unit: "kWh",
     factorKgCo2e: "0.716",
     calculatedKgCo2e: "8950",
+    scope: "Scope 2",
+    factorSourceSheet: "Electricity",
+    factorSourceYear: 2025,
+    factorSourceVersion: "2025",
     notes: "April electricity bill",
     metadata: null,
     createdByUserId: "user-admin",
@@ -210,6 +218,10 @@ export const demoDataRecords: DataRecord[] = [
     unit: "litre",
     factorKgCo2e: "2.512",
     calculatedKgCo2e: "1607.680",
+    scope: "Scope 1",
+    factorSourceSheet: "Fuels",
+    factorSourceYear: 2025,
+    factorSourceVersion: "2025",
     notes: "Backup generator diesel purchase",
     metadata: null,
     createdByUserId: "user-employee",

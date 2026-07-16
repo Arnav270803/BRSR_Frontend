@@ -58,10 +58,12 @@ function FieldMessage({ error }: { error?: FieldError }) {
 }
 
 export function DataRecordForm({
+  initialScope,
   onAddRecord,
   records,
   selectedActivities,
 }: {
+  initialScope?: string | null;
   onAddRecord: (values: CreateDataRecordValues) => Promise<void>;
   records: DataRecord[];
   selectedActivities: SelectedGhgActivity[];
@@ -152,6 +154,7 @@ export function DataRecordForm({
             <input type="hidden" {...register("ghgActivitySelectionId")} />
             <ActivitySearchPicker
               error={errors.ghgActivitySelectionId}
+              initialScope={initialScope}
               recentSelectionIds={recentSelectionIds}
               selectedActivities={selectedActivities}
               value={selectedActivityId}
@@ -240,12 +243,14 @@ export function DataRecordForm({
 
 function ActivitySearchPicker({
   error,
+  initialScope,
   onChange,
   recentSelectionIds,
   selectedActivities,
   value,
 }: {
   error?: FieldError;
+  initialScope?: string | null;
   onChange: (selectionId: string) => void;
   recentSelectionIds: Set<string>;
   selectedActivities: SelectedGhgActivity[];
@@ -278,6 +283,20 @@ function ActivitySearchPicker({
     ],
     [selectedActivities],
   );
+
+  useEffect(() => {
+    if (!initialScope) {
+      return;
+    }
+
+    const normalizedInitialScope = initialScope.toLowerCase().replace(/[^a-z0-9]+/g, "");
+    const matchingScope = scopes.find(
+      (scopeValue) =>
+        scopeValue.toLowerCase().replace(/[^a-z0-9]+/g, "") === normalizedInitialScope,
+    );
+
+    setScope(matchingScope ?? "all");
+  }, [initialScope, scopes]);
   const normalizedSearchTerm = searchTerm.trim().toLowerCase();
   const filteredActivities = useMemo(() => {
     const filtered = selectedActivities.filter(

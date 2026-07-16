@@ -14,14 +14,17 @@ function getInitials(name: string) {
 
 export function WorkspaceHeader({
   activeSite,
+  currentReportingYearId,
   workspace,
 }: {
   activeSite: CompanySite;
+  currentReportingYearId?: string;
   workspace: CompanyWorkspace;
 }) {
   const { company, viewerRole } = workspace;
   const canManageAccess = viewerRole !== "USER";
-  const defaultReportingYearId = workspace.reportingYears[0]?.id;
+  const defaultReportingYearId =
+    currentReportingYearId ?? workspace.reportingYears[0]?.id;
   const dataEntryPath = defaultReportingYearId
     ? `/app/${company.id}/sites/${activeSite.id}/reporting-years/${defaultReportingYearId}/data`
     : `/app/${company.id}/reporting-years`;
