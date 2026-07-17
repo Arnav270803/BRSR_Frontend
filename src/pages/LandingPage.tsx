@@ -243,10 +243,11 @@ export function LandingPage() {
   return (
     <main className="landing-page min-h-screen overflow-x-clip bg-[#f6f8fb] text-[#07182e]">
       <HeroSection />
-      <FrameworkSection />
       <RegionalAlignmentSection />
-      <PlatformSection />
+      <FrameworkSection />
+      <ServicesSection />
       <EngagementApproachSection />
+      <PlatformSection />
       <AboutSection />
     </main>
   );
@@ -271,11 +272,11 @@ function HeroSection() {
             <a className="relative py-3 transition hover:text-[#176b4d] after:absolute after:inset-x-0 after:bottom-0 after:mx-auto after:h-0.5 after:w-12 after:bg-[#268f2f]" href="#solutions">
               Solutions
             </a>
-            <a className="py-3 transition hover:text-[#176b4d]" href="#platform">
-              Platform
-            </a>
             <a className="py-3 transition hover:text-[#176b4d]" href="#services">
               Services
+            </a>
+            <a className="py-3 transition hover:text-[#176b4d]" href="#platform">
+              Platform
             </a>
             <a className="py-3 transition hover:text-[#176b4d]" href="#contact">
               Contact
@@ -314,11 +315,11 @@ function HeroSection() {
             <a className="rounded-md bg-[#eef3ec] px-3 py-2.5 text-[#176b4d]" href="#solutions" onClick={() => setIsMenuOpen(false)}>
               Solutions
             </a>
-            <a className="rounded-md px-3 py-2.5 hover:bg-[#eef3ec]" href="#platform" onClick={() => setIsMenuOpen(false)}>
-              Platform
-            </a>
             <a className="rounded-md px-3 py-2.5 hover:bg-[#eef3ec]" href="#services" onClick={() => setIsMenuOpen(false)}>
               Services
+            </a>
+            <a className="rounded-md px-3 py-2.5 hover:bg-[#eef3ec]" href="#platform" onClick={() => setIsMenuOpen(false)}>
+              Platform
             </a>
             <a className="rounded-md px-3 py-2.5 hover:bg-[#eef3ec]" href="#contact" onClick={() => setIsMenuOpen(false)}>
               Contact
@@ -743,8 +744,7 @@ function FrameworkCard({
 
 function PlatformSection() {
   return (
-    <section id="platform">
-      <div className="relative overflow-hidden bg-[#001326] py-16 text-white sm:py-20">
+    <section id="platform" className="relative overflow-hidden bg-[#001326] py-16 text-white sm:py-20">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_0%,rgba(24,191,180,0.20),transparent_30%),radial-gradient(circle_at_80%_54%,rgba(20,105,178,0.26),transparent_34%)]" />
         <div className="relative mx-auto max-w-[1480px] px-5 sm:px-8 lg:px-14">
           <div className="grid gap-10 lg:grid-cols-[0.78fr_1.22fr] lg:items-center">
@@ -841,9 +841,13 @@ function PlatformSection() {
             </div>
           </div>
         </div>
-      </div>
+    </section>
+  );
+}
 
-      <div id="services" className="bg-[#f6f8fb] py-16 sm:py-20">
+function ServicesSection() {
+  return (
+      <section id="services" className="bg-[#f6f8fb] py-16 sm:py-20">
         <div className="mx-auto max-w-[1480px] px-5 sm:px-8 lg:px-14">
           <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
             <div>
@@ -879,8 +883,7 @@ function PlatformSection() {
             ))}
           </div>
         </div>
-      </div>
-    </section>
+      </section>
   );
 }
 
