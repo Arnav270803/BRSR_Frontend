@@ -968,6 +968,23 @@ function AboutSection() {
               in 2020. We help organisations embed social priorities into strategy,
               operations, and reporting frameworks.
             </p>
+            <div className="mt-6 flex items-center gap-3 border-l-2 border-[#159f90] pl-4 text-sm text-[#526173]">
+              <span>Founded by</span>
+              <a
+                className="inline-flex items-center gap-2 font-bold text-[#0b315f] transition hover:text-[#159f90] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#159f90]"
+                href="https://www.linkedin.com/in/anudeep-parashar?utm_source=share_via&utm_content=profile&utm_medium=member_ios"
+                rel="noreferrer"
+                target="_blank"
+              >
+                Anudeep Parashar
+                <span
+                  aria-hidden="true"
+                  className="flex size-5 items-center justify-center rounded-sm border border-current text-[10px] font-extrabold leading-none"
+                >
+                  in
+                </span>
+              </a>
+            </div>
           </div>
 
           <div className="grid gap-5 sm:grid-cols-2">
