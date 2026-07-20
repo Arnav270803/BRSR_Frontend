@@ -233,10 +233,18 @@ const focusAreas = [
 ];
 
 const aboutCards = [
-  { label: "Founded", value: "2020 in Singapore", tone: "bg-[#159f90]" },
-  { label: "Focus", value: "ESG & Digital Transformation", tone: "bg-[#1469b2]" },
-  { label: "Reach", value: "Singapore, APAC & Global", tone: "bg-[#268f2f]" },
-  { label: "Expertise", value: "25+ years of leadership experience", tone: "bg-[#1d3e6f]" },
+  { label: "Founded", value: "2020 in Singapore", tone: "bg-[#159f90]", icon: Building2 },
+  { label: "Focus", value: "ESG & Digital Transformation", tone: "bg-[#1469b2]", icon: Target },
+  { label: "Reach", value: "Singapore, APAC & Global", tone: "bg-[#268f2f]", icon: Globe2 },
+  { label: "Expertise", value: "25+ years of leadership experience", tone: "bg-[#1d3e6f]", icon: Users },
+];
+
+const founderHighlights = [
+  { copy: "25+ years international experience across APAC", icon: Globe2 },
+  { copy: "ESG Reporting & Net Zero Certified", icon: Leaf },
+  { copy: "Sales Director, SaaSWorx \u2013 Cloud Transformation", icon: Database },
+  { copy: "C-level stakeholder engagement across SG, JP, KR, CN, HK & ASEAN", icon: Users },
+  { copy: "Built boutique consulting firms; entrepreneurial ESG vision", icon: Building2 },
 ];
 
 export function LandingPage() {
@@ -968,32 +976,75 @@ function AboutSection() {
               in 2020. We help organisations embed social priorities into strategy,
               operations, and reporting frameworks.
             </p>
-            <div className="mt-6 flex items-center gap-3 border-l-2 border-[#159f90] pl-4 text-sm text-[#526173]">
-              <span>Founded by</span>
+          </div>
+
+          <div className="grid gap-5 sm:grid-cols-2">
+            {aboutCards.map((card) => {
+              const Icon = card.icon;
+
+              return (
+                <article className={`${card.tone} min-h-36 rounded-lg p-6 text-white shadow-[0_18px_48px_rgba(10,35,70,0.16)]`} key={card.label}>
+                  <div className="flex items-center justify-between gap-4">
+                    <p className="text-xl font-extrabold">{card.label}</p>
+                    <Icon aria-hidden="true" className="shrink-0 text-white/90" size={28} strokeWidth={1.8} />
+                  </div>
+                  <p className="mt-8 text-lg leading-7 font-semibold">{card.value}</p>
+                </article>
+              );
+            })}
+          </div>
+        </div>
+
+        <div className="mt-12 overflow-hidden border-y border-[#159f90]/50 bg-[#f8fafc] lg:grid lg:grid-cols-[300px_minmax(0,1fr)]">
+          <div className="flex min-h-[230px] flex-col bg-[#001d3b] p-8 text-white sm:p-10 lg:min-h-[330px]">
+            <p className="text-sm font-bold tracking-[0.18em] text-[#52d8c6] uppercase">
+              Founded by
+            </p>
+            <span className="mt-3 h-0.5 w-10 bg-[#ffc34f]" aria-hidden="true" />
+            <p className="mt-4 text-lg font-semibold">CEO</p>
+            <p className="mt-auto text-[7rem] leading-none font-extrabold text-[#21b6a3] sm:text-[9rem]" aria-hidden="true">
+              AP
+            </p>
+          </div>
+
+          <div className="min-w-0 p-8 sm:p-10 lg:p-12">
+            <h3 className="text-3xl font-extrabold tracking-normal text-[#07182e] sm:text-4xl">
+              Anudeep Parashar
+            </h3>
+            <p className="mt-2 text-lg font-semibold italic text-[#159f90] sm:text-xl">
+              ESG & Sustainability Consultant
+            </p>
+
+            <div className="mt-8 grid gap-x-12 gap-y-5 md:grid-cols-2">
+              {founderHighlights.map((highlight) => {
+                const Icon = highlight.icon;
+
+                return (
+                  <div className="flex min-w-0 items-start gap-4" key={highlight.copy}>
+                    <Icon aria-hidden="true" className="mt-0.5 shrink-0 text-[#159f90]" size={25} strokeWidth={1.8} />
+                    <p className="text-base leading-7 text-[#3f5168] sm:text-lg">{highlight.copy}</p>
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className="mt-8 border-t border-[#d5dee8] pt-5">
               <a
-                className="inline-flex items-center gap-2 font-bold text-[#0b315f] transition hover:text-[#159f90] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#159f90]"
+                className="inline-flex items-center gap-2 font-semibold text-[#1469b2] transition hover:text-[#159f90] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#159f90]"
                 href="https://www.linkedin.com/in/anudeep-parashar?utm_source=share_via&utm_content=profile&utm_medium=member_ios"
                 rel="noreferrer"
                 target="_blank"
               >
-                Anudeep Parashar
                 <span
                   aria-hidden="true"
-                  className="flex size-5 items-center justify-center rounded-sm border border-current text-[10px] font-extrabold leading-none"
+                  className="flex size-6 items-center justify-center rounded-sm bg-[#1469b2] text-[11px] font-extrabold leading-none text-white"
                 >
                   in
                 </span>
+                LinkedIn
+                <ArrowRight aria-hidden="true" size={16} />
               </a>
             </div>
-          </div>
-
-          <div className="grid gap-5 sm:grid-cols-2">
-            {aboutCards.map((card) => (
-              <article className={`${card.tone} min-h-36 rounded-lg p-6 text-white shadow-[0_18px_48px_rgba(10,35,70,0.16)]`} key={card.label}>
-                <p className="text-xl font-extrabold">{card.label}</p>
-                <p className="mt-8 text-lg leading-7 font-semibold">{card.value}</p>
-              </article>
-            ))}
           </div>
         </div>
       </div>
