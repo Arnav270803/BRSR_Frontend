@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { Navigate, Outlet, useLocation } from "react-router-dom";
+import { Navigate, Outlet, useLocation, useParams } from "react-router-dom";
 import { getCurrentSession } from "../api/auth";
 import { ApiError } from "../api/client";
 
@@ -13,7 +13,7 @@ function AuthLoading() {
   );
 }
 
-function useSessionQuery() {
+export function useSessionQuery() {
   return useQuery({
     queryKey: ["auth", "me"],
     queryFn: getCurrentSession,
@@ -52,9 +52,72 @@ export function RequireAuth() {
   if (
     session.needsCompanyOnboarding &&
     location.pathname !== "/onboarding/company" &&
-    location.pathname !== "/invite"
+    location.pathname !== "/invite" &&
+    location.pathname !== "/vendor/invite"
   ) {
     return <Navigate replace to="/onboarding/company" />;
+  }
+
+  return <Outlet />;
+}
+
+export function RequireCompanyAccess() {
+  const { companyId } = useParams();
+  const sessionQuery = useSessionQuery();
+
+  if (sessionQuery.isLoading) {
+    return <AuthLoading />;
+  }
+
+  if (sessionQuery.isError) {
+    return <Navigate replace to="/login" />;
+  }
+
+  const session = sessionQuery.data!.data;
+  const hasAccess =
+    session.user.isPlatformOwner ||
+    session.memberships.some((membership) => membership.companyId === companyId);
+
+  if (!hasAccess) {
+    const vendorMembership = session.vendorMemberships[0];
+
+    return (
+      <Navigate
+        replace
+        to={vendorMembership ? `/vendor/${vendorMembership.vendorId}` : "/login"}
+      />
+    );
+  }
+
+  return <Outlet />;
+}
+
+export function RequireVendorPortal() {
+  const { vendorId } = useParams();
+  const sessionQuery = useSessionQuery();
+
+  if (sessionQuery.isLoading) {
+    return <AuthLoading />;
+  }
+
+  if (sessionQuery.isError) {
+    return <Navigate replace to="/login" />;
+  }
+
+  const session = sessionQuery.data!.data;
+  const hasAccess = session.vendorMemberships.some(
+    (membership) => membership.vendorId === vendorId,
+  );
+
+  if (!hasAccess) {
+    const companyMembership = session.memberships[0];
+
+    return (
+      <Navigate
+        replace
+        to={companyMembership ? `/app/${companyMembership.companyId}` : "/login"}
+      />
+    );
   }
 
   return <Outlet />;
@@ -73,9 +136,14 @@ export function RequireCompanyOnboarding() {
 
   const session = sessionQuery.data!.data;
   const firstCompany = session.memberships[0];
+  const firstVendor = session.vendorMemberships[0];
 
   if (!session.needsCompanyOnboarding && firstCompany) {
     return <Navigate replace to={`/app/${firstCompany.companyId}`} />;
+  }
+
+  if (!session.needsCompanyOnboarding && firstVendor) {
+    return <Navigate replace to={`/vendor/${firstVendor.vendorId}`} />;
   }
 
   return <Outlet />;

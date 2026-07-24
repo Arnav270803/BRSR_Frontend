@@ -7,6 +7,15 @@ export type AuthMembership = {
   status: string;
 };
 
+export type AuthVendorMembership = {
+  companyId: string;
+  companyDisplayName: string;
+  vendorId: string;
+  vendorDisplayName: string;
+  role: "VENDOR_ADMIN" | "VENDOR_CONTRIBUTOR";
+  status: string;
+};
+
 export type AuthSession = {
   user: {
     id: string;
@@ -16,6 +25,7 @@ export type AuthSession = {
     isPlatformOwner: boolean;
   };
   memberships: AuthMembership[];
+  vendorMemberships: AuthVendorMembership[];
   needsCompanyOnboarding: boolean;
 };
 

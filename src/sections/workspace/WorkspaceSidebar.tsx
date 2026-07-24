@@ -8,6 +8,7 @@ import {
   MapPin,
   Menu,
   Settings,
+  Store,
   Users,
   X,
 } from "lucide-react";
@@ -22,6 +23,7 @@ export type WorkspaceNavKey =
   | "ghgSetup"
   | "dataEntry"
   | "reports"
+  | "vendors"
   | "sites"
   | "employees"
   | "settings";
@@ -45,6 +47,12 @@ function getNavigation(viewerRole: WorkspaceRole, companyId: string): NavItem[] 
     { key: "ghgSetup", label: "GHG setup", icon: Leaf },
     { key: "dataEntry", label: "Data entry", icon: ClipboardList },
     { key: "reports", label: "Reports", icon: FileText, to: `/app/${companyId}/reports` },
+    {
+      key: "vendors",
+      label: "Vendors & suppliers",
+      icon: Store,
+      to: `/app/${companyId}/vendors`,
+    },
     { key: "sites", label: "Sites", icon: MapPin, to: `/app/${companyId}/sites` },
     { key: "employees", label: "Employees", icon: Users, to: `/app/${companyId}/employees` },
     { key: "settings", label: "Settings", icon: Settings, to: `/app/${companyId}/settings` },

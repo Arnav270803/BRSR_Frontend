@@ -33,6 +33,8 @@ export type ReportDataRecord = {
   unit: string;
   factorKgCo2e: string | null;
   calculatedKgCo2e: string | null;
+  dataOrigin: "Vendor" | "Internal";
+  vendor: string | null;
   createdBy: string;
   notes: string | null;
 };
@@ -75,6 +77,7 @@ export type ReportingYearReport = {
     totalsByScope: ReportTotalRow[];
     totalsByCategory: ReportTotalRow[];
     totalsByActivity: ReportTotalRow[];
+    totalsByVendor: ReportTotalRow[];
   };
   dataRecords: ReportDataRecord[];
   methodology: {

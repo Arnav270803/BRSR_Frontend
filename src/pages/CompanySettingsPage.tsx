@@ -7,6 +7,7 @@ import { GovernanceRoadmapPanel } from "../sections/settings/GovernanceRoadmapPa
 import { SettingsHeader } from "../sections/settings/SettingsHeader";
 import { SettingsMetrics } from "../sections/settings/SettingsMetrics";
 import { WorkspaceReadinessPanel } from "../sections/settings/WorkspaceReadinessPanel";
+import { VendorTrackingSettingsPanel } from "../sections/settings/VendorTrackingSettingsPanel";
 import { WorkspacePageState } from "../sections/workspace/WorkspacePageState";
 import { WorkspaceSidebar } from "../sections/workspace/WorkspaceSidebar";
 
@@ -57,6 +58,7 @@ export function CompanySettingsPage() {
           <div className="grid gap-3 sm:gap-4 xl:grid-cols-[minmax(0,1fr)_430px] xl:gap-5 2xl:grid-cols-[minmax(0,1fr)_500px]">
             <div className="grid gap-3 sm:gap-4 xl:gap-5">
               <CompanyProfilePanel workspace={workspace} />
+              <VendorTrackingSettingsPanel workspace={workspace} />
               <WorkspaceReadinessPanel workspace={workspace} />
               <GovernanceRoadmapPanel />
             </div>

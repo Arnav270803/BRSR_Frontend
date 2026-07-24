@@ -29,6 +29,22 @@ function areSetsEqual(left: Set<string>, right: Set<string>) {
   return true;
 }
 
+type VendorTrackingMode = "NONE" | "OPTIONAL" | "REQUIRED";
+
+function areTrackingModesEqual(
+  left: Record<string, VendorTrackingMode>,
+  right: Record<string, VendorTrackingMode>,
+  selectedActivityIds: Set<string>,
+) {
+  for (const activityId of selectedActivityIds) {
+    if ((left[activityId] ?? "NONE") !== (right[activityId] ?? "NONE")) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
 export function CompanyGhgSetupPage() {
   const { companyId, siteId, reportingYearId } = useParams();
   const catalogRef = useRef<HTMLDivElement>(null);
@@ -55,8 +71,20 @@ export function CompanyGhgSetupPage() {
     enabled: Boolean(companyId && reportingYearId && resolvedSiteId),
   });
   const saveSelectionsMutation = useMutation({
-    mutationFn: (activityIds: string[]) =>
-      updateGhgActivitySelections(companyId!, reportingYearId!, activityIds, resolvedSiteId),
+    mutationFn: ({
+      activityIds,
+      vendorTrackingModes,
+    }: {
+      activityIds: string[];
+      vendorTrackingModes: Record<string, VendorTrackingMode>;
+    }) =>
+      updateGhgActivitySelections(
+        companyId!,
+        reportingYearId!,
+        activityIds,
+        resolvedSiteId,
+        vendorTrackingModes,
+      ),
     onSuccess: async () => {
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: ["ghg-selections", companyId, resolvedSiteId, reportingYearId] }),
@@ -68,6 +96,9 @@ export function CompanyGhgSetupPage() {
   const [selectedActivityIds, setSelectedActivityIds] = useState<Set<string>>(
     () => new Set(),
   );
+  const [vendorTrackingModes, setVendorTrackingModes] = useState<
+    Record<string, VendorTrackingMode>
+  >({});
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
   const initialSelectedIds = useMemo(
     () =>
@@ -77,12 +108,23 @@ export function CompanyGhgSetupPage() {
       ),
     [selectionsQuery.data],
   );
+  const initialVendorTrackingModes = useMemo(
+    () =>
+      Object.fromEntries(
+        (selectionsQuery.data?.data.selectedActivities ?? []).map((selection) => [
+          selection.activity.id,
+          selection.vendorTrackingMode,
+        ]),
+      ) as Record<string, VendorTrackingMode>,
+    [selectionsQuery.data],
+  );
 
   useEffect(() => {
     if (selectionsQuery.data) {
       setSelectedActivityIds(initialSelectedIds);
+      setVendorTrackingModes(initialVendorTrackingModes);
     }
-  }, [initialSelectedIds, selectionsQuery.data]);
+  }, [initialSelectedIds, initialVendorTrackingModes, selectionsQuery.data]);
 
   useEffect(() => {
     if (
@@ -153,7 +195,13 @@ export function CompanyGhgSetupPage() {
   const reportingYear = selectionsQuery.data!.data.reportingYear;
   const categories = categoriesQuery.data!.data;
   const activities = activitiesQuery.data!.data;
-  const hasUnsavedChanges = !areSetsEqual(selectedActivityIds, initialSelectedIds);
+  const hasUnsavedChanges =
+    !areSetsEqual(selectedActivityIds, initialSelectedIds) ||
+    !areTrackingModesEqual(
+      vendorTrackingModes,
+      initialVendorTrackingModes,
+      selectedActivityIds,
+    );
   const selectedActivities = activities.filter((activity) =>
     selectedActivityIds.has(activity.id),
   );
@@ -167,16 +215,26 @@ export function CompanyGhgSetupPage() {
     }
 
     setStatusMessage(null);
-    setSelectedActivityIds((current) => {
-      const next = new Set(current);
+    const nextSelectedIds = new Set(selectedActivityIds);
+    const isRemoving = nextSelectedIds.has(activityId);
 
-      if (next.has(activityId)) {
-        next.delete(activityId);
+    if (isRemoving) {
+      nextSelectedIds.delete(activityId);
+    } else {
+      nextSelectedIds.add(activityId);
+    }
+
+    setSelectedActivityIds(nextSelectedIds);
+    setVendorTrackingModes((currentModes) => {
+      const nextModes = { ...currentModes };
+
+      if (isRemoving) {
+        delete nextModes[activityId];
       } else {
-        next.add(activityId);
+        nextModes[activityId] = currentModes[activityId] ?? "NONE";
       }
 
-      return next;
+      return nextModes;
     });
   }
 
@@ -186,15 +244,20 @@ export function CompanyGhgSetupPage() {
     }
 
     setStatusMessage(null);
+    const categoryActivityIds = activities
+      .filter((activity) => activity.categoryId === categoryId)
+      .map((activity) => activity.id);
     setSelectedActivityIds((current) => {
       const next = new Set(current);
-      for (const activity of activities) {
-        if (activity.categoryId === categoryId) {
-          next.add(activity.id);
-        }
-      }
-
+      categoryActivityIds.forEach((activityId) => next.add(activityId));
       return next;
+    });
+    setVendorTrackingModes((currentModes) => {
+      const nextModes = { ...currentModes };
+      categoryActivityIds.forEach((activityId) => {
+        nextModes[activityId] = currentModes[activityId] ?? "NONE";
+      });
+      return nextModes;
     });
   }
 
@@ -205,6 +268,19 @@ export function CompanyGhgSetupPage() {
 
     setStatusMessage(null);
     setSelectedActivityIds(new Set());
+    setVendorTrackingModes({});
+  }
+
+  function changeVendorTrackingMode(activityId: string, mode: VendorTrackingMode) {
+    if (!canEdit || !company.vendorTrackingEnabled) {
+      return;
+    }
+
+    setStatusMessage(null);
+    setVendorTrackingModes((current) => ({
+      ...current,
+      [activityId]: mode,
+    }));
   }
 
   async function saveSelections() {
@@ -218,7 +294,15 @@ export function CompanyGhgSetupPage() {
     }
 
     try {
-      await saveSelectionsMutation.mutateAsync([...selectedActivityIds]);
+      await saveSelectionsMutation.mutateAsync({
+        activityIds: [...selectedActivityIds],
+        vendorTrackingModes: Object.fromEntries(
+          [...selectedActivityIds].map((activityId) => [
+            activityId,
+            vendorTrackingModes[activityId] ?? "NONE",
+          ]),
+        ),
+      });
       setStatusMessage(`Saved ${selectedActivityIds.size} selected activities.`);
     } catch {
       setStatusMessage("Unable to save selected activities.");
@@ -281,6 +365,9 @@ export function CompanyGhgSetupPage() {
               saveSelections={saveSelections}
               selectedActivities={selectedActivities}
               statusMessage={statusMessage}
+              vendorTrackingEnabled={company.vendorTrackingEnabled}
+              vendorTrackingModes={vendorTrackingModes}
+              onVendorTrackingModeChange={changeVendorTrackingMode}
             />
           </div>
         </section>

@@ -46,9 +46,11 @@ export function toCreateRecordPayload(
   values: CreateDataRecordValues,
 ): CreateDataRecordPayload {
   const notes = values.notes.trim();
+  const vendorId = values.vendorId.trim();
 
   return {
     ghgActivitySelectionId: values.ghgActivitySelectionId,
+    ...(vendorId ? { vendorId } : {}),
     recordDate: values.recordDate,
     quantity: Number(values.quantity),
     ...(notes ? { notes } : {}),

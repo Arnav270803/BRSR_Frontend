@@ -8,6 +8,7 @@ import {
 } from "../api/dataRecords";
 import { listGhgActivitySelections } from "../api/ghg";
 import { getCurrentSession } from "../api/auth";
+import { listVendorOptions } from "../api/vendors";
 import { getCompanyWorkspace } from "../api/workspace";
 import { DataEntryHeader } from "../sections/dataEntry/DataEntryHeader";
 import { DataEntryMetrics } from "../sections/dataEntry/DataEntryMetrics";
@@ -50,6 +51,13 @@ export function CompanyDataEntryPage() {
     queryFn: () => listDataRecordsForSite(companyId!, resolvedSiteId, reportingYearId!),
     enabled: Boolean(companyId && reportingYearId && resolvedSiteId),
   });
+  const vendorTrackingEnabled =
+    workspaceQuery.data?.data.company.vendorTrackingEnabled ?? false;
+  const vendorsQuery = useQuery({
+    queryKey: ["vendors", companyId, "ACTIVE", resolvedSiteId],
+    queryFn: () => listVendorOptions(companyId!, resolvedSiteId!),
+    enabled: Boolean(companyId && resolvedSiteId && vendorTrackingEnabled),
+  });
   const createRecordMutation = useMutation({
     mutationFn: (values: CreateDataRecordValues) =>
       createDataRecord(companyId!, reportingYearId!, toCreateRecordPayload(values), resolvedSiteId),
@@ -81,6 +89,7 @@ export function CompanyDataEntryPage() {
       !workspaceQuery.isSuccess ||
       !selectionsQuery.isSuccess ||
       !recordsQuery.isSuccess ||
+      (vendorTrackingEnabled && !vendorsQuery.isSuccess) ||
       !window.matchMedia("(max-width: 1023px)").matches
     ) {
       return;
@@ -98,6 +107,8 @@ export function CompanyDataEntryPage() {
     sessionQuery.isSuccess,
     siteId,
     workspaceQuery.isSuccess,
+    vendorTrackingEnabled,
+    vendorsQuery.isSuccess,
   ]);
 
   if (!companyId || !reportingYearId) {
@@ -108,7 +119,8 @@ export function CompanyDataEntryPage() {
     sessionQuery.isLoading ||
     workspaceQuery.isLoading ||
     selectionsQuery.isLoading ||
-    recordsQuery.isLoading
+    recordsQuery.isLoading ||
+    (vendorTrackingEnabled && vendorsQuery.isLoading)
   ) {
     return <DataEntryShell message="Loading data entry..." />;
   }
@@ -117,7 +129,8 @@ export function CompanyDataEntryPage() {
     sessionQuery.isError ||
     workspaceQuery.isError ||
     selectionsQuery.isError ||
-    recordsQuery.isError
+    recordsQuery.isError ||
+    (vendorTrackingEnabled && vendorsQuery.isError)
   ) {
     return <DataEntryShell message="Unable to load data entry." tone="error" />;
   }
@@ -144,6 +157,7 @@ export function CompanyDataEntryPage() {
   const viewerRole = workspace.viewerRole;
   const selectedActivities = selectionsQuery.data!.data.selectedActivities;
   const records = recordsQuery.data!.data;
+  const vendors = vendorsQuery.data?.data ?? [];
   const totalEmissions = records.reduce(
     (total, record) => total + Number(record.calculatedKgCo2e ?? 0),
     0,
@@ -205,6 +219,7 @@ export function CompanyDataEntryPage() {
                 onAddRecord={addRecord}
                 records={records}
                 selectedActivities={selectedActivities}
+                vendors={vendors}
               />
             </div>
           </div>

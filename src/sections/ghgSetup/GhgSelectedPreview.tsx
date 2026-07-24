@@ -31,6 +31,9 @@ export function GhgSelectedPreview({
   saveSelections,
   selectedActivities,
   statusMessage,
+  vendorTrackingEnabled,
+  vendorTrackingModes,
+  onVendorTrackingModeChange,
 }: {
   canEdit: boolean;
   categories: GhgCategory[];
@@ -39,6 +42,12 @@ export function GhgSelectedPreview({
   saveSelections: () => void;
   selectedActivities: GhgActivity[];
   statusMessage: string | null;
+  vendorTrackingEnabled: boolean;
+  vendorTrackingModes: Record<string, "NONE" | "OPTIONAL" | "REQUIRED">;
+  onVendorTrackingModeChange: (
+    activityId: string,
+    mode: "NONE" | "OPTIONAL" | "REQUIRED",
+  ) => void;
 }) {
   return (
     <aside className="rounded-lg border border-white/70 bg-white/50 p-4 shadow-[0_18px_60px_rgba(35,47,38,0.10)] backdrop-blur-2xl sm:p-5 xl:sticky xl:top-4 xl:max-h-[calc(100vh-2rem)] xl:overflow-y-auto 2xl:p-6">
@@ -93,6 +102,12 @@ export function GhgSelectedPreview({
         </p>
       ) : null}
 
+      {!vendorTrackingEnabled && canEdit ? (
+        <p className="mt-4 rounded-md border border-[#ded2b4] bg-[#fbf6e9] px-3 py-2 text-sm leading-6 text-[#775d20]">
+          Enable vendor tracking in Settings before assigning supplier activities.
+        </p>
+      ) : null}
+
       <div className="mt-5 grid gap-3">
         {categories.map((category) => {
           const categoryActivities = selectedActivities.filter(
@@ -133,6 +148,34 @@ export function GhgSelectedPreview({
                       {activity.scope ?? "Scope not set"} / {activity.unit} /{" "}
                       {activity.factorKgCo2e ?? "factor not set"}
                     </p>
+                    {canEdit && vendorTrackingEnabled ? (
+                      <label className="mt-3 block">
+                        <span className="text-[10px] font-semibold tracking-[0.08em] text-[#718079] uppercase">
+                          Vendor data
+                        </span>
+                        <select
+                          className="mt-1.5 h-9 w-full rounded-md border border-[#d2ded6] bg-white/80 px-2 text-xs font-semibold text-[#253229] outline-none focus:border-[#678c72] focus:ring-3 focus:ring-[#426a52]/15"
+                          value={vendorTrackingModes[activity.id] ?? "NONE"}
+                          onChange={(event) =>
+                            onVendorTrackingModeChange(
+                              activity.id,
+                              event.target.value as "NONE" | "OPTIONAL" | "REQUIRED",
+                            )
+                          }
+                        >
+                          <option value="NONE">Not requested from vendors</option>
+                          <option value="OPTIONAL">Optional from vendors</option>
+                          <option value="REQUIRED">Required from vendors</option>
+                        </select>
+                      </label>
+                    ) : vendorTrackingEnabled ? (
+                      <p className="mt-2 text-xs font-semibold text-[#426a52]">
+                        Vendor data:{" "}
+                        {(vendorTrackingModes[activity.id] ?? "NONE")
+                          .toLowerCase()
+                          .replace("_", " ")}
+                      </p>
+                    ) : null}
                   </div>
                 ))}
               </div>

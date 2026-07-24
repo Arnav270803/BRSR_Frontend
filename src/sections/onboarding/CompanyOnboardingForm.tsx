@@ -57,6 +57,7 @@ const companyOnboardingSchema = z.object({
   employeeCountRange: optionalText,
   contactPhone: optionalText,
   logoUrl: optionalUrl,
+  vendorTrackingEnabled: z.boolean(),
 });
 
 type CompanyOnboardingFormValues = {
@@ -81,6 +82,7 @@ type CompanyOnboardingFormValues = {
   employeeCountRange: string;
   contactPhone: string;
   logoUrl: string;
+  vendorTrackingEnabled: boolean;
 };
 
 const months = [
@@ -120,6 +122,7 @@ const emptyDefaults: CompanyOnboardingFormValues = {
   employeeCountRange: "",
   contactPhone: "",
   logoUrl: "",
+  vendorTrackingEnabled: false,
 };
 
 function FieldMessage({ error }: { error?: FieldError }) {
@@ -206,6 +209,7 @@ export function CompanyOnboardingForm() {
         employeeCountRange: result.data.employeeCountRange,
         contactPhone: result.data.contactPhone,
         logoUrl: result.data.logoUrl,
+        vendorTrackingEnabled: result.data.vendorTrackingEnabled,
         site: {
           name: result.data.siteName,
           type: result.data.siteType,
@@ -493,6 +497,7 @@ export function CompanyOnboardingForm() {
             <FieldMessage error={errors.employeeCountRange} />
           </label>
         </div>
+
       </FormSection>
 
       <FormSection
@@ -541,6 +546,23 @@ export function CompanyOnboardingForm() {
             <FieldMessage error={errors.logoUrl} />
           </label>
         </div>
+
+        <label className="mt-4 flex items-start gap-3 rounded-lg border border-[#d2ded6] bg-white/55 p-4">
+          <input
+            className="mt-0.5 size-5 shrink-0 accent-[#1f5135]"
+            type="checkbox"
+            {...register("vendorTrackingEnabled")}
+          />
+          <span>
+            <span className="block text-sm font-semibold text-[#253229]">
+              Enable vendor and supplier tracking
+            </span>
+            <span className="mt-1 block text-xs leading-5 text-[#65716a]">
+              Adds a separate supplier directory and approval workflow for vendor-provided
+              GHG activity data. You can also enable this later in Settings.
+            </span>
+          </span>
+        </label>
       </FormSection>
 
       <div className="mt-8 flex flex-col-reverse gap-3 border-t border-[#dce5df] pt-5 sm:flex-row sm:items-center sm:justify-between">

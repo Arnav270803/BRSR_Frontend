@@ -101,12 +101,16 @@ export function ReportPreview({ report, isLoading }: ReportPreviewProps) {
           </ReportBlock>
 
           <ReportBlock title="Emission totals">
-            <div className="grid gap-3 lg:grid-cols-3">
+            <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
               <TotalsList rows={report.emissionSummary.totalsByScope} title="By scope" />
               <TotalsList rows={report.emissionSummary.totalsByCategory} title="By category" />
               <TotalsList
                 rows={report.emissionSummary.totalsByActivity.slice(0, 6)}
                 title="Top activities"
+              />
+              <TotalsList
+                rows={report.emissionSummary.totalsByVendor.slice(0, 6)}
+                title="Emissions by vendor"
               />
             </div>
           </ReportBlock>
@@ -122,6 +126,7 @@ export function ReportPreview({ report, isLoading }: ReportPreviewProps) {
                     <th className="py-3 pr-4">Quantity</th>
                     <th className="py-3 pr-4">Factor</th>
                     <th className="py-3 pr-4">Calculated kg CO2e</th>
+                    <th className="py-3 pr-4">Origin</th>
                     <th className="py-3 pr-4">Created by</th>
                   </tr>
                 </thead>
@@ -145,6 +150,12 @@ export function ReportPreview({ report, isLoading }: ReportPreviewProps) {
                       </td>
                       <td className="py-3 pr-4 font-semibold text-[#183f2a]">
                         {formatKgCo2e(record.calculatedKgCo2e)}
+                      </td>
+                      <td className="py-3 pr-4 text-[#65736b]">
+                        <span className="font-semibold text-[#26342b]">{record.dataOrigin}</span>
+                        {record.vendor ? (
+                          <span className="mt-1 block text-xs">{record.vendor}</span>
+                        ) : null}
                       </td>
                       <td className="py-3 pr-4 text-[#65736b]">{record.createdBy}</td>
                     </tr>

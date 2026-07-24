@@ -3,6 +3,7 @@ import { Calculator, Check, Plus, Search } from "lucide-react";
 import { type FieldError, useForm } from "react-hook-form";
 import { z } from "zod";
 import { ApiError } from "../../api/client";
+import type { VendorOption } from "../../api/vendors";
 import type {
   CreateDataRecordValues,
   DataRecord,
@@ -19,6 +20,7 @@ import {
 
 const createDataRecordSchema = z.object({
   ghgActivitySelectionId: z.string().trim().min(1, "Select a GHG activity"),
+  vendorId: z.string().trim(),
   recordDate: z
     .string()
     .regex(/^\d{4}-\d{2}-\d{2}$/, "Use YYYY-MM-DD")
@@ -33,6 +35,7 @@ const createDataRecordSchema = z.object({
 
 const defaultValues: CreateDataRecordValues = {
   ghgActivitySelectionId: "",
+  vendorId: "",
   recordDate: "",
   quantity: "",
   notes: "",
@@ -62,11 +65,13 @@ export function DataRecordForm({
   onAddRecord,
   records,
   selectedActivities,
+  vendors,
 }: {
   initialScope?: string | null;
   onAddRecord: (values: CreateDataRecordValues) => Promise<void>;
   records: DataRecord[];
   selectedActivities: SelectedGhgActivity[];
+  vendors: VendorOption[];
 }) {
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
   const [statusTone, setStatusTone] = useState<"error" | "success">("success");
@@ -83,6 +88,7 @@ export function DataRecordForm({
     defaultValues,
   });
   const selectedActivityId = watch("ghgActivitySelectionId");
+  const selectedVendorId = watch("vendorId");
   const quantity = watch("quantity");
   const selectedActivity = useMemo(
     () => getSelectedActivity(selectedActivities, selectedActivityId),
@@ -102,6 +108,16 @@ export function DataRecordForm({
   const calculatedKgCo2e = selectedActivity
     ? calculateKgCo2e(quantity, selectedActivity.activity.factorKgCo2e)
     : null;
+  const vendorTrackingMode = selectedActivity?.vendorTrackingMode ?? "NONE";
+
+  useEffect(() => {
+    if (vendorTrackingMode === "NONE" && selectedVendorId) {
+      setValue("vendorId", "", {
+        shouldDirty: true,
+        shouldValidate: true,
+      });
+    }
+  }, [selectedVendorId, setValue, vendorTrackingMode]);
 
   async function onSubmit(values: CreateDataRecordValues) {
     clearErrors();
@@ -121,6 +137,14 @@ export function DataRecordForm({
         }
       }
 
+      return;
+    }
+
+    if (vendorTrackingMode === "REQUIRED" && !result.data.vendorId) {
+      setError("vendorId", {
+        message: "Select the vendor associated with this activity",
+        type: "manual",
+      });
       return;
     }
 
@@ -168,6 +192,42 @@ export function DataRecordForm({
             />
             <FieldMessage error={errors.ghgActivitySelectionId} />
           </label>
+
+          {vendorTrackingMode !== "NONE" ? (
+            <label>
+              <span className="text-sm font-semibold text-[#253229]">
+                Vendor{vendorTrackingMode === "OPTIONAL" ? " (optional)" : ""}
+              </span>
+              <select
+                aria-invalid={Boolean(errors.vendorId)}
+                className={fieldClass(Boolean(errors.vendorId))}
+                {...register("vendorId")}
+              >
+                <option value="">
+                  {vendorTrackingMode === "REQUIRED"
+                    ? "Select a vendor"
+                    : "No vendor attribution"}
+                </option>
+                {vendors.map((vendor) => (
+                  <option key={vendor.id} value={vendor.id}>
+                    {vendor.displayName}
+                    {vendor.vendorCode ? ` (${vendor.vendorCode})` : ""}
+                  </option>
+                ))}
+              </select>
+              <p className="mt-2 text-xs leading-5 text-[#65716a]">
+                {vendorTrackingMode === "REQUIRED"
+                  ? "This activity is configured to require vendor attribution."
+                  : "Link this internal record to a vendor when the source is supplier-related."}
+              </p>
+              {vendors.length === 0 ? (
+                <p className="mt-1 text-xs font-medium text-[#9b5f28]">
+                  No active vendor is assigned to this site.
+                </p>
+              ) : null}
+              <FieldMessage error={errors.vendorId} />
+            </label>
+          ) : null}
 
           <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-1">
             <label>

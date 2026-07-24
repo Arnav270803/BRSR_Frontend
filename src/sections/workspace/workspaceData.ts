@@ -39,6 +39,7 @@ export type CompanyWorkspace = {
     state: string;
     city: string;
     financialYearStartMonth: number;
+    vendorTrackingEnabled: boolean;
     status: string;
   };
   viewerRole: WorkspaceRole;
@@ -60,6 +61,7 @@ export const demoWorkspace: CompanyWorkspace = {
     state: "Maharashtra",
     city: "Mumbai",
     financialYearStartMonth: 4,
+    vendorTrackingEnabled: true,
     status: "ACTIVE",
   },
   viewerRole: "ADMIN",

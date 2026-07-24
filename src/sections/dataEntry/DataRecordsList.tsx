@@ -54,6 +54,7 @@ export function DataRecordsList({
                     <th className="px-4 py-3">Quantity</th>
                     <th className="px-4 py-3">Factor</th>
                     <th className="px-4 py-3">kg CO2e</th>
+                    <th className="px-4 py-3">Origin</th>
                     <th className="px-4 py-3">Created by</th>
                     <th className="px-4 py-3 text-right">Action</th>
                   </tr>
@@ -76,6 +77,9 @@ export function DataRecordsList({
                       </td>
                       <td className="px-4 py-4 font-semibold text-[#142019]">
                         {formatNumber(record.calculatedKgCo2e)}
+                      </td>
+                      <td className="px-4 py-4">
+                        <OriginBadge record={record} />
                       </td>
                       <td className="px-4 py-4 text-[#5f6d65]">
                         {record.createdBy?.name ?? record.createdBy?.email ?? "Unknown"}
@@ -135,6 +139,16 @@ function RecordCard({
         <RecordMeta label="kg CO2e" value={formatNumber(record.calculatedKgCo2e)} />
         <RecordMeta label="Factor" value={record.factorKgCo2e ?? "Not set"} />
         <RecordMeta
+          label="Origin"
+          value={
+            record.dataOrigin === "VENDOR"
+              ? `Vendor: ${record.vendor?.displayName ?? "Supplier"}`
+              : record.vendor
+                ? `Internal: ${record.vendor.displayName}`
+                : "Internal"
+          }
+        />
+        <RecordMeta
           label="Created by"
           value={record.createdBy?.name ?? record.createdBy?.email ?? "Unknown"}
         />
@@ -153,6 +167,29 @@ function RecordCard({
         />
       </div>
     </article>
+  );
+}
+
+function OriginBadge({ record }: { record: DataRecord }) {
+  const isVendorSubmission = record.dataOrigin === "VENDOR";
+
+  return (
+    <div>
+      <span
+        className={`inline-flex rounded-md border px-2 py-1 text-xs font-semibold ${
+          isVendorSubmission
+            ? "border-[#b9cde0] bg-[#edf5fb] text-[#315f83]"
+            : "border-[#cddbd2] bg-[#f3f7f4] text-[#52645a]"
+        }`}
+      >
+        {isVendorSubmission ? "Vendor submission" : "Internal"}
+      </span>
+      {record.vendor ? (
+        <p className="mt-1 max-w-36 truncate text-xs text-[#65716a]">
+          {record.vendor.displayName}
+        </p>
+      ) : null}
+    </div>
   );
 }
 

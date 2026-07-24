@@ -77,6 +77,7 @@ export function updateGhgActivitySelections(
   reportingYearId: string,
   activityIds: string[],
   siteId?: string,
+  vendorTrackingModes: Record<string, "NONE" | "OPTIONAL" | "REQUIRED"> = {},
 ) {
   const prefix = siteId
     ? `/companies/${companyId}/sites/${siteId}`
@@ -86,7 +87,7 @@ export function updateGhgActivitySelections(
     `${prefix}/reporting-years/${reportingYearId}/ghg-activity-selections`,
     {
       method: "PUT",
-      body: JSON.stringify({ activityIds }),
+      body: JSON.stringify({ activityIds, vendorTrackingModes }),
     },
   );
 }

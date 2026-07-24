@@ -3,6 +3,7 @@ import type { DataRecord } from "../sections/dataEntry/dataEntryData";
 
 export type CreateDataRecordInput = {
   ghgActivitySelectionId: string;
+  vendorId?: string;
   recordDate: string;
   quantity: number;
   notes?: string;

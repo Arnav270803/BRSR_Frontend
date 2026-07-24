@@ -4,6 +4,7 @@ export type SelectedGhgActivity = {
   selectionId: string;
   customLabel: string | null;
   selectedAt: string;
+  vendorTrackingMode: "NONE" | "OPTIONAL" | "REQUIRED";
   activity: {
     id: string;
     categoryId: string;
@@ -44,6 +45,14 @@ export type DataRecord = {
   factorSourceVersion: string | null;
   notes: string | null;
   metadata: unknown;
+  dataOrigin: "INTERNAL" | "VENDOR";
+  vendorId: string | null;
+  vendor?: {
+    id: string;
+    displayName: string;
+    vendorCode: string | null;
+  } | null;
+  vendorSubmissionRecordId: string | null;
   createdByUserId: string;
   createdBy?: {
     id: string;
@@ -70,6 +79,7 @@ export type DataRecord = {
 
 export type CreateDataRecordValues = {
   ghgActivitySelectionId: string;
+  vendorId: string;
   recordDate: string;
   quantity: string;
   notes: string;
@@ -77,12 +87,17 @@ export type CreateDataRecordValues = {
 
 export type CreateDataRecordPayload = {
   ghgActivitySelectionId: string;
+  vendorId?: string;
   recordDate: string;
   quantity: number;
   notes?: string;
 };
 
 export function canDeleteRecord(viewerRole: WorkspaceRole, record: DataRecord, userId: string) {
+  if (record.dataOrigin === "VENDOR") {
+    return false;
+  }
+
   return viewerRole !== "USER" || record.createdByUserId === userId;
 }
 
@@ -91,6 +106,7 @@ export const demoSelectedGhgActivities: SelectedGhgActivity[] = [
     selectionId: "sel-grid-electricity",
     customLabel: null,
     selectedAt: "2025-04-01T09:30:00.000Z",
+    vendorTrackingMode: "NONE",
     activity: {
       id: "act-grid-electricity-india",
       categoryId: "cat-electricity",
@@ -116,6 +132,7 @@ export const demoSelectedGhgActivities: SelectedGhgActivity[] = [
     selectionId: "sel-diesel-generator",
     customLabel: null,
     selectedAt: "2025-04-01T09:32:00.000Z",
+    vendorTrackingMode: "NONE",
     activity: {
       id: "act-diesel-generator",
       categoryId: "cat-stationary",
@@ -141,6 +158,7 @@ export const demoSelectedGhgActivities: SelectedGhgActivity[] = [
     selectionId: "sel-business-car",
     customLabel: null,
     selectedAt: "2025-04-01T09:34:00.000Z",
+    vendorTrackingMode: "OPTIONAL",
     activity: {
       id: "act-company-car-petrol",
       categoryId: "cat-transport",
@@ -183,6 +201,10 @@ export const demoDataRecords: DataRecord[] = [
     factorSourceVersion: "2025",
     notes: "April electricity bill",
     metadata: null,
+    dataOrigin: "INTERNAL",
+    vendorId: null,
+    vendor: null,
+    vendorSubmissionRecordId: null,
     createdByUserId: "user-admin",
     createdBy: {
       id: "user-admin",
@@ -224,6 +246,10 @@ export const demoDataRecords: DataRecord[] = [
     factorSourceVersion: "2025",
     notes: "Backup generator diesel purchase",
     metadata: null,
+    dataOrigin: "INTERNAL",
+    vendorId: null,
+    vendor: null,
+    vendorSubmissionRecordId: null,
     createdByUserId: "user-employee",
     createdBy: {
       id: "user-employee",

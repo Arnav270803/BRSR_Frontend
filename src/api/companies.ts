@@ -16,6 +16,7 @@ export type CreateCompanyInput = {
   employeeCountRange?: string;
   contactPhone?: string;
   logoUrl?: string;
+  vendorTrackingEnabled?: boolean;
   site?: {
     name: string;
     type: string;
@@ -37,6 +38,7 @@ export type CreateCompanyResult = {
     state: string;
     city: string;
     financialYearStartMonth: number;
+    vendorTrackingEnabled: boolean;
     status: string;
   };
   membership: {
@@ -55,4 +57,17 @@ export function createCompany(input: CreateCompanyInput) {
     method: "POST",
     body: JSON.stringify(input),
   });
+}
+
+export function updateCompanySettings(
+  companyId: string,
+  input: { vendorTrackingEnabled: boolean },
+) {
+  return apiRequest<ApiDataResponse<CreateCompanyResult["company"]>>(
+    `/companies/${companyId}/settings`,
+    {
+      method: "PATCH",
+      body: JSON.stringify(input),
+    },
+  );
 }

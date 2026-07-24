@@ -87,7 +87,10 @@ export function LoginPage() {
               const result = await loginWithGoogle(response.credential);
               const session = result.data;
 
-              if (fromPath?.startsWith("/invite")) {
+              if (
+                fromPath?.startsWith("/invite") ||
+                fromPath?.startsWith("/vendor/invite")
+              ) {
                 navigate(fromPath, { replace: true });
                 return;
               }
@@ -101,6 +104,13 @@ export function LoginPage() {
 
               if (firstCompany) {
                 navigate(`/app/${firstCompany.companyId}`, { replace: true });
+                return;
+              }
+
+              const firstVendor = session.vendorMemberships[0];
+
+              if (firstVendor) {
+                navigate(`/vendor/${firstVendor.vendorId}`, { replace: true });
                 return;
               }
 
